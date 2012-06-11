@@ -1,7 +1,19 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?> 
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"> 
 
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
-</web-app>
+<filter> 
+   <filter-name>Chat</filter-name> 
+   <filter-class>com.sillycat.magicneptune.web.filter.ChatFilter</filter-class> 
+</filter> 
+<filter-mapping> 
+   <filter-name>Chat</filter-name> 
+   <url-pattern>/chat/*</url-pattern> 
+</filter-mapping> 
+
+<welcome-file-list> 
+   <welcome-file>index.jsp</welcome-file> 
+</welcome-file-list> 
+</web-app> 
