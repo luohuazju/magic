@@ -30,7 +30,7 @@ public class Producer extends Thread
   {
     props.put("serializer.class", "kafka.serializer.StringEncoder");
     props.put("zk.connect", KafkaProperties.zkConnect);
-    props.put("zk.connectiontimeout.ms", "15000");
+    props.put("zk.connectiontimeout.ms", "25000");
     // Use random partitioner. Don't need the key type. Just set it to Integer.
     // The message is of type String.
     producer = new kafka.javaapi.producer.Producer<Integer, String>(new ProducerConfig(props));
