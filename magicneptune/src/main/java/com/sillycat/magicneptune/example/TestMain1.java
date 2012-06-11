@@ -2,15 +2,11 @@ package com.sillycat.magicneptune.example;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Properties;
 
 import kafka.api.FetchRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
 import kafka.javaapi.message.ByteBufferMessageSet;
-import kafka.javaapi.producer.Producer;
-import kafka.javaapi.producer.ProducerData;
 import kafka.message.MessageAndOffset;
-import kafka.producer.ProducerConfig;
 
 public class TestMain1 {
 

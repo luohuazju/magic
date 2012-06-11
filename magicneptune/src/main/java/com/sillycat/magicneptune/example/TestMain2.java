@@ -13,8 +13,7 @@ public class TestMain2 {
 		props2.put("zk.connect", "122.70.144.208:2181");
 		props2.put("serializer.class", "kafka.serializer.StringEncoder");
 		// This is added by myself for changing the default timeout 6000.
-		props2.put("connect.timeout.ms", "15000");
-		props2.put("socket.timeout.ms", "15000");
+		props2.put("zk.connectiontimeout.ms", "15000");
 		ProducerConfig config = new ProducerConfig(props2);
 		Producer<String, String> producer = new Producer<String, String>(config);
 
