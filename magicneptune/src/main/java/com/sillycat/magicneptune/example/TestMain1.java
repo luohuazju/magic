@@ -19,7 +19,7 @@ public class TestMain1 {
 			e.printStackTrace();
 		}
 
-		SimpleConsumer consumer = new SimpleConsumer("ud1129.chinaw3.com", 9092, 10000,
+		SimpleConsumer consumer = new SimpleConsumer("192.168.56.101", 9092, 10000,
 				1024000);
 
 		long offset = 0;
