@@ -5,8 +5,6 @@ public class ChatMessage extends BasicObject {
 
 	private static final long serialVersionUID = 1437240642374550072L;
 
-	private String content;
-
 	/**
 	 * 1=text, 2=picture, 4=audio, 8=video
 	 */
@@ -37,14 +35,6 @@ public class ChatMessage extends BasicObject {
 
 	public void setTouser(BasicUser touser) {
 		this.touser = touser;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	public String getType() {

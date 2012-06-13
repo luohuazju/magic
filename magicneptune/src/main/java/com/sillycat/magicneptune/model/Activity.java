@@ -1,6 +1,5 @@
 package com.sillycat.magicneptune.model;
 
-import java.util.Date;
 import java.util.List;
 
 /**

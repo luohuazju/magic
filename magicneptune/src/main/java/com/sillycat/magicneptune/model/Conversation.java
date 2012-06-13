@@ -24,6 +24,19 @@ public class Conversation extends BasicObject {
 	 */
 	List<BasicUser> users;
 	
+	/**
+	 * all the messages in this conversation
+	 */
+	List<ChatMessage> messages;
+	
+	public List<ChatMessage> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<ChatMessage> messages) {
+		this.messages = messages;
+	}
+
 	public List<BasicUser> getUsers() {
 		return users;
 	}
