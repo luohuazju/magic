@@ -31,12 +31,14 @@ import org.mortbay.util.ajax.Continuation;
 import org.mortbay.util.ajax.ContinuationSupport;
 
 public class ChatFilter extends AjaxFilter {
+	@SuppressWarnings("rawtypes")
 	private Map chatrooms;
 
 	/* ------------------------------------------------------------ */
 	/*
 	 * @see org.mortbay.ajax.AjaxFilter#init(javax.servlet.FilterConfig)
 	 */
+	@SuppressWarnings("rawtypes")
 	public void init(FilterConfig filterConfig) throws ServletException {
 		super.init(filterConfig);
 		chatrooms = new HashMap();
@@ -58,6 +60,7 @@ public class ChatFilter extends AjaxFilter {
 	 * javax.servlet.http.HttpServletRequest,
 	 * org.mortbay.ajax.AjaxFilter.AjaxResponse)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void handle(String method, String message,
 			HttpServletRequest request, AjaxResponse response) {
 		String roomName = request.getParameter("room");
@@ -85,6 +88,7 @@ public class ChatFilter extends AjaxFilter {
 	}
 
 	/* ------------------------------------------------------------ */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void doJoinChat(Map room, String name, HttpServletRequest request,
 			AjaxResponse response) {
 		HttpSession session = request.getSession(true);
@@ -110,6 +114,7 @@ public class ChatFilter extends AjaxFilter {
 	}
 
 	/* ------------------------------------------------------------ */
+	@SuppressWarnings("rawtypes")
 	private void doLeaveChat(Map room, String name, HttpServletRequest request,
 			AjaxResponse response) {
 		HttpSession session = request.getSession(true);
@@ -133,6 +138,7 @@ public class ChatFilter extends AjaxFilter {
 	}
 
 	/* ------------------------------------------------------------ */
+	@SuppressWarnings("rawtypes")
 	private void doChat(Map room, String text, HttpServletRequest request,
 			AjaxResponse response) {
 		HttpSession session = request.getSession(true);
@@ -149,6 +155,7 @@ public class ChatFilter extends AjaxFilter {
 	}
 
 	/* ------------------------------------------------------------ */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void doPoll(Map room, HttpServletRequest request,
 			AjaxResponse response) {
 		HttpSession session = request.getSession(true);
@@ -182,6 +189,7 @@ public class ChatFilter extends AjaxFilter {
 	}
 
 	/* ------------------------------------------------------------ */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void sendMessage(Map room, Member member, String text, boolean alert) {
 		Message event = new Message(member.getName(), text, alert);
 
@@ -209,6 +217,7 @@ public class ChatFilter extends AjaxFilter {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void sendMembers(Map room, AjaxResponse response) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<ul>\n");
@@ -252,6 +261,7 @@ public class ChatFilter extends AjaxFilter {
 	private class Member {
 		private HttpSession _session;
 		private String _name;
+		@SuppressWarnings("rawtypes")
 		private List _messages = new ArrayList();
 		private Continuation _continuation;
 
@@ -298,6 +308,7 @@ public class ChatFilter extends AjaxFilter {
 		}
 
 		/* ------------------------------------------------------------ */
+		@SuppressWarnings("unchecked")
 		public void addMessage(Message event) {
 			if (_name == null)
 				return;
@@ -312,6 +323,7 @@ public class ChatFilter extends AjaxFilter {
 		}
 
 		/* ------------------------------------------------------------ */
+		@SuppressWarnings({ "rawtypes", "unused" })
 		public void rename(Map room, String name) {
 			String oldName = getName();
 			setName(name);
