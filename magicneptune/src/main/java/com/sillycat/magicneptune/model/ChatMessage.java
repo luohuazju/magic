@@ -1,13 +1,9 @@
 package com.sillycat.magicneptune.model;
 
-import java.io.Serializable;
-import java.util.Date;
 
-public class ChatMessage implements Serializable {
+public class ChatMessage extends BasicObject {
 
 	private static final long serialVersionUID = 1437240642374550072L;
-
-	private String id;
 
 	private String content;
 
@@ -15,19 +11,32 @@ public class ChatMessage implements Serializable {
 	 * 1=text, 2=picture, 4=audio, 8=video
 	 */
 	private String type;
-
-	private String desn;
-
-	private Date gmtCreate;
-
-	private Date gmtUpdate;
-
-	public String getId() {
-		return id;
+	
+	/**
+	 * message send from this user, maybe a merchant or mobile
+	 */
+	private BasicUser fromuser;
+	
+	/**
+	 * message send to this user, maybe a merchant or mobile
+	 * if this is null, means to all the users in conversation(multiple user in the future)
+	 */
+	private BasicUser touser;
+	
+	public BasicUser getFromuser() {
+		return fromuser;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setFromuser(BasicUser fromuser) {
+		this.fromuser = fromuser;
+	}
+
+	public BasicUser getTouser() {
+		return touser;
+	}
+
+	public void setTouser(BasicUser touser) {
+		this.touser = touser;
 	}
 
 	public String getContent() {
@@ -44,30 +53,6 @@ public class ChatMessage implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getDesn() {
-		return desn;
-	}
-
-	public void setDesn(String desn) {
-		this.desn = desn;
-	}
-
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
-
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
-
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
 	}
 
 }

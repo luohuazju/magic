@@ -1,7 +1,5 @@
 package com.sillycat.magicneptune.model;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 
@@ -10,33 +8,28 @@ import java.util.List;
  * @author SILLYCAT
  *
  */
-public class Conversation implements Serializable {
+public class Conversation extends BasicObject {
 
 	private static final long serialVersionUID = -7159046904962605198L;
 
-	private String id;
-	
 	private String topic;
-	
-	private Date gmtCreate;
-	
-	private Date gmtUpdate;
 	
 	/**
 	 * 1=active, 2=delete
 	 */
 	private int status;
 	
-	private List<MobileUser> mobileusers;
+	/**
+	 * users in this conversation
+	 */
+	List<BasicUser> users;
 	
-	private List<MerchantUser> merchants;
-
-	public String getId() {
-		return id;
+	public List<BasicUser> getUsers() {
+		return users;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUsers(List<BasicUser> users) {
+		this.users = users;
 	}
 
 	public String getTopic() {
@@ -47,22 +40,6 @@ public class Conversation implements Serializable {
 		this.topic = topic;
 	}
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
-
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
-
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
-
 	public int getStatus() {
 		return status;
 	}
@@ -71,20 +48,4 @@ public class Conversation implements Serializable {
 		this.status = status;
 	}
 
-	public List<MobileUser> getMobileusers() {
-		return mobileusers;
-	}
-
-	public void setMobileusers(List<MobileUser> mobileusers) {
-		this.mobileusers = mobileusers;
-	}
-
-	public List<MerchantUser> getMerchants() {
-		return merchants;
-	}
-
-	public void setMerchants(List<MerchantUser> merchants) {
-		this.merchants = merchants;
-	}
-	
 }
