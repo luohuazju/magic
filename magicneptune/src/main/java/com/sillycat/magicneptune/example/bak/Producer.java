@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sillycat.magicneptune.example;
+package com.sillycat.magicneptune.example.bak;
 
 import kafka.javaapi.producer.ProducerData;
 import kafka.producer.ProducerConfig;

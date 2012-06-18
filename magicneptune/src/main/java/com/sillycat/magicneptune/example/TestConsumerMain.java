@@ -8,7 +8,7 @@ import kafka.javaapi.consumer.SimpleConsumer;
 import kafka.javaapi.message.ByteBufferMessageSet;
 import kafka.message.MessageAndOffset;
 
-public class TestMain1 {
+public class TestConsumerMain {
 
 	public static void main(String[] args) {
 		
@@ -18,8 +18,10 @@ public class TestMain1 {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
-		SimpleConsumer consumer = new SimpleConsumer("192.168.56.101", 9092, 10000,
+		//122.70.144.208:2181
+//		SimpleConsumer consumer = new SimpleConsumer("192.168.56.101", 9092, 10000,
+//				1024000);
+		SimpleConsumer consumer = new SimpleConsumer("122.70.144.208", 9092, 10000,
 				1024000);
 
 		long offset = 0;
@@ -32,14 +34,12 @@ public class TestMain1 {
 			// get the message set from the consumer and print them out
 			ByteBufferMessageSet messages = consumer.fetch(fetchRequest);
 			for (MessageAndOffset msg : messages) {
-				System.out.println(ExampleUtils.getMessage(msg.message()));
+				System.out.println(ExampleUtils.getMessage(msg.message()) + "offset=" + offset);
 				// advance the offset after consuming each message
 				offset = msg.offset();
 			}
 		}
-		
-		
-
+		//consumer.close();
 	}
 
 }
