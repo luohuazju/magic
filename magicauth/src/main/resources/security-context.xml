@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+           
+	<security:authentication-manager>
+		<security:authentication-provider ref="openidAuthenticationProvider" />
+		<security:authentication-provider ref="authenticationProvider" /> 
+    </security:authentication-manager>
+    
+    <bean id="openidAuthenticationProvider" class="org.springframework.security.openid.OpenIDAuthenticationProvider">
+        <property name="userDetailsService" ref="registeringUserService" />
+    </bean>
+    
+    <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="registeringUserService" />
+    </bean>
+    
+    <bean id="authenticationProcessingFilterEntryPoint" class="com.sillycat.magicauth.openid.service.AjaxAwareAuthenticationEntryPoint">
+        <property name="loginFormUrl" value="/openidlogin.jsp"/>
+        <property name="forceHttps" value="false"/>
+    </bean>
+    
+    <security:http pattern="/openidlogin.jsp*" security="none"/>
+   	<security:http pattern="/images/*" security="none" />
+   	<security:http pattern="/css/*" security="none" />
+   	<security:http pattern="/js/*" security="none" />
+   	<security:http pattern="/resources/**" security="none" />
+    <security:debug />
+    
+    <security:http access-denied-page="/denied.jsp" use-expressions="true" entry-point-ref="authenticationProcessingFilterEntryPoint">
+    	<security:form-login login-processing-url="/j_spring_security_check" login-page="/openidlogin.jsp" authentication-failure-url="/openidlogin.jsp?login_error=true"
+    	          />
+    	<security:intercept-url pattern="/index.jsp" access="permitAll" />
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/service/person/**" access="hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/super/**" access="hasRole('ROLE_SUPERVISOR')" />
+        <security:intercept-url pattern="/**" access="denyAll" />
+        <security:logout 
+            invalidate-session="true"
+            logout-success-url="/openidlogin.jsp"
+            logout-url="/j_spring_security_logout"/>
+        <security:openid-login 
+            user-service-ref="registeringUserService" 
+            authentication-failure-url="/openidlogin.jsp?login_error=true" 
+            default-target-url="/index.jsp">
+            <security:attribute-exchange identifier-match="https://www.google.com/.*">
+                <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true" />
+                <security:openid-attribute name="firstName" type="http://axschema.org/namePerson/first" required="true" />
+                <security:openid-attribute name="lastName" type="http://axschema.org/namePerson/last" required="true" />
+            </security:attribute-exchange>
+            <security:attribute-exchange identifier-match=".*yahoo.com.*">
+                <security:openid-attribute name="email" type="http://axschema.org/contact/email" required="true"/>
+                <security:openid-attribute name="fullname" type="http://axschema.org/namePerson" required="true" />
+            </security:attribute-exchange>
+            <security:attribute-exchange identifier-match=".*myopenid.com.*">
+               <security:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+               <security:openid-attribute name="fullname" type="http://schema.openid.net/namePerson" required="true" />
+            </security:attribute-exchange>
+        </security:openid-login>
+    </security:http>
+    
+   <bean id="registeringUserService" class="com.sillycat.magicauth.openid.service.OpenIdUserDetailsService" />
+	
+	
+</beans>
