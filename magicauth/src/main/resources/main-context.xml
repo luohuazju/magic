@@ -41,6 +41,7 @@
 	</context:component-scan>
     
 	<import resource="classpath:security-context.xml" />
+	<import resource="classpath:security-oauth2-context.xml" />
 	<import resource="classpath:controller-context.xml" />
 </beans>
 

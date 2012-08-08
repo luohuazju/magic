@@ -61,6 +61,7 @@
                <security:openid-attribute name="fullname" type="http://schema.openid.net/namePerson" required="true" />
             </security:attribute-exchange>
         </security:openid-login>
+        <security:custom-filter ref="oauth2ClientFilter" after="EXCEPTION_TRANSLATION_FILTER" />
     </security:http>
     
    <bean id="registeringUserService" class="com.sillycat.magicauth.openid.service.OpenIdUserDetailsService" />

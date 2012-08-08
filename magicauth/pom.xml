@@ -11,6 +11,7 @@
   <properties>
 		<spring.version>3.2.0.M1</spring.version>
 		<spring-security.version>3.1.0.M2</spring-security.version>
+		<spring.security.oauth2.version>1.0.0.RC1</spring.security.oauth2.version>
   </properties>
 	
   
@@ -51,6 +52,11 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.8</version>
 	</dependency>
+	<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>${spring.security.oauth2.version}</version>
+		</dependency>
 	<dependency>
   		<groupId>log4j</groupId>
   		<artifactId>log4j</artifactId>
