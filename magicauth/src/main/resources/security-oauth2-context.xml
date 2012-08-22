@@ -21,7 +21,7 @@
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
 			<set>
-				<bean class="org.springframework.security.oauth.examples.tonr.converter.AccessTokenRequestConverter" />
+				<bean class="com.sillycat.magicauth.oauth2.AccessTokenRequestConverter" />
 			</set>
 		</property>
 	</bean>
