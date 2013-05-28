@@ -1,38 +1,43 @@
 define([
-	// Define the libs
-	'firebase', 
-	'jquery', 
-	'underscore', 
-	'backbone', 
-	'backbonefirebase',
-	// Define the views
-	'views/navbar',
-	'views/main/main',
-	// Define the collections
- 	'collections/main'
-], function(Firebase, $, _, Backbone, BackboneFirebase, navbarView, mainMainView, mainCollection) {
-	
-	var Router = Backbone.Router.extend({
-        routes: {
-			'about': 'about',
-			'*actions': 'defaultAction'
-		},
-	
-		about: function(){
-	
-		},
-	
-	    defaultAction: function(actions){
-			navbarView.render();
-			mainMainView.render();
-		}
-		
-	});
-
-	return {
-		initialize: function() {
-			new Router();
-		}
-	};
-
+  'jquery',
+  'underscore',
+  'backbone',
+  'views/ProductView',
+  'views/AboutView',
+  'views/NavBarView',
+  'views/HomeMainView'
+], function($, _, Backbone, ProductView, AboutView, NavBarView, HomeMainView) {
+  
+  var Router = Backbone.Router.extend({
+    routes: {
+      // Define some URL routes
+      'products' : 'showProduct',
+      'about' : 'showAbout',
+      '*actions': 'defaultAction'
+    },
+  
+    initialize: function(){
+       window.logger.debug("init the router, and make backbone start.");
+       Backbone.history.start();
+    },
+    
+    showAbout: function(){
+    	window.logger.debug("Entering the showAbout Page!");
+    	new AboutView().render();
+    },
+    
+    showProduct: function(){
+    	window.logger.debug("Enterring the showProduct Page!");
+    	new ProductView().render();
+    },
+    
+    defaultAction: function(){
+    	window.logger.debug("Enterring the default Page!");
+		new NavBarView().render();
+		new HomeMainView().render();
+    }
+    
+  });
+  
+  return Router;
 });
