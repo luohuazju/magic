@@ -33,7 +33,8 @@ require([
 	'Router',
 	'Config',
 	'Log4j',
-	'json2'
+	'json2',
+	'bootstrap'
 ], function(Router, Config, Log4j){
    	
 	new Log4j().init();
