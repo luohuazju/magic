@@ -2,16 +2,16 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'views/ProductView',
   'views/AboutView',
   'views/NavBarView',
-  'views/HomeMainView'
-], function($, _, Backbone, ProductView, AboutView, NavBarView, HomeMainView) {
+  'views/HomeMainView',
+  'views/product/ProductsView'
+], function($, _, Backbone, AboutView, NavBarView, HomeMainView,ProductsView) {
   
   var Router = Backbone.Router.extend({
     routes: {
       // Define some URL routes
-      'products' : 'showProduct',
+      'productsPlan' : 'productsPlan',
       'about' : 'showAbout',
       '*actions': 'defaultAction'
     },
@@ -27,10 +27,10 @@ define([
     	new AboutView().render();
     },
     
-    showProduct: function(){
-    	window.logger.debug("Enterring the showProduct Page!");
+    productsPlan: function(){
+    	window.logger.debug("Enterring the productsPlan Page!");
     	new NavBarView().render();
-    	new ProductView().render();
+    	new ProductsView().render('PRODUCT_PLAN');
     },
     
     defaultAction: function(){
