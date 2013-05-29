@@ -8,6 +8,10 @@ define([
   var HomeMainView = Backbone.View.extend({
     el: $("#content"),
     
+    initialize: function(){
+    	
+	},
+    
     render: function(){
       window.logger.debug("I am going to render to HomeMainView");
       var data = {

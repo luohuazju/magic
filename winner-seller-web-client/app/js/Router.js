@@ -23,11 +23,13 @@ define([
     
     showAbout: function(){
     	window.logger.debug("Entering the showAbout Page!");
+    	new NavBarView().render();
     	new AboutView().render();
     },
     
     showProduct: function(){
     	window.logger.debug("Enterring the showProduct Page!");
+    	new NavBarView().render();
     	new ProductView().render();
     },
     
