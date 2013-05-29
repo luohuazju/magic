@@ -2,7 +2,8 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'text!templates/product/ProductsTemplate.html'
+  'text!templates/product/ProductsTemplate.html',
+  'bootstrap'
 ], function($, _, Backbone, htmlTemplate) {
 
   var View = Backbone.View.extend({

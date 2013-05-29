@@ -13,7 +13,8 @@ define([
       // Define some URL routes
       'productsPlan' : 'productsPlan',
       'about' : 'showAbout',
-      '*actions': 'defaultAction'
+      '/*' : 'defaultAction'
+      //'*actions': 'defaultAction'
     },
   
     initialize: function(){
