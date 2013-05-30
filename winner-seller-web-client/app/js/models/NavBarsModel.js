@@ -8,7 +8,7 @@ define([
     });
 
     var Items = Backbone.Collection.extend({
-        url: '/NavBarsMock.JSON',
+        url: '/navbars.JSON',
         parse: function(response) {
             window.logger.debug("getting NavBars from response=" + response);
             return response;

@@ -7,3 +7,5 @@ target/
 .idea/
 .idea_modules/
 winner-seller-server.iml
+.cache
+akka.log
