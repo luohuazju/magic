@@ -4,3 +4,6 @@
 project/target
 project/project
 target/
+.idea/
+.idea_modules/
+winner-seller-server.iml
