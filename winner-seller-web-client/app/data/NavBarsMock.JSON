@@ -1,0 +1,44 @@
+[
+    {
+       "title":   "首页",
+       "link":    "#",
+       "alter":   ""
+    },
+    {
+       "title":   "商品管理",
+       "link":    "#",
+       "alter":   "",
+       "subNavBars" : [
+          {
+            "title":  "计划商品",
+            "link":   "#productsPlan",
+            "alter":  ""
+          },
+          {
+            "title":  "上架商品",
+            "link":   "#",
+            "alter":  ""
+          },
+          {
+            "title":  "历史商品",
+            "link":   "#",
+            "alter":  ""
+          },
+          {
+            "title":  "divider",
+            "link":   "",
+            "alter":  ""
+          },
+          {
+            "title":  "添加商品",
+            "link":   "#productEdit",
+            "alter":  ""
+          }
+       ]
+    },
+    {
+        "title":  "系统介绍",
+        "link":   "#about",
+        "alter":  ""
+    }
+]

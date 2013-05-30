@@ -30,12 +30,13 @@ require.config({
 });
 
 require([
+    'jquery',
 	'Router',
 	'Config',
 	'Log4j',
 	'json2',
 	'bootstrap'
-], function(Router, Config, Log4j){
+], function($, Router, Config, Log4j){
    	
 	new Log4j().init();
    	
@@ -46,7 +47,10 @@ require([
 	initialize: function(){
 		window.logger.debug("initialize the IndexPageView and whole system.", "Good Luck.");
 		window.logger.info("Config Start==================================");
-		window.logger.info(JSON.stringify(new Config()));
+		var config = new Config();
+		for (var c in config) if (config.hasOwnProperty(c)) {
+          window.logger.info(c + " = " + config[c]);
+        }
 		window.logger.info("Config End====================================");
    			this.router = new Router();
    		}

@@ -8,18 +8,24 @@
     <a class="brand" href="#">卖家WEB管理系统</a>
     <div class="nav-collapse collapse">
       <ul class="nav">
-        <li class="active"><a href="#">首页</a></li>
-		<li class="Product">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">商品管理<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="#productsPlan">计划商品</a></li>
-            <li><a href="#">上架商品</a></li>
-            <li><a href="#">历史商品</a></li>
-            <li class="divider"></li>
-            <li><a href="#">添加商品</a></li>
-          </ul>
-        </li>        
-        <li><a href="#about">系统介绍</a></li>
+        <% items.each( function(item){ %>
+          <% if(_.isUndefined(item.get("subNavBars"))) { %>
+          <li><a href="<%= item.get('link') %>"><%= item.get('title') %></a></li>
+          <% }else{ %>
+          <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= item.get('title') %><b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                  <% _.each( item.get('subNavBars'), function(sub){ %>
+                  <% if(sub.title ===  'divider') { %>
+                  <li class="divider"></li>
+                  <% }else{ %>
+                  <li><a href="<%= sub.link %>"><%= sub.title %></a></li>
+                  <% } %>
+                  <% }); %>
+              </ul>
+          </li>
+          <% } %>
+        <% }); %>
       </ul>
       <form class="navbar-form pull-right">
         <input class="span2" type="text" placeholder="邮箱">

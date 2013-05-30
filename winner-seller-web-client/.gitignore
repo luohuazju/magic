@@ -1,3 +1,6 @@
 .project
 .settings
 node_modules
+.idea/
+winner-seller-web-client.iml
+app/data/.DS_Store

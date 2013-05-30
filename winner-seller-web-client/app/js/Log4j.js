@@ -10,7 +10,7 @@ define([
 	Log4j.prototype.init = function(){
 		var config = new Config();
 		
-		if(config.getLogEnable() == 1){
+		if(config.logEnable == 1){
 			log4javascript.setEnabled(true);
 		}else{
 			log4javascript.setEnabled(false);
@@ -18,13 +18,13 @@ define([
 		
 		var logger = log4javascript.getLogger(); 
 		
-		if(config.getLogLevel() == 'debug'){
+		if(config.logLevel == 'debug'){
 			logger.setLevel(log4javascript.Level.DEBUG);
-		}else if(config.getLogLevel() == 'all'){
+		}else if(config.logLevel == 'all'){
 			logger.setLevel(log4javascript.Level.ALL);
-		}else if(config.getLogLevel() == 'info'){
+		}else if(config.logLevel == 'info'){
 			logger.setLevel(log4javascript.Level.INFO);
-		}else if(config.getLogLevel() == 'error'){
+		}else if(config.logLevel == 'error'){
 			logger.setLevel(log4javascript.Level.ERROR);
 		}
 		

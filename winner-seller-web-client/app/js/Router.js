@@ -5,13 +5,15 @@ define([
   'views/AboutView',
   'views/NavBarView',
   'views/HomeMainView',
-  'views/product/ProductsView'
-], function($, _, Backbone, AboutView, NavBarView, HomeMainView,ProductsView) {
+  'views/product/ProductsView',
+  'views/product/ProductEditView'
+], function($, _, Backbone, AboutView, NavBarView, HomeMainView, ProductsView, ProductEditView) {
   
   var Router = Backbone.Router.extend({
     routes: {
       // Define some URL routes
       'productsPlan' : 'productsPlan',
+      'productEdit' : 'productEdit',
       'about' : 'showAbout',
       '' : 'defaultAction'
       //'*actions': 'defaultAction'
@@ -29,13 +31,19 @@ define([
     },
     
     productsPlan: function(){
-    	window.logger.debug("Enterring the productsPlan Page!");
+    	window.logger.debug("Entering the productsPlan Page!");
     	new NavBarView().render();
     	new ProductsView().render('PRODUCT_PLAN');
     },
+
+    productEdit: function(){
+        window.logger.debug("Entering the productEdit Page!");
+        new NavBarView().render();
+        new ProductEditView().render();
+    },
     
     defaultAction: function(){
-    	window.logger.debug("Enterring the default Page!");
+    	window.logger.debug("Entering the default Page!");
 		new NavBarView().render();
 		new HomeMainView().render();
     }

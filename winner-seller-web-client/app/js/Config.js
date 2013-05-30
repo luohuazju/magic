@@ -2,25 +2,10 @@ define([
   'jquery'
 ], function($) {
 	function Config(){
-		this.logLevel = 'all'; //info, debug, all
+		this.logLevel = 'debug'; //info, debug, all, error
 		this.logEnable = 1;
+		this.serverURL = 'http://localhost';
+		this.serverPort = 9000;
 	}
-	
-	Config.prototype.setLogLevel = function(logLevel){
-		this.logLevel = logLevel;
-	};
-	
-	Config.prototype.getLogLevel = function(){
-		return this.logLevel;
-	};
-	
-	Config.prototype.setLogEnable = function(logEnable){
-		this.logEnable = logEnalbe;
-	};
-	
-	Config.prototype.getLogEnable = function(){
-		return this.logEnable;
-	};
-	
 	return Config;
 });
