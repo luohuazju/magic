@@ -15,6 +15,8 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
 
   override def afterAll() { dao.drop }
 
+  val empty: List[Nothing] = List()
+
   test("Database tables are created and dropped") {
     assert("x" === "x")
   }
@@ -32,6 +34,17 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       dao.NavBars.insert(item2)
       dao.NavBars.insert(sub1_1)
       dao.NavBars.insert(sub1_2)
+    }
+  }
+
+  test("Load NavBar All"){
+    dao.db withSession {
+      val all = dao.NavBars.all()
+      assert(all.length === 2)
+
+      assert(all.head.title === "title1")
+      assert(all.head.subs.getOrElse(empty).length === 2)
+      info(all.toString())
     }
   }
   

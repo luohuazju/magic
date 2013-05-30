@@ -58,17 +58,20 @@ trait NavBarDAO extends Logging { this: Profile =>
     def all()(implicit session: Session): List[NavBar] = {
       val s1 = Query(NavBars).list
       val s2 = s1.filter(_.parentId == 0l)   //filter to get the root NavBars
+
       def placeSubandParent(item: NavBar, all :List[NavBar]) : NavBar = {
-        val nav = NavBar(
-          item.id,
-          item.title,
-          item.link,
-          item.alter,
-          item.parentId,
-          Option(all.filter(_.parentId == item.id.getOrElse(0))),
-          Option(all.filter(_.id.getOrElse(0) == item.parentId).head) )
-        nav
+       val nav = NavBar(
+            item.id,
+            item.title,
+            item.link,
+            item.alter,
+            item.parentId,
+            Option(all.filter(_.parentId == item.id.getOrElse(0))),
+            all.filter(_.id.getOrElse(0) == item.parentId).headOption
+       )
+       nav
       }
+
       val s3 = s2.map(placeSubandParent(_, s1))
       s3
     }
