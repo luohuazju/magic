@@ -1,34 +1,13 @@
 package com.sillycat.winnersellerserver.dao
 
-import scala.slick.util.Logging
-import org.joda.time.DateTime
 import com.sillycat.winnersellerserver.model.Product
 import com.sillycat.winnersellerserver.model.Cart
 import com.sillycat.winnersellerserver.model.RCartProduct
-import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.User
 import com.sillycat.winnersellerserver.model.UserType
-import spray.httpx.SprayJsonSupport
-import spray.json.DefaultJsonProtocol
-import spray.json.DeserializationException
-import spray.json.JsNumber
-import spray.json.JsObject
-import spray.json.JsString
-import spray.json.JsValue
-import spray.json.RootJsonFormat
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.DateTime
-import spray.json.JsArray
-import spray.json._
-import DefaultJsonProtocol._
 import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
-import spray.json.{ RootJsonFormat, DefaultJsonProtocol }
-import spray.httpx.SprayJsonSupport
-import org.joda.time.format.DateTimeFormat
-import scala.slick.ast._
-import scala.slick.ast.Util._
 import com.sillycat.winnersellerserver.model.NavBar
 
 //case class NavBar(id: Option[Long], title: String, link: String, alter: String, subs: Seq[NavBar] , parent: NavBar)

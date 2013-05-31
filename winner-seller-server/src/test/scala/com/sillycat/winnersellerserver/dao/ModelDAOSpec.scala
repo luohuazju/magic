@@ -11,9 +11,13 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
 
   implicit val dao: BaseDAO = BaseDAO.apply("test")
 
-  override def beforeAll() { dao.create }
+  override def beforeAll() {
+    dao.create
+  }
 
-  override def afterAll() { dao.drop }
+  override def afterAll() {
+    dao.drop
+  }
 
   val empty: List[Nothing] = List()
 

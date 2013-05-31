@@ -1,30 +1,27 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-import akka.actor.{ Props, Actor }
+import akka.actor.Actor
 import spray.routing._
 import spray.routing.directives._
 import spray.util.LoggingContext
 import spray.http.StatusCodes._
-import spray.httpx.SprayJsonSupport._
 import shapeless._
 import com.sillycat.winnersellerserver.service.auth.UsersAuthenticationDirectives
-import com.typesafe.scalalogging.slf4j.Logging
 import akka.util.Timeout
-import com.sillycat.winnersellerserver.dao.BaseDAO
 
 class URLRouterActor extends Actor with URLRouterService {
   def actorRefFactory = context
   def receive = runRoute(route)
 }
 
-trait URLRouterService extends HttpService with UsersAuthenticationDirectives with Logging {
+trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
 
   implicit val timeout = Timeout(30 * 1000)
   
   implicit def myExceptionHandler(implicit log: LoggingContext) =
     ExceptionHandler.fromPF {
       case e: java.lang.IllegalArgumentException => ctx =>
-        logger.error("Request {} could not be handled normally", ctx.request)
+        logger.error("Request {} could not be handled normally" + ctx.request)
         ctx.complete(BadRequest, e.getMessage)
     }
 

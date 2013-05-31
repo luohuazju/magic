@@ -1,14 +1,8 @@
 package com.sillycat.winnersellerserver.model
 
-import spray.httpx.SprayJsonSupport
 import spray.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
-import DefaultJsonProtocol._
-import com.sillycat.winnersellerserver.model.User
-import com.sillycat.winnersellerserver.model.NavBar
-import com.sillycat.winnersellerserver.model.Cart
-import com.sillycat.winnersellerserver.model.Product
 import scala.Some
 
 

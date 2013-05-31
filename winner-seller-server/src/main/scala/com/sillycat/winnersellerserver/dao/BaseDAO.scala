@@ -8,18 +8,45 @@ import scala.slick.session.Database.threadLocalSession
 import scala.slick.session.Session
 import com.sillycat.winnersellerserver.util.DBConn
 import com.sillycat.winnersellerserver.util.TestDBConn
+import scala.slick.jdbc.meta.MTable
+import scala.slick.util.Logging
+import com.sillycat.winnersellerserver.model.NavBar
 
-class BaseDAO(override val profile: ExtendedProfile, dbConn: DBConn) extends ProductDAO with UserDAO with CartDAO with RCartProductDAO with NavBarDAO with Profile {
+class BaseDAO(override val profile: ExtendedProfile, dbConn: DBConn) extends ProductDAO with UserDAO with CartDAO with RCartProductDAO with NavBarDAO with Profile with Logging {
 
   def db: Database = { dbConn.database }
 
+  def checkTable: Boolean = db withSession {
+    val tableList = MTable.getTables.list
+    val bool : Boolean = !tableList.isEmpty
+    bool
+  }
+
   def create: Unit = db withSession {
-    Users.create
-    Products.create
-    Carts.create
-    NavBars.create
-    
-    RCartProducts.create
+    val tableList = MTable.getTables.list(db)
+    logger.info("Table we Having: " + tableList.toString())
+    if(tableList.isEmpty){
+      logger.info("Table " + Users.tableName + " not exist, creating.")
+    	Users.create
+      logger.info("Table " + Products.tableName + " not exist, creating.")
+      Products.create
+      logger.info("Table " + Carts.tableName + " not exist, creating.")
+      Carts.create
+      logger.info("Table " + NavBars.tableName + " not exist, creating.")
+      NavBars.create
+
+      logger.info("Table " + RCartProducts.tableName + " not exist, creating.")
+      RCartProducts.create
+    }
+  }
+
+  def buildData: Unit = db withSession {
+      NavBars.insert(NavBar(None,"title","link","alter",Some(0), None, None))
+  }
+
+  def checkData: Boolean = db withSession {
+      val bool : Boolean = !NavBars.all().isEmpty
+      bool
   }
 
   def drop: Unit = db withSession {
@@ -36,9 +63,8 @@ class BaseDAO(override val profile: ExtendedProfile, dbConn: DBConn) extends Pro
 }
 
 object BaseDAO {
-  import com.sillycat.winnersellerserver.model.DBType._
   def apply: BaseDAO = {
-    new BaseDAO(MySQLDriver, DBConn)
+    new BaseDAO(H2Driver, DBConn)
   }
 
   def apply(s: String): BaseDAO = s match {
