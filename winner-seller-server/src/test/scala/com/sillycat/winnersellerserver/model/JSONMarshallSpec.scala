@@ -8,9 +8,10 @@ import spray.json.pimpString
 
 class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProtocol {
 
+  import com.sillycat.winnersellerserver.model.NavBarProtocol._
   import com.sillycat.winnersellerserver.model.ProductJsonProtocol._
   import com.sillycat.winnersellerserver.model.CartJsonProtocol._
-  
+
   "Marshalling User without ID JSON" should "result in an User Object without id" in {
     val jsonUser = """{
     		"userName":"Carl",
@@ -30,13 +31,19 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     assert(user.id === None)
   }
 
-  "Marshalling NavBar JSON" should "result in a NavBar Object" in {
+  "Marshalling Simple NavBar JSON" should "result in a Simple NavBar Object" in {
     val json =
       """{
         "title":   "首页",
         "link":    "#",
-        "alter":   ""
+        "alter":   "test"
         }"""
+    val objAST = json.asJson
+
+    info("NavBarAST: " + objAST.asJsObject)
+    val obj: NavBar = objAST.convertTo[NavBar]
+    info("NavBar Object: " + obj.toJson)
+    assert(obj.toJson === objAST)
   }
   
   "Marshalling Cart JSON" should "result in an Cart Object" in {

@@ -103,11 +103,12 @@ object CartJsonProtocol extends DefaultJsonProtocol {
 }
 
 object NavBarProtocol extends DefaultJsonProtocol {
-  implicit object CartJsonFormat extends RootJsonFormat[NavBar]{
+  implicit object NavBarJsonFormat extends RootJsonFormat[NavBar]{
      def write(nav : NavBar) = JsObject(
       Map(
         "title" -> JsString(nav.title),
-        "link"  -> JsString(nav.link)
+        "link"  -> JsString(nav.link),
+        "alter" -> JsString(nav.alter)
       )
      )
      def read(jsNav: JsValue) = {
@@ -117,7 +118,7 @@ object NavBarProtocol extends DefaultJsonProtocol {
           params("title").convertTo[String],
           params("link").convertTo[String],
           params("alter").convertTo[String],
-          Some(0),
+          None,
           None,
           None
        )
