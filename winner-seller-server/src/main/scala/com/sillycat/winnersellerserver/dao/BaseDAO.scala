@@ -41,7 +41,14 @@ class BaseDAO(override val profile: ExtendedProfile, dbConn: DBConn) extends Pro
   }
 
   def buildData: Unit = db withSession {
-      NavBars.insert(NavBar(None,"title","link","alter",Some(0), None, None))
+    val id1 = NavBars.insert(NavBar(None,"首页","#","alter",Some(0), None, None))
+    val id2 = NavBars.insert(NavBar(None,"商品管理","#","alter",Some(0), None, None))
+    val id3 = NavBars.insert(NavBar(None,"计划商品","#productsPlan","alter",Some(id2), None, None))
+    val id4 = NavBars.insert(NavBar(None,"上架商品","#","alter",Some(id2), None, None))
+    val id5 = NavBars.insert(NavBar(None,"历史商品","#","alter",Some(id2), None, None))
+    val id6 = NavBars.insert(NavBar(None,"divider", "#", "alter", Some(id2), None, None))
+    val id7 = NavBars.insert(NavBar(None,"添加商品", "#productEdit", "alter", Some(id2), None, None))
+    val id8 = NavBars.insert(NavBar(None,"系统介绍","#about","alter",Some(0), None, None))
   }
 
   def checkData: Boolean = db withSession {

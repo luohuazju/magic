@@ -8,6 +8,13 @@ import spray.http.StatusCodes._
 import shapeless._
 import com.sillycat.winnersellerserver.service.auth.UsersAuthenticationDirectives
 import akka.util.Timeout
+import com.sillycat.winnersellerserver.dao.BaseDAO
+import com.sillycat.winnersellerserver.model.NavBar
+import com.sillycat.winnersellerserver.model.NavBarProtocol
+import spray.json._
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.DateTime
+import scala.Some
 
 class URLRouterActor extends Actor with URLRouterService {
   def actorRefFactory = context
@@ -15,6 +22,7 @@ class URLRouterActor extends Actor with URLRouterService {
 }
 
 trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
+  import BaseDAO.threadLocalSession
 
   implicit val timeout = Timeout(30 * 1000)
   
@@ -25,19 +33,18 @@ trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
         ctx.complete(BadRequest, e.getMessage)
     }
 
-  //implicit val dao: BaseDAO = BaseDAO.apply("app")
+  implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
 
   def route = {
     pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
-      path("navbars") {
-        authenticate(customerOnly) { user =>
+      authenticate(customerOnly) { user =>
+        path("navbars") {
           get {
             logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
             complete {
-              //dao.db.withSession {
-                //dao.Campaigns.byId(id, brandId)
-              //}
-              ""
+              dao.db.withSession {
+                DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
+              }
             }
           }
         }

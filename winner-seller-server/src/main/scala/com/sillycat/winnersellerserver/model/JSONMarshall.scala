@@ -4,6 +4,8 @@ import spray.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
 import scala.Some
+import com.sun.tools.internal.xjc.model.CNonElement
+import com.typesafe.scalalogging.slf4j.Logging
 
 
 class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
@@ -102,7 +104,7 @@ object CartJsonProtocol extends DefaultJsonProtocol {
   }
 }
 
-object NavBarProtocol extends DefaultJsonProtocol {
+object NavBarProtocol extends DefaultJsonProtocol with Logging {
 
   private val emptyJSMap = Map[String, JsValue]()
 
@@ -115,14 +117,17 @@ object NavBarProtocol extends DefaultJsonProtocol {
       ) ++
       nav.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
       ++
-      nav.parentId.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
+      nav.parentId.map( i => Map("parentId" -> JsNumber(i))).getOrElse(emptyJSMap)
       ++
       nav.parent.map( i => Map("parent" -> i.toJson)).getOrElse(emptyJSMap)
       ++
       nav.subs.map( i => Map("subs" -> i.toJson)).getOrElse(emptyJSMap)
      )
+    //case class NavBar(id: Option[Long], title: String, link: String,
+    // alter: String, parentId: Option[Long], subs: Option[List[NavBar]] , parent: Option[NavBar])
      def read(jsNav: JsValue) = {
        val params: Map[String, JsValue] = jsNav.asJsObject.fields
+
        NavBar(
           params.get("id").map(_.convertTo[Long]),
           params("title").convertTo[String],

@@ -49,36 +49,25 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
   "Marshalling Complex NavBar JSON" should "result in a Complex NavBar Object" in {
     val json =
       """{
-        "title":   "商品管理",
+        "id" :  1,
+        "title":   "title1",
         "link":    "#",
         "alter":   "",
+        "parentId" : 12,
         "subs" : [
                   {
-                    "title":  "计划商品",
+                    "title":  "title2",
                     "link":   "#productsPlan",
                     "alter":  ""
-                  },
-                  {
-                    "title":  "上架商品",
-                    "link":   "#",
-                    "alter":  ""
-                  },
-                  {
-                    "title":  "历史商品",
-                    "link":   "#",
-                    "alter":  ""
-                  },
-                  {
-                    "title":  "divider",
-                    "link":   "",
-                    "alter":  ""
-                  },
-                  {
-                    "title":  "添加商品",
-                    "link":   "#productEdit",
-                    "alter":  ""
                   }
-               ]
+               ],
+         "parent" :
+               {
+                    "id" : 9,
+                    "title": "test1",
+                    "link" : "#",
+                    "alter" : "alter"
+               }
       }"""
     val objAST = json.asJson
 

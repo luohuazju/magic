@@ -15,4 +15,7 @@ trait Bootstrap {
     serverPort = if (config.getInt("environment." + env + ".server.port") != 0) config.getInt("environment." + env + ".server.port") else serverPort
   }
 
+  SchemaSetup.initTables("app")
+  SchemaSetup.initData("app")
+
 }
