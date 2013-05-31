@@ -45,6 +45,48 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     info("NavBar Object: " + obj.toJson)
     assert(obj.toJson === objAST)
   }
+
+  "Marshalling Complex NavBar JSON" should "result in a Complex NavBar Object" in {
+    val json =
+      """{
+        "title":   "商品管理",
+        "link":    "#",
+        "alter":   "",
+        "subs" : [
+                  {
+                    "title":  "计划商品",
+                    "link":   "#productsPlan",
+                    "alter":  ""
+                  },
+                  {
+                    "title":  "上架商品",
+                    "link":   "#",
+                    "alter":  ""
+                  },
+                  {
+                    "title":  "历史商品",
+                    "link":   "#",
+                    "alter":  ""
+                  },
+                  {
+                    "title":  "divider",
+                    "link":   "",
+                    "alter":  ""
+                  },
+                  {
+                    "title":  "添加商品",
+                    "link":   "#productEdit",
+                    "alter":  ""
+                  }
+               ]
+      }"""
+    val objAST = json.asJson
+
+    info("NavBarAST: " + objAST.asJsObject)
+    val obj: NavBar = objAST.convertTo[NavBar]
+    info("NavBar Object: " + obj.toJson)
+    assert(obj.toJson === objAST)
+  }
   
   "Marshalling Cart JSON" should "result in an Cart Object" in {
     val jsonCart = """{

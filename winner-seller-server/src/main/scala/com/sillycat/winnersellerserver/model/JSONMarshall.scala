@@ -1,23 +1,23 @@
 package com.sillycat.winnersellerserver.model
 
 import spray.httpx.SprayJsonSupport
-import spray.json.DefaultJsonProtocol
-import spray.json.DeserializationException
-import spray.json.JsNumber
-import spray.json.JsObject
-import spray.json.JsString
-import spray.json.JsValue
-import spray.json.RootJsonFormat
+import spray.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
-import spray.json.JsArray
-import spray.json._
 import DefaultJsonProtocol._
-
+import com.sillycat.winnersellerserver.model.User
+import com.sillycat.winnersellerserver.model.NavBar
+import com.sillycat.winnersellerserver.model.Cart
+import com.sillycat.winnersellerserver.model.Product
+import scala.Some
 
 
 class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
+
   private val dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+
+  private val emptyJSMap = Map[String, JsValue]()
+
   implicit object UserJsonFormat extends RootJsonFormat[User] {
     def write(user: User) = JsObject(
       Map(  
@@ -28,7 +28,7 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
       "createDate" -> JsString(dateTimeFormat.print(new DateTime(user.createDate))),
       "expirationDate" -> JsString(dateTimeFormat.print(new DateTime(user.expirationDate)))
       ) ++ 
-      user.id.map( i => Map("id" -> JsNumber(i))).getOrElse(Map[String, JsValue]()) 
+      user.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
     )
     def read(jsUser: JsValue) = {
       jsUser.asJsObject.getFields("id", "userName", "age", "userType", "createDate", "expirationDate", "password") match {
@@ -47,7 +47,11 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
 }
 
 object ProductJsonProtocol extends DefaultJsonProtocol {
+
   private val dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+
+  private val emptyJSMap = Map[String, JsValue]()
+
   implicit object ProductJsonFormat extends RootJsonFormat[Product] {
     def write(product: Product) = JsObject(
       Map(
@@ -57,7 +61,7 @@ object ProductJsonProtocol extends DefaultJsonProtocol {
       "expirationDate" -> JsString(dateTimeFormat.print(new DateTime(product.expirationDate))),
       "productCode" -> JsString(product.productCode)
       ) ++
-      product.id.map( i => Map("id" -> JsNumber(i))).getOrElse(Map[String, JsValue]()) 
+      product.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
       )
     def read(jsProduct: JsValue) = {
       jsProduct.asJsObject.getFields("id", "productName", "productDesn", "createDate", "expirationDate", "productCode") match {
@@ -76,6 +80,8 @@ object ProductJsonProtocol extends DefaultJsonProtocol {
 }
 
 object CartJsonProtocol extends DefaultJsonProtocol {
+
+  private val emptyJSMap = Map[String, JsValue]()
   
   implicit object CartJsonFormat extends RootJsonFormat[Cart] {
     implicit val userFormatter = (new UserJsonProtocol(1)).UserJsonFormat
@@ -87,7 +93,7 @@ object CartJsonProtocol extends DefaultJsonProtocol {
       "user"     -> cart.user.toJson,
       "products" -> cart.products.toJson
       ) ++
-      cart.id.map( i => Map("id" -> JsNumber(i))).getOrElse(Map[String, JsValue]())
+      cart.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
     )
     def read(jsCart: JsValue) = {
     	val params: Map[String, JsValue] = jsCart.asJsObject.fields
@@ -103,13 +109,23 @@ object CartJsonProtocol extends DefaultJsonProtocol {
 }
 
 object NavBarProtocol extends DefaultJsonProtocol {
+
+  private val emptyJSMap = Map[String, JsValue]()
+
   implicit object NavBarJsonFormat extends RootJsonFormat[NavBar]{
      def write(nav : NavBar) = JsObject(
       Map(
         "title" -> JsString(nav.title),
         "link"  -> JsString(nav.link),
         "alter" -> JsString(nav.alter)
-      )
+      ) ++
+      nav.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
+      ++
+      nav.parentId.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
+      ++
+      nav.parent.map( i => Map("parent" -> i.toJson)).getOrElse(emptyJSMap)
+      ++
+      nav.subs.map( i => Map("subs" -> i.toJson)).getOrElse(emptyJSMap)
      )
      def read(jsNav: JsValue) = {
        val params: Map[String, JsValue] = jsNav.asJsObject.fields
@@ -118,9 +134,9 @@ object NavBarProtocol extends DefaultJsonProtocol {
           params("title").convertTo[String],
           params("link").convertTo[String],
           params("alter").convertTo[String],
-          None,
-          None,
-          None
+          params.get("parentId").map(_.convertTo[Long]),
+          params.get("subs").map(_.convertTo[List[NavBar]]),
+          params.get("parent").map(_.convertTo[NavBar])
        )
      }
   }
