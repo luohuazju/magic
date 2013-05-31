@@ -23,10 +23,10 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
 
   test("Persist NavBar"){
     dao.db withSession {
-      val item1 = NavBar(None,"title1", "link1", "", 0, None, None)
-      val item2 = NavBar(None,"title2", "link2", "", 0, None, None)
-      val sub1_1 = NavBar(None, "sub1_1", "link1_1", "", 1, None, None)
-      val sub1_2 = NavBar(None, "sub1_2", "link1_2", "", 1, None, None)
+      val item1 = NavBar(None,"title1", "link1", "", Some(0), None, None)
+      val item2 = NavBar(None,"title2", "link2", "", Some(0), None, None)
+      val sub1_1 = NavBar(None, "sub1_1", "link1_1", "", Some(1), None, None)
+      val sub1_2 = NavBar(None, "sub1_2", "link1_2", "", Some(1), None, None)
 
       val id1 = dao.NavBars.insert(item1)
       assert(id1 === 1)

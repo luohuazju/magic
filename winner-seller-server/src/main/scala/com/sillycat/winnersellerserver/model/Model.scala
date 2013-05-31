@@ -5,7 +5,7 @@ import scala.slick.direct.AnnotationMapper.column
 import com.sillycat.winnersellerserver.dao.Profile
 import scala.slick.util.Logging
 
-case class NavBar(id: Option[Long], title: String, link: String, alter: String, parentId: Long, subs: Option[List[NavBar]] , parent: Option[NavBar])
+case class NavBar(id: Option[Long], title: String, link: String, alter: String, parentId: Option[Long], subs: Option[List[NavBar]] , parent: Option[NavBar])
 
 case class Cart(id: Option[Long], cartName: String, cartType: CartType.Value, user: User, products: Seq[Product])
 

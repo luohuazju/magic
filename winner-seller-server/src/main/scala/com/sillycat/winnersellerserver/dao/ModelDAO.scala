@@ -42,11 +42,11 @@ trait NavBarDAO extends Logging { this: Profile =>
     def alter = column[String]("NAVBAR_ALTER") //4
     def parentId = column[Long]("PARENT_ID") //5
 
-    def * = id.? ~ title ~ link ~ alter ~ parentId <>
+    def * = id.? ~ title ~ link ~ alter ~ parentId.? <>
       ({ t => NavBar(t._1, t._2, t._3, t._4, t._5, None, None) },
         { (s: NavBar) => Some(s.id ,s.title, s.link, s.alter, s.parentId) })
 
-    def forInsert = title ~ link ~ alter ~ parentId <>
+    def forInsert = title ~ link ~ alter ~ parentId.? <>
       ({ t => NavBar(None, t._1, t._2, t._3, t._4, None, None) },
         { (s: NavBar) => Some(s.title, s.link, s.alter, s.parentId) })
 
@@ -57,7 +57,7 @@ trait NavBarDAO extends Logging { this: Profile =>
 
     def all()(implicit session: Session): List[NavBar] = {
       val s1 = Query(NavBars).list
-      val s2 = s1.filter(_.parentId == 0l)   //filter to get the root NavBars
+      val s2 = s1.filter(_.parentId.getOrElse(-1) == 0)   //filter to get the root NavBars
 
       def placeSubandParent(item: NavBar, all :List[NavBar]) : NavBar = {
        val nav = NavBar(
@@ -66,8 +66,8 @@ trait NavBarDAO extends Logging { this: Profile =>
             item.link,
             item.alter,
             item.parentId,
-            Option(all.filter(_.parentId == item.id.getOrElse(0))),
-            all.filter(_.id.getOrElse(0) == item.parentId).headOption
+            Option(all.filter(_.parentId.getOrElse(-1) == item.id.getOrElse(0))),
+            all.filter(_.id.getOrElse(0) == item.parentId.getOrElse(-1)).headOption
        )
        nav
       }

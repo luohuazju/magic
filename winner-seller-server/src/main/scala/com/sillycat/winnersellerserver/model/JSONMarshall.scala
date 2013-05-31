@@ -78,8 +78,8 @@ object ProductJsonProtocol extends DefaultJsonProtocol {
 object CartJsonProtocol extends DefaultJsonProtocol {
   
   implicit object CartJsonFormat extends RootJsonFormat[Cart] {
-  implicit val userFormatter = (new UserJsonProtocol(1)).UserJsonFormat
-  implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
+    implicit val userFormatter = (new UserJsonProtocol(1)).UserJsonFormat
+    implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
     def write(cart: Cart) = JsObject(
       Map(
       "cartName" -> JsString(cart.cartName),
@@ -99,5 +99,28 @@ object CartJsonProtocol extends DefaultJsonProtocol {
     	    params("products").convertTo[Seq[Product]]
     	)
     }
+  }
+}
+
+object NavBarProtocol extends DefaultJsonProtocol {
+  implicit object CartJsonFormat extends RootJsonFormat[NavBar]{
+     def write(nav : NavBar) = JsObject(
+      Map(
+        "title" -> JsString(nav.title),
+        "link"  -> JsString(nav.link)
+      )
+     )
+     def read(jsNav: JsValue) = {
+       val params: Map[String, JsValue] = jsNav.asJsObject.fields
+       NavBar(
+          params.get("id").map(_.convertTo[Long]),
+          params("title").convertTo[String],
+          params("link").convertTo[String],
+          params("alter").convertTo[String],
+          Some(0),
+          None,
+          None
+       )
+     }
   }
 }
