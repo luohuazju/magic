@@ -21,6 +21,17 @@ define([
   
     initialize: function(){
        window.logger.debug("init the router, and make backbone start.");
+       $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+              // Modify options, control originalOptions, store jqXHR, etc
+              //options.url = 'http://localhost:9000/data' + options.url + ".JSON";
+              //options.dataType = 'json';
+
+              //jqXHR.setRequestHeader("Authorization",
+              //"Basic " + encodeBase64("customer:customer")
+              //"Basic Y3VzdG9tZXI6Y3VzdG9tZXI="
+              //);
+              //options.url = 'http://localhost:9002/v1/sillycat' + options.url;
+       });
        Backbone.history.start();
     },
     

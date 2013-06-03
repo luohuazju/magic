@@ -15,6 +15,10 @@ import spray.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
 import scala.Some
+import spray.http._
+import spray.http.MediaTypes._
+import scala.Some
+import shapeless.::
 
 class URLRouterActor extends Actor with URLRouterService {
   def actorRefFactory = context
@@ -37,18 +41,23 @@ trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
 
   def route = {
     pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
-      authenticate(customerOnly) { user =>
+      //authenticate(customerOnly) { user =>
         path("navbars") {
-          get {
-            logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
-            complete {
-              dao.db.withSession {
-                DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
-              }
-            }
+          //respondWithMediaType(`application/json`) {
+          //  get {
+                jsonpWithParameter("callback") {
+                  logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
+                  //complete(HttpBody(`application/json`,"""{ "key" : "value" }"""))
+                  complete(HttpBody(`application/json`,
+                    dao.db.withSession {
+                      DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
+                    }
+                  ))
+          //    }
+          //  }
           }
         }
-      }
+      //}
     }
   }
 

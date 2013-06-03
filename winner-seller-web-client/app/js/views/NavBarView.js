@@ -22,9 +22,7 @@ define([
       navBars.fetch({
          data: {},
          type: 'GET',
-         //dataType: 'json',
-         //jsonp: 'jsoncallback',
-         //contentType: 'application/json',
+         //dataType: 'jsonp',
          success: function(data, response, options) {
              window.logger.debug("NavBarView data = " + data);
              var compiledTemplate = _.template( htmlTemplate, { items : data } );

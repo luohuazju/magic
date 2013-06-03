@@ -8,7 +8,7 @@
        "title":   "商品管理",
        "link":    "#",
        "alter":   "",
-       "subNavBars" : [
+       "subs" : [
           {
             "title":  "计划商品",
             "link":   "#productsPlan",
