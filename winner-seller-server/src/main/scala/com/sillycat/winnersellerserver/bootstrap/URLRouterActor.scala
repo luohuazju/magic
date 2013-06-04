@@ -26,20 +26,20 @@ import spray.util.LoggingContext
 import spray.http.StatusCodes._
 import spray.httpx.SprayJsonSupport._
 import shapeless._
-
 import spray.routing.authentication._
-
 import java.io.File
 import org.parboiled.common.FileUtils
 import java.io.BufferedInputStream
 import java.io.FileInputStream
+import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
+import com.typesafe.scalalogging.slf4j.Logging
 
 class URLRouterActor extends Actor with URLRouterService {
   def actorRefFactory = context
   def receive = runRoute(route)
 }
 
-trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
+trait URLRouterService extends HttpService with Logging {
   import BaseDAO.threadLocalSession
 
   implicit val timeout = Timeout(30 * 1000)
@@ -52,10 +52,13 @@ trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
     }
 
   implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
+  
+  implicit val dao: BaseDAO = BaseDAO.apply("app")
 
   def route = {
     pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
       //authenticate(customerOnly) { user =>
+      authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
         path("navbars") {
           //respondWithMediaType(`application/json`) {
           //  get {
@@ -77,7 +80,7 @@ trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
           bis.close();
           complete(HttpBody(`image/gif`, bArray ))
         }
-      //}
+      }
     }
   }
 
