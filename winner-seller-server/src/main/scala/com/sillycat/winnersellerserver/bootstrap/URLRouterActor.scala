@@ -19,6 +19,20 @@ import spray.http._
 import spray.http.MediaTypes._
 import scala.Some
 import shapeless.::
+import akka.actor.{ Props, Actor }
+import spray.routing._
+import spray.routing.directives._
+import spray.util.LoggingContext
+import spray.http.StatusCodes._
+import spray.httpx.SprayJsonSupport._
+import shapeless._
+
+import spray.routing.authentication._
+
+import java.io.File
+import org.parboiled.common.FileUtils
+import java.io.BufferedInputStream
+import java.io.FileInputStream
 
 class URLRouterActor extends Actor with URLRouterService {
   def actorRefFactory = context
@@ -46,16 +60,22 @@ trait URLRouterService extends HttpService with UsersAuthenticationDirectives {
           //respondWithMediaType(`application/json`) {
           //  get {
                 jsonpWithParameter("callback") {
-                  logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                   //complete(HttpBody(`application/json`,"""{ "key" : "value" }"""))
                   complete(HttpBody(`application/json`,
                     dao.db.withSession {
+                      logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                       DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
                     }
                   ))
           //    }
           //  }
           }
+        } ~
+        path("gif1x1"){
+          val bis = new BufferedInputStream(new FileInputStream("/var/tmp/1x1t.gif"))
+          val bArray = Stream.continually(bis.read).takeWhile(-1 !=).map(_.toByte).toArray
+          bis.close();
+          complete(HttpBody(`image/gif`, bArray ))
         }
       //}
     }

@@ -22,7 +22,10 @@ define([
       navBars.fetch({
          data: {},
          type: 'GET',
-         //dataType: 'jsonp',
+         //beforeSend: function (xhr) {
+         //    xhr.setRequestHeader("Authorization", "Basic Y3VzdG9tZXI6Y3VzdG9tZXI=");
+         //    xhr.withCredentials = true;
+         //},
          success: function(data, response, options) {
              window.logger.debug("NavBarView data = " + data);
              var compiledTemplate = _.template( htmlTemplate, { items : data } );

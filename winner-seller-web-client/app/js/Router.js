@@ -30,6 +30,7 @@ define([
               //"Basic " + encodeBase64("customer:customer")
               //"Basic Y3VzdG9tZXI6Y3VzdG9tZXI="
               //);
+              //jqXHR.withCredentials = true;
               //options.url = 'http://localhost:9002/v1/sillycat' + options.url;
        });
        Backbone.history.start();
