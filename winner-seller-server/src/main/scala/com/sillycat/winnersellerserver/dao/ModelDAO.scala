@@ -9,6 +9,8 @@ import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.NavBar
+import scala.slick.jdbc.{GetResult, StaticQuery}
+import com.sillycat.winnersellerserver.util.JodaTimestampMapper
 
 //case class NavBar(id: Option[Long], title: String, link: String, alter: String, subs: Seq[NavBar] , parent: NavBar)
 trait NavBarDAO extends Logging { this: Profile =>
@@ -147,12 +149,26 @@ trait ProductDAO extends Logging { this: Profile =>
 
     def * = id.? ~ productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <> (Product.apply _, Product.unapply _)
 
+    implicit val getProductResult =
+      GetResult(
+        r => new Product(
+          id = r.nextLongOption,
+          productName = r.nextString(),
+          productDesn = r.nextString,
+          createDate = JodaTimestampMapper.comap(r.nextTimestamp),
+          expirationDate = JodaTimestampMapper.comap(r.nextTimestamp),
+          productCode = r.nextString
+        )
+      )
+
     def forInsert = productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <>
       ({ t => Product(None, t._1, t._2, t._3, t._4, t._5) },
         { (s: Product) => Some(s.productName, s.productDesn, s.createDate, s.expirationDate, s.productCode) })
 
-    def insert(s: Product)(implicit session: Session): Long = {
-      Products.forInsert returning id insert s
+    def insert(s: Product)(implicit session: Session): Product = {
+      val returnId = Products.forInsert returning id insert s
+      logger.info("I got the returnId as " + returnId)
+      byId(returnId)
     }
 
     def forProductCode(productCode: String)(implicit session: Session): Option[Product] = {
@@ -162,8 +178,39 @@ trait ProductDAO extends Logging { this: Profile =>
       query.firstOption
     }
     
-    def all()(implicit session: Session): Seq[Product] = {
+    def all()(implicit session: Session): List[Product] = {
       Query(Products).list
+    }
+
+    def byId(id: Long)(implicit session: Session): Product = {
+      val product: Option[Product] = exits(id)
+      require(
+        product match {
+          case Some(_) => true
+          case None => false
+        },
+        "No product with this id, id = " + id
+      )
+
+      product.get
+    }
+
+    def exits(id: Long)(implicit session: Session): Option[Product] = {
+      val get = StaticQuery[(Long), Product] +
+        """
+          |select
+          | ID,
+          | PRODUCT_NAME,
+          | PRODUCT_DESN,
+          | CREATE_DATE,
+          | EXPIRATION_DATE,
+          | PRODUCT_CODE
+          |from
+          | PRODUCT
+          |where
+          | ID = ?
+        """.stripMargin
+      get(id).firstOption
     }
 
     def create(implicit session: Session) = {

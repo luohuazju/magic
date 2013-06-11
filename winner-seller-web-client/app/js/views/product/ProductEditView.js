@@ -13,6 +13,26 @@ define([
 
 	},
 
+	events: {
+        'submit #saveProduct': 'saveProduct'
+    },
+
+    saveProduct: function(ev){
+        window.logger.debug("I am about to saving product.");
+        var locationDetail = $(ev.currentTarget).serializeObject();
+
+        var location = new Location();
+        location.save(locationDetail, {
+              success: function (location) {
+            	Backbone.history.navigate('locations', {trigger:true});
+              },
+              error: function(e){
+            	console.log("Failed to save on single location" + e);
+              }
+        });
+        return false;
+    },
+
     render: function(type){
       window.logger.debug("I am going to hit the Products Template Page with type = " + type);
       var data = {

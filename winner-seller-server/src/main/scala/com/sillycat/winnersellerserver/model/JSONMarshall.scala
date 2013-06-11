@@ -1,11 +1,11 @@
 package com.sillycat.winnersellerserver.model
 
-import spray.json._
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
 import scala.Some
-import com.sun.tools.internal.xjc.model.CNonElement
 import com.typesafe.scalalogging.slf4j.Logging
+import spray.httpx.SprayJsonSupport
+import spray.json._
 
 
 class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
@@ -42,7 +42,7 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
   }
 }
 
-object ProductJsonProtocol extends DefaultJsonProtocol {
+object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
 
   private val dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
 

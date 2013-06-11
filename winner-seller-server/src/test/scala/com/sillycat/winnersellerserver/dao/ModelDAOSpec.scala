@@ -56,8 +56,8 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
     dao.db withSession {
       val item = Product(None, "Iphone5", "Nice device", DateTime.now, DateTime.now, "IPHONE5")
       info(item.toString)
-      val id = dao.Products.insert(item)
-      assert(id === 1)
+      val response = dao.Products.insert(item)
+      assert(response.id.getOrElse(-1) === 1)
       
       dao.Products.insert(new Product(None, "IPhone4S", "Also good", DateTime.now, DateTime.now, "IPHONE4S"))
     }
@@ -68,6 +68,14 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       val item = dao.Products.forProductCode("IPHONE5").get
       info(item.toString())
       assert(item.productCode === "IPHONE5")
+    }
+  }
+
+  test("Fetch Product by Id"){
+    dao.db withSession {
+      val item = dao.Products.byId(1)
+      info(item.toString)
+      assert(item.id.get === 1)
     }
   }
   
