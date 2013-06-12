@@ -20,13 +20,9 @@ define([
     },
   
     initialize: function(){
-       window.logger.debug("init the router, and make backbone start.");
+       //window.logger.debug("init the router, and make backbone start.");
        $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-              // Modify options, control originalOptions, store jqXHR, etc
-              //options.url = 'http://localhost:9000/data' + options.url + ".JSON";
-              //options.dataType = 'json';
 
-              //options.url = 'http://localhost:9002/v1/sillycat' + options.url;
        });
        Backbone.history.start();
     },

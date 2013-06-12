@@ -13,17 +13,17 @@ define([
 	},
     
     render: function(){
-      window.logger.debug("I am going to hit the Nav Bar Template Page.");
+      //window.logger.debug("I am going to hit the Nav Bar Template Page.");
       var widget = this;
 
-      var navBars = new NavBarsModel();
+      var models = new NavBarsModel();
 
-      window.logger.debug(" navBars url = " + navBars.url);
-      navBars.fetch({
+      //window.logger.debug(" navBars url = " + models.url);
+      models.fetch({
          data: {},
          type: 'GET',
          success: function(data, response, options) {
-             window.logger.debug("NavBarView data = " + data);
+             window.logger.debug("response data = " + data);
              var compiledTemplate = _.template( htmlTemplate, { items : data } );
              $("#navBar").html(compiledTemplate);
          },
@@ -32,7 +32,7 @@ define([
             window.logger.error(jqXHR + " " + textStatus + " " + errorThrown);
          },
          complete: function(xhr, textStatus) {
-            window.logger.debug(textStatus);
+            //window.logger.debug(textStatus);
          }
       });
     }

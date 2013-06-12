@@ -1,6 +1,7 @@
 package com.sillycat.winnersellerserver.util
 
 import org.joda.time.format.DateTimeFormat
+import com.sillycat.winnersellerserver.CrossDomainHeaders.{`Access-Control-Allow-Headers`, `Access-Control-Allow-Origin`}
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,5 +12,6 @@ import org.joda.time.format.DateTimeFormat
  */
 object SillycatConstant {
   val DATE_TIME_FORMAT_1 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+
 
 }

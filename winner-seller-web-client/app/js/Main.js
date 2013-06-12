@@ -45,7 +45,7 @@ require([
 	router: null,
 	
 	initialize: function(){
-		window.logger.debug("initialize the IndexPageView and whole system.", "Good Luck.");
+		//window.logger.debug("initialize the IndexPageView and whole system.", "Good Luck.");
 		window.logger.info("Config Start==================================");
 		var config = new Config();
 		for (var c in config) if (config.hasOwnProperty(c)) {

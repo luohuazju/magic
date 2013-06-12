@@ -25,8 +25,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="error">
-            <td>小海马</td>
+        <% items.each( function(item){ %>
+        <tr>  <!-- class, error success info -->
+            <td><%= item.get('productName') %></td>
             <td>$16.00</td>
             <td>￥200.00</td>
             <td>￥300.00</td>
@@ -35,26 +36,7 @@
             <td><a href="http://www.amazon.com">亚马逊</a></td>
             <td>+2.75%</td>
         </tr>
-        <tr>
-            <td>小海马</td>
-            <td>$16.00</td>
-            <td>￥200.00</td>
-            <td>￥300.00</td>
-            <td>1 pound</td>
-            <td>￥100.00</td>
-            <td><a href="http://www.amazon.com">亚马逊</a></td>
-            <td>+2.75%</td>
-        </tr>
-        <tr class="success">
-            <td>小海马</td>
-            <td>$16.00</td>
-            <td>￥200.00</td>
-            <td>￥300.00</td>
-            <td>1 pound</td>
-            <td>￥100.00</td>
-            <td><a href="http://www.amazon.com">亚马逊</a></td>
-            <td>-2.75%</td>
-        </tr>
+        <% }); %>
         </tbody>
 </table>
 <div class="pagination agination-small pagination-right">
