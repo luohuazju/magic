@@ -1,7 +1,7 @@
 package com.sillycat.winnersellerserver.dao
 
 import scala.slick.driver.ExtendedProfile
-import com.sillycat.winnersellerserver.util.JodaDateTimeMapper
+//import com.sillycat.winnersellerserver.util.JodaDateTimeMapper
 import com.sillycat.winnersellerserver.util.UserTypeMapper
 import com.sillycat.winnersellerserver.util.JodaTimestampMapper
 

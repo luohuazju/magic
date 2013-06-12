@@ -59,7 +59,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       val response = dao.Products.insert(item)
       assert(response.id.getOrElse(-1) === 1)
       
-      dao.Products.insert(new Product(None, "IPhone4S", "Also good", DateTime.now, DateTime.now, "IPHONE4S"))
+      dao.Products.insert(Product(None, "IPhone4S", "Also good", DateTime.now, DateTime.now, "IPHONE4S"))
     }
   }
   
@@ -76,6 +76,29 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       val item = dao.Products.byId(1)
       info(item.toString)
       assert(item.id.get === 1)
+    }
+  }
+
+  test("Update Product"){
+    dao.db withSession {
+      val item = dao.Products.byId(1)
+      //info(item.toString)
+      assert(item.id.get === 1)
+      assert(item.productName === "Iphone5")
+      dao.Products.update(item.copy(productName="NiceIphone5"))
+      val item2 = dao.Products.byId(1)
+      info(item2.toString)
+      assert(item2.id.get === 1)
+      assert(item2.productName === "NiceIphone5")
+    }
+  }
+
+  test("Delete Product"){
+    dao.db withSession {
+      val item = dao.Products.insert(Product(None, "IPhone4S_toDelete", "Also good", DateTime.now, DateTime.now, "IPHONE4S_DELETE_TEST"))
+      assert(!item.id.isEmpty)
+      val result = dao.Products.deleteById(item.id.get)
+      info("deleting result is " + result)
     }
   }
   
@@ -96,6 +119,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       assert(item.get.userName === "sillycat")
     }
   }
+
   
   test("Persist Cart"){
     dao.db withSession {

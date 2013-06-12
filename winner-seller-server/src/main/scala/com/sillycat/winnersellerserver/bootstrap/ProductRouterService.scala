@@ -28,7 +28,6 @@ trait ProductRouterService extends BaseRouterService {
 
         path("products") {
           get {
-            //fetch list
             complete(HttpBody(`application/json`,
               dao.db.withSession {
                 logger.debug("Hitting to fetch products with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
@@ -51,7 +50,7 @@ trait ProductRouterService extends BaseRouterService {
                 complete {
                   dao.db withSession {
                     logger.debug("Hitting to update product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
-                    ???
+                    dao.Products.update(item)
                   }
                 }
               }
@@ -61,6 +60,7 @@ trait ProductRouterService extends BaseRouterService {
           get {
             complete {
               dao.db withSession {
+                logger.debug("Hitting to getById product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                 dao.Products.byId(id)
               }
             }
@@ -68,8 +68,8 @@ trait ProductRouterService extends BaseRouterService {
           delete {
             complete {
               dao.db withSession {
-                //TODO call delete api here
-                ???
+                logger.debug("Hitting to deleteById product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
+                dao.Products.deleteById(id) + ""
               }
             }
           }

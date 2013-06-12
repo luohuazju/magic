@@ -9,8 +9,16 @@ import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.NavBar
-import scala.slick.jdbc.{GetResult, StaticQuery}
+import scala.slick.jdbc.{SetParameter, GetResult, StaticQuery}
 import com.sillycat.winnersellerserver.util.JodaTimestampMapper
+import com.sillycat.winnersellerserver.util.SillycatConstant
+import scala.slick.session.PositionedParameters
+import java.sql.Timestamp
+import org.joda.time.DateTime
+import scala.slick.util.Logging
+import org.joda.time.format.DateTimeFormat
+import scala.slick.session.PositionedParameters
+import java.sql.{ Date, Timestamp }
 
 //case class NavBar(id: Option[Long], title: String, link: String, alter: String, subs: Seq[NavBar] , parent: NavBar)
 trait NavBarDAO extends Logging { this: Profile =>
@@ -139,6 +147,8 @@ trait UserDAO extends Logging { this: Profile =>
 trait ProductDAO extends Logging { this: Profile =>
   import profile.simple._
 
+  implicit object SetDateTime extends SetParameter[DateTime] { def apply(v: DateTime, pp: PositionedParameters) { pp.setTimestamp(new Timestamp(v.getMillis)) } }
+
   object Products extends Table[Product]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
@@ -161,15 +171,40 @@ trait ProductDAO extends Logging { this: Profile =>
         )
       )
 
+    def update(item: Product)(implicit session: Session): Product = {
+      session.withTransaction {
+
+        (StaticQuery.u +
+          "update PRODUCT set" +
+          "  PRODUCT_NAME = " +? item.productName +
+          ", PRODUCT_DESN = " +? item.productDesn +
+          ", CREATE_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.createDate) +
+          ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate) +
+          ", PRODUCT_CODE = " +? item.productCode +
+          " where id = " +? item.id
+          ).execute
+
+        byId(item.id.get)
+      }
+    }
+
+    def deleteById(id: Long)(implicit session: Session): Int = {
+        val query = for {
+          item <- Products if item.id === id
+        } yield item
+        query.delete
+    }
+
     def forInsert = productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <>
       ({ t => Product(None, t._1, t._2, t._3, t._4, t._5) },
         { (s: Product) => Some(s.productName, s.productDesn, s.createDate, s.expirationDate, s.productCode) })
 
-    def insert(s: Product)(implicit session: Session): Product = {
-      val returnId = Products.forInsert returning id insert s
+    def insert(item: Product)(implicit session: Session): Product = {
+      val returnId = Products.forInsert returning id insert item
       logger.info("I got the returnId as " + returnId)
       byId(returnId)
     }
+
 
     def forProductCode(productCode: String)(implicit session: Session): Option[Product] = {
       val query = for {
@@ -191,7 +226,6 @@ trait ProductDAO extends Logging { this: Profile =>
         },
         "No product with this id, id = " + id
       )
-
       product.get
     }
 
