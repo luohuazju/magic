@@ -31,17 +31,29 @@ define([
 	},
 
 	events: {
-        'submit #editForm': 'saveProduct'
+        'submit #editForm': 'saveProduct',
+        'click #delete': 'deleteProduct'
+    },
+
+    deleteProduct: function(ev){
+       var itemDetail = $(ev.currentTarget).serializeObject();
+
+       this.item.destroy({
+          success: function(){
+              window.logger.debug("delete product hitting.");
+              Backbone.history.navigate('products/productplan', {trigger:true});
+          }
+       });
     },
 
     saveProduct: function(ev){
         window.logger.debug("I am about to saving product.");
         var itemDetail = $(ev.currentTarget).serializeObject();
 
-        var item = new ProductModel();
+        var newItem = new ProductModel();
 
 
-        item.save(itemDetail, {
+        newItem.save(itemDetail, {
               success: function (data) {
                 console.log("success to get the data back = " + data);
             	Backbone.history.navigate('products/productplan', {trigger:true});

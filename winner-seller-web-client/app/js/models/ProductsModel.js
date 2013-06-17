@@ -13,8 +13,6 @@ define([
         sync: function(method, model, options){
            options.timeout = 10000;
 
-           console.log("I am here")
-
            var config = new Config(); //loading configuration
            //json mock
            if(config.productsProvider == 'mock'){

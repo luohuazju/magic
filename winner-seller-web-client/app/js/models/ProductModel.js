@@ -13,7 +13,7 @@ define([
            options.timeout = 10000;
            var config = new Config();
 
-              window.logger.info("method = " + method + " model = " + model.id);
+              window.logger.info("method = " + method);
 
 
               options.xhrFields = { withCredentials: true };
