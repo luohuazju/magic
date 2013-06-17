@@ -40,37 +40,11 @@ define([
 
         var item = new ProductModel();
 
-//        Backbone.ajax({
-//            xhrFields: {
-//               withCredentials: true
-//            },
-//            url: "http://localhost/v1/sillycat/products",
-//            type: 'POST',
-//            contentType: 'application/json; charset=utf-8',
-//            data: '{"productName" : "iphone 6","productDesn" : "A good mobile device.","createDate" : "2012-05-22 13:33","expirationDate" : "2012-05-22 14:33","productCode" : "IPHONE5"}',
-//            dataType: 'json',
-//            beforeSend: function(xhr){
-//                xhr.setRequestHeader("Authorization","Basic Y3VzdG9tZXI6Y3VzdG9tZXI=");
-//            },
-//            success: function(responseData, textStatus, jqXHR) {
-//               var value = responseData;
-//                alert(value);
-//            },
-//            error: function (responseData, textStatus, errorThrown) {
-//                    alert('POST failed.' + textStatus);
-//            }
-//        });
-
-//         item.productName="iphone 100";
-//         item.productDesn="A good mobile device.";
-//         item.createDate="2012-05-22 13:33";
-//         item.expirationDate="2012-05-22 14:33";
-//         item.productCode="IPHONE5";
 
         item.save(itemDetail, {
               success: function (data) {
                 console.log("success to get the data back = " + data);
-            	Backbone.history.navigate('productsPlan', {trigger:true});
+            	Backbone.history.navigate('products/productplan', {trigger:true});
               },
               error: function(e){
             	console.log("Failed to save on product" + e);
@@ -80,14 +54,24 @@ define([
         return false;
     },
 
-    render: function(type){
-      window.logger.debug("I am going to hit the Products Template Page with type = " + type);
-      var data = {
-  			content: {},
-  			_: _
-  	  };
-      var compiledTemplate = _.template( htmlTemplate, data );
-  	  $(this.el).html( compiledTemplate );
+    render: function(productId){
+      var that = this;
+      if(productId){
+        that.item = new ProductModel({id: productId});
+        that.item.fetch({
+           success: function(data){
+              window.logger.debug("I am getting data=" + data.id);
+              var compiledTemplate = _.template( htmlTemplate, {item:data} );
+              $("#content").html( compiledTemplate );
+           },
+           error: function(e){
+                console.log("Failed to fetch the product" + e);
+           }
+        });
+      }else{
+        var compiledTemplate = _.template( htmlTemplate, {item:null} );
+  	    $(this.el).html( compiledTemplate );
+      }
     }
 
   });

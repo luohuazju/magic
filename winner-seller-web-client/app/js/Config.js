@@ -9,7 +9,7 @@ define([
 		this.mockServerPort = 9000;                //mock server port
 
 		this.remoteServerURL = 'localhost'; //remote server URL
-		this.remoteServerPort = 80;              //remote server port
+		this.remoteServerPort = 9002;              //remote server port
 
 		this.apiVersion = 'v1'
         this.brandName = 'sillycat'

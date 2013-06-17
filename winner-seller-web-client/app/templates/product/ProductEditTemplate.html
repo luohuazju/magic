@@ -2,10 +2,9 @@
     <h1>&nbsp;</h1>
 </div>
 
-<h1 align="left">添加商品</h1>
+<h1 align="left"><%= item ? '修改' : '添加' %>商品</h1>
 
 <form class="form-horizontal" id="editForm">
-    <input type="hidden" name="productName" value="asdf">
     <input type="hidden" name="productDesn" value="dsf">
     <input type="hidden" name="createDate" value="2012-05-22 13:33">
     <input type="hidden" name="expirationDate" value="2012-05-22 13:33">
@@ -15,7 +14,7 @@
     <div class="control-group">
         <label class="control-label" for="inputWarning">商品名称</label>
         <div class="controls">
-            <input type="text" id="inputWarning">
+            <input type="text" id="inputWarning" name="productName" value="<%= item ? item.get('productName') : '' %>">
             <span class="help-inline"></span>
         </div>
     </div>
