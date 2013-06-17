@@ -5,9 +5,7 @@
 <h1 align="left"><%= item ? '修改' : '添加' %>商品</h1>
 
 <form class="form-horizontal" id="editForm">
-    <% if(item) { %>
-    <input type="hidden" name="id" value="<%= item.get('id') %>">
-    <% } %>
+
     <input type="hidden" name="productDesn" value="dsf">
     <input type="hidden" name="createDate" value="2012-05-22 13:33">
     <input type="hidden" name="expirationDate" value="2012-05-22 13:33">

@@ -51,15 +51,27 @@ define([
 
         var newItem = new ProductModel();
 
-        newItem.save(itemDetail, {
-              success: function (data) {
-                console.log("success to get the data back = " + data);
-            	Backbone.history.navigate('products/productplan', {trigger:true});
-              },
-              error: function(e){
-            	console.log("Failed to save on product" + e);
-              }
-        });
+        if(this.item){
+          this.item.save(itemDetail,{
+            success: function (data) {
+              console.log("success to get the data back = " + data);
+              Backbone.history.navigate('products/productplan', {trigger:true});
+            },
+            error: function(e){
+              console.log("Failed to save on product" + e);
+            }
+          });
+        }else{
+          newItem.save(itemDetail, {
+            success: function (data) {
+              console.log("success to get the data back = " + data);
+            Backbone.history.navigate('products/productplan', {trigger:true});
+            },
+            error: function(e){
+            console.log("Failed to save on product" + e);
+            }
+          });
+        }
 
         return false;
     },

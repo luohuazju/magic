@@ -44,7 +44,7 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
 
       respondWithHeaders(preflightHeaders: _*) {
 
-        authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+        //authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
             path("products") {
               get {
                 complete(
@@ -104,7 +104,7 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
               }
             //}
           }
-        }
+        //}
       }
     }
   }

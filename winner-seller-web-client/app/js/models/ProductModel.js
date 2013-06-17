@@ -24,6 +24,14 @@ define([
               if((method == 'read' || method == 'delete') && model.id){
                 url_str = url_str + '/' + model.id;
               }
+
+              if(method == 'update'){
+                options.beforeSend = function (jqXHR, settings) {
+                      jqXHR.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
+                      return true;
+                }
+              }
+
               options.url = url_str;
 
            return Backbone.sync(method, model, options);
