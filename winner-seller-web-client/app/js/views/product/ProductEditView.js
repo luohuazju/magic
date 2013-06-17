@@ -36,39 +36,41 @@ define([
     },
 
     deleteProduct: function(ev){
-
        this.item.destroy({
           success: function(){
               window.logger.debug("delete product hitting.");
               Backbone.history.navigate('products/productplan', {trigger:true});
           }
        });
+       this.item = null;
     },
 
     saveProduct: function(ev){
-        window.logger.debug("I am about to saving product.");
+        //window.logger.debug("I am about to saving product.");
         var itemDetail = $(ev.currentTarget).serializeObject();
 
         var newItem = new ProductModel();
 
         if(this.item){
+          window.logger.info("I am going to update the item.");
           this.item.save(itemDetail,{
             success: function (data) {
-              console.log("success to get the data back = " + data);
+              //window.logger.debug("success to get the data back = " + data);
               Backbone.history.navigate('products/productplan', {trigger:true});
             },
             error: function(e){
-              console.log("Failed to save on product" + e);
+              window.logger.error("Failed to save on product" + e);
             }
           });
         }else{
+          window.logger.info("I am going to create the item.")
           newItem.save(itemDetail, {
             success: function (data) {
-              console.log("success to get the data back = " + data);
-            Backbone.history.navigate('products/productplan', {trigger:true});
+              //window.logger.debug("success to get the data back = " + data);
+              Backbone.history.navigate('products/productplan', {trigger:true});
             },
             error: function(e){
-            console.log("Failed to save on product" + e);
+              window.logger.error("Failed to save on product" + e);
             }
           });
         }
