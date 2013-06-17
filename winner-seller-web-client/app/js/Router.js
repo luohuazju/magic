@@ -8,7 +8,13 @@ define([
   'views/product/ProductsView',
   'views/product/ProductEditView'
 ], function($, _, Backbone, AboutView, NavBarView, HomeMainView, ProductsView, ProductEditView) {
-  
+
+  var navBarView = new NavBarView();
+  var aboutView = new AboutView();
+  var productsView = new ProductsView();
+  var productEditView = new ProductEditView();
+  var homeMainView = new HomeMainView();
+
   var Router = Backbone.Router.extend({
     routes: {
       // Define some URL routes
@@ -31,49 +37,31 @@ define([
     
     showAbout: function(){
     	window.logger.debug("Entering the showAbout Page!");
-    	new NavBarView().render();
-    	new AboutView().render();
+    	navBarView.render();
+        aboutView.render();
     },
     
     products: function(type){
     	window.logger.debug("Entering the Page products with type=" + type);
-    	new NavBarView().render();
-    	new ProductsView().render('PRODUCT_PLAN');
+    	navBarView.render();
+        productsView.render(type);
     },
 
     product: function(productId){
         window.logger.debug("Entering the productEdit Page with id=" + productId);
-        new NavBarView().render();
-        new ProductEditView().render(productId);
+        navBarView.render();
+        productEditView.render(productId);
     },
     
     defaultAction: function(){
     	window.logger.debug("Entering the default Page!");
-		new NavBarView().render();
-		new HomeMainView().render();
+		navBarView.render();
+		homeMainView.render();
     }
-
-//    _extractParameters: function(route, fragment) {
-//        var result = route.exec(fragment).slice(1);
-//        result.unshift(deparam(result[result.length-1]));
-//        return result.slice(0,-1);
-//    }
     
   });
 
-//  var deparam = function(paramString){
-//      var result = {};
-//      if( ! paramString){
-//          return result;
-//      }
-//      $.each(paramString.split('&'), function(index, value){
-//          if(value){
-//              var param = value.split('=');
-//              result[param[0]] = param[1];
-//          }
-//      });
-//      return result;
-//  };
+
   
   return Router;
 });

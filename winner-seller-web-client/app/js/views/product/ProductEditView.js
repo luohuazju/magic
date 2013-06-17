@@ -36,7 +36,6 @@ define([
     },
 
     deleteProduct: function(ev){
-       var itemDetail = $(ev.currentTarget).serializeObject();
 
        this.item.destroy({
           success: function(){
@@ -51,7 +50,6 @@ define([
         var itemDetail = $(ev.currentTarget).serializeObject();
 
         var newItem = new ProductModel();
-
 
         newItem.save(itemDetail, {
               success: function (data) {
