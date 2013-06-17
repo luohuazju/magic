@@ -21,7 +21,7 @@ define([
               options.contentType = "application/json; charset=utf-8";
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
               url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
-              if(model.id){
+              if((method == 'read' || method == 'delete') && model.id){
                 url_str = url_str + '/' + model.id;
               }
               options.url = url_str;

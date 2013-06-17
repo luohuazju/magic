@@ -56,7 +56,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
               } ~
               post {
                 entity(as[Product]) { item =>
-                  //println("asdfasdfsdf")
                   complete {
                     dao.db.withSession {
                       logger.debug("Hitting to create product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
@@ -66,14 +65,14 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                 }
               } ~
               put {
-                  entity(as[Product]){ item =>
+                 entity(as[Product]){ item =>
                     complete {
                       dao.db withSession {
                         logger.debug("Hitting to update product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                         dao.Products.update(item)
                       }
                     }
-                  }
+                 }
               } ~
               options{
                 complete{
