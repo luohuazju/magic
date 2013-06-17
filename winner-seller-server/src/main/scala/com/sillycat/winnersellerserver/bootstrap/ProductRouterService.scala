@@ -97,6 +97,11 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                     dao.Products.deleteById(id) + ""
                   }
                 }
+              }~
+              options{
+                  complete{
+                    "OK"
+                  }
               }
             //}
           }
