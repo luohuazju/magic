@@ -12,11 +12,16 @@ import com.typesafe.config.ConfigFactory
  * To change this template use File | Settings | File Templates.
  */
 object SillycatUtil {
-  def getCrossDomainHeaders(): HttpHeader = {
+  def getACAOHeader(originHeader: String): HttpHeader = {
 
     val config = ConfigFactory.load()
     if(config.getBoolean("server.crossdomain.eanble") == true){
-      `Access-Control-Allow-Origin`("*")
+      val lists = config.getStringList("server.crossdomain.list")
+      if(lists.contains(originHeader)){
+        `Access-Control-Allow-Origin`(originHeader)
+      }else{
+        `Access-Control-Allow-Origin`("")
+      }
     }else{
       `Access-Control-Allow-Origin`("")
     }

@@ -22,7 +22,9 @@ define([
     initialize: function(){
        //window.logger.debug("init the router, and make backbone start.");
        $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-
+          //options.url = 'http://localhost/v1/sillycat' + options.url;
+          options.crossDomain = true;
+          options.xhrFields = { withCredentials: true };
        });
        Backbone.history.start();
     },

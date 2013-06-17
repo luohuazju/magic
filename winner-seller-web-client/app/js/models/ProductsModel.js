@@ -13,6 +13,8 @@ define([
         sync: function(method, model, options){
            options.timeout = 10000;
 
+           console.log("I am here")
+
            var config = new Config(); //loading configuration
            //json mock
            if(config.productsProvider == 'mock'){
@@ -25,6 +27,10 @@ define([
               options.dataType = "json";
               options.crossDomain = true;
               options.xhrFields = { withCredentials: true };
+
+              //options.beforeSend = function (xhr) {
+              //   xhr.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
+              //};
 
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
               url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';

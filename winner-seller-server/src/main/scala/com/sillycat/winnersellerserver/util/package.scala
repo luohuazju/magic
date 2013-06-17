@@ -34,6 +34,30 @@ package object CrossDomainHeaders {
     def value = origin
   }
 
+  case class `Access-Control-Max-Age`(origin: String) extends HttpHeader {
+    def name = "Access-Control-Max-Age"
+    def lowercaseName = "access-control-max-age"
+    def value = origin
+  }
+
+  case class `Access-Control-Expose-Headers`(origin: String) extends HttpHeader {
+    def name = "Access-Control-Expose-Headers"
+    def lowercaseName = "access-control-expose-headers"
+    def value = origin
+  }
+
+  case class `Access-Control-Request-Method`(origin: String) extends HttpHeader {
+    def name = "Access-Control-Request-Method"
+    def lowercaseName = "access-control-allow-method"
+    def value = origin
+  }
+
+  case class `Access-Control-Request-Headers`(origin: String) extends HttpHeader {
+    def name = "Access-Control-Request-Headers"
+    def lowercaseName = "access-control-request-headers"
+    def value = origin
+  }
+
   case class `Access-Control-Allow-Credentials`(allowed: Boolean) extends HttpHeader {
     def name = "Access-Control-Allow-Credentials"
     def lowercaseName = "access-control-allow-credentials"

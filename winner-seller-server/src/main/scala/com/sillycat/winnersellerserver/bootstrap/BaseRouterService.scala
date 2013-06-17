@@ -20,7 +20,7 @@ import akka.util.Timeout
  */
 trait BaseRouterService extends HttpService with Logging {
 
-  implicit val timeout = Timeout(30 * 1000)
+  implicit val timeout = Timeout(60 * 1000)
 
   implicit val dao: BaseDAO = BaseDAO.apply("app")
 
