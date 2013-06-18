@@ -61,7 +61,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
           DateTime.now,
           DateTime.now,
           Some("IPHONE5"),
-          BigDecimal(395.55),
+          BigDecimal(395),
           BigDecimal(3000),
           BigDecimal(4000),
           Some(1.5),
@@ -81,7 +81,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
           DateTime.now,
           DateTime.now,
           Some("IPHONE4S"),
-          BigDecimal(395.55),
+          BigDecimal(395),
           BigDecimal(3000),
           BigDecimal(4000),
           Some(1.5),
@@ -97,7 +97,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
     dao.db withSession {
       val item = dao.Products.forProductCode("IPHONE5").get
       info(item.toString())
-      assert(item.productCode === "IPHONE5")
+      assert(item.productCode.get === "IPHONE5")
     }
   }
 

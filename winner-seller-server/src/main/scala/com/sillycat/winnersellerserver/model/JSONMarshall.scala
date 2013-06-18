@@ -60,9 +60,9 @@ object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       ) ++
       product.id.map( i => Map("id" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
         ++
-      product.productDesn.map( i=> Map("productDesn" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+      product.productDesn.map( i=> Map("productDesn" -> JsString(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
         ++
-      product.productCode.map( i=> Map("productCode" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+      product.productCode.map( i=> Map("productCode" -> JsString(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
         ++
       product.productWeight.map( i=> Map("productWeight" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
         ++
