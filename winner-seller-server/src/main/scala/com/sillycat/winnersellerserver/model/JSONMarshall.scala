@@ -6,6 +6,7 @@ import scala.Some
 import com.typesafe.scalalogging.slf4j.Logging
 import spray.httpx.SprayJsonSupport
 import spray.json._
+import com.sillycat.winnersellerserver.util.SillycatConstant
 
 
 class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
@@ -44,33 +45,52 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
 
 object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
 
-  private val dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
-
-  private val emptyJSMap = Map[String, JsValue]()
-
   implicit object ProductJsonFormat extends RootJsonFormat[Product] {
     def write(product: Product) = JsObject(
       Map(
       "productName" -> JsString(product.productName),
-      "productDesn" -> JsString(product.productDesn),
-      "createDate"	-> JsString(dateTimeFormat.print(new DateTime(product.createDate))),
-      "expirationDate" -> JsString(dateTimeFormat.print(new DateTime(product.expirationDate))),
-      "productCode" -> JsString(product.productCode)
+      "createDate"	-> JsString(SillycatConstant.DATE_TIME_FORMAT_2.print(new DateTime(product.createDate))),
+      "expirationDate" -> JsString(SillycatConstant.DATE_TIME_FORMAT_2.print(new DateTime(product.expirationDate))),
+      "productPriceUS" -> JsNumber(product.productPriceUS),
+      "productPriceCN" -> JsNumber(product.productPriceCN),
+      "productSellingPriceCN" -> JsNumber(product.productSellingPriceCN),
+      "productWin" -> JsNumber(product.productWin),
+      "productType" -> JsString(product.productType.toString),
+      "productStatus" -> JsString(product.productStatus.toString)
       ) ++
-      product.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
+      product.id.map( i => Map("id" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+        ++
+      product.productDesn.map( i=> Map("productDesn" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+        ++
+      product.productCode.map( i=> Map("productCode" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+        ++
+      product.productWeight.map( i=> Map("productWeight" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+        ++
+      product.productLink.map( i=> Map("productLink" -> JsString(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
       )
     def read(jsProduct: JsValue) = {
-      jsProduct.asJsObject.getFields("id", "productName", "productDesn", "createDate", "expirationDate", "productCode") match {
-        case Seq(JsNumber(id), JsString(productName), JsString(productDesn), JsString(createDate), JsString(expirationDate), JsString(productCode)) =>
-          val createDateObject = dateTimeFormat.parseDateTime(createDate)
-          val expirationDateObject = dateTimeFormat.parseDateTime(expirationDate)
-          new Product(Some(id.longValue),  productName, productDesn, createDateObject, expirationDateObject, productCode)
-        case Seq(JsString(productName), JsString(productDesn), JsString(createDate), JsString(expirationDate), JsString(productCode)) =>
-          val createDateObject = dateTimeFormat.parseDateTime(createDate)
-          val expirationDateObject = dateTimeFormat.parseDateTime(expirationDate)
-          new Product(None,  productName, productDesn, createDateObject, expirationDateObject, productCode)
-        case _ => throw new DeserializationException("Product expected")
-      }
+      val params: Map[String, JsValue] = jsProduct.asJsObject.fields
+      val createDate =  params("createDate").convertTo[String]
+      val expirationDate = params("expirationDate").convertTo[String]
+      val createDateObject = SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(createDate)
+      val expirationDateObject = SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(expirationDate)
+
+      Product(
+        params.get("id").map(_.convertTo[Long]),
+        params("productName").convertTo[String],
+        params.get("productDesn").map(_.convertTo[String]),
+        createDateObject,
+        expirationDateObject,
+        params.get("productCode").map(_.convertTo[String]),
+        params("productPriceUS").convertTo[BigDecimal],
+        params("productPriceCN").convertTo[BigDecimal],
+        params("productSellingPriceCN").convertTo[BigDecimal],
+        params.get("productWeight").map(_.convertTo[Double]),
+        params("productWin").convertTo[BigDecimal],
+        params.get("productLink").map(_.convertTo[String]),
+        ProductType.withName(params("productType").convertTo[String]),
+        ProductStatus.withName(params("productStatus").convertTo[String])
+      )
     }
   }
 }
@@ -123,8 +143,6 @@ object NavBarProtocol extends DefaultJsonProtocol with Logging {
       ++
       nav.subs.map( i => Map("subs" -> i.toJson)).getOrElse(emptyJSMap)
      )
-    //case class NavBar(id: Option[Long], title: String, link: String,
-    // alter: String, parentId: Option[Long], subs: Option[List[NavBar]] , parent: Option[NavBar])
      def read(jsNav: JsValue) = {
        val params: Map[String, JsValue] = jsNav.asJsObject.fields
 

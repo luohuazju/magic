@@ -5,6 +5,8 @@ import com.sillycat.winnersellerserver.model.Cart
 import com.sillycat.winnersellerserver.model.RCartProduct
 import com.sillycat.winnersellerserver.model.User
 import com.sillycat.winnersellerserver.model.UserType
+import com.sillycat.winnersellerserver.model.ProductStatus
+import com.sillycat.winnersellerserver.model.ProductType
 import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
@@ -149,25 +151,65 @@ trait ProductDAO extends Logging { this: Profile =>
 
   implicit object SetDateTime extends SetParameter[DateTime] { def apply(v: DateTime, pp: PositionedParameters) { pp.setTimestamp(new Timestamp(v.getMillis)) } }
 
-  object Products extends Table[Product]("PRODUCT") {
+  object Products extends Table[(Option[Long],String,Option[String],DateTime,DateTime,String,BigDecimal,BigDecimal,BigDecimal,Double,BigDecimal,String,String,String)]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
     def productDesn = column[String]("PRODUCT_DESN") //3
     def createDate = column[DateTime]("CREATE_DATE") //4
     def expirationDate = column[DateTime]("EXPIRATION_DATE") // 5
     def productCode = column[String]("PRODUCT_CODE") //6
+    def productPriceUS = column[BigDecimal]("PRODUCT_PRICE_US") //7
+    def productPriceCN = column[BigDecimal]("PRODUCT_PRICE_CN") //8
+    def productSellingPriceCN = column[BigDecimal]("PRODUCT_SELLING_PRICE_CN") //9
+    def productWeight = column[Double]("PRODUCT_WEIGHT") //10
+    def productWin = column[BigDecimal]("PRODUCT_WIN") //11
+    def productLink = column[String]("PRODUCT_LINK") //12
+    def productType = column[String]("PRODUCT_TYPE") //13
+    def productStatus = column[String]("PRODUCT_STATUS") //14
 
-    def * = id.? ~ productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <> (Product.apply _, Product.unapply _)
+    def * = id.? ~
+            productName ~
+            productDesn.? ~
+            createDate ~
+            expirationDate ~
+            productCode ~
+            productPriceUS ~
+            productPriceCN ~
+            productSellingPriceCN ~
+            productWeight ~
+            productWin ~
+            productLink ~
+            productType ~
+            productStatus
+
+    def persist(implicit session: Session) = id.? ~
+      productName ~
+      productDesn.? ~
+      createDate ~ createDate ~ expirationDate ~ password
+
+    def insert(item: Product)(implicit session: Session): Product = {
+      val returnId = Products.forInsert returning id insert item
+      logger.info("I got the returnId as " + returnId)
+      byId(returnId)
+    }
 
     implicit val getProductResult =
       GetResult(
         r => new Product(
           id = r.nextLongOption,
           productName = r.nextString(),
-          productDesn = r.nextString,
+          productDesn = r.nextStringOption(),
           createDate = JodaTimestampMapper.comap(r.nextTimestamp),
           expirationDate = JodaTimestampMapper.comap(r.nextTimestamp),
-          productCode = r.nextString
+          productCode = r.nextStringOption(),
+          productPriceUS = r.nextBigDecimal(),
+          productPriceCN = r.nextBigDecimal(),
+          productSellingPriceCN = r.nextBigDecimal(),
+          productWeight = r.nextDoubleOption(),
+          productWin = r.nextBigDecimal(),
+          productLink = r.nextStringOption(),
+          productType = ProductType.withName(r.nextString()),
+          productStatus = ProductStatus.withName(r.nextString())
         )
       )
 
@@ -195,15 +237,7 @@ trait ProductDAO extends Logging { this: Profile =>
         query.delete
     }
 
-    def forInsert = productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <>
-      ({ t => Product(None, t._1, t._2, t._3, t._4, t._5) },
-        { (s: Product) => Some(s.productName, s.productDesn, s.createDate, s.expirationDate, s.productCode) })
 
-    def insert(item: Product)(implicit session: Session): Product = {
-      val returnId = Products.forInsert returning id insert item
-      logger.info("I got the returnId as " + returnId)
-      byId(returnId)
-    }
 
 
     def forProductCode(productCode: String)(implicit session: Session): Option[Product] = {

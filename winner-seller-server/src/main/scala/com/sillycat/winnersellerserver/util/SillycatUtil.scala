@@ -30,19 +30,5 @@ object SillycatUtil {
     }else{
       headers
     }
-
-
-
-//    val config = ConfigFactory.load()
-//    if(config.getBoolean("server.crossdomain.eanble") == true){
-//      val lists = config.getStringList("server.crossdomain.list")
-//      if(lists.contains(originHeader)){
-//        `Access-Control-Allow-Origin`(originHeader)
-//      }else{
-//        `Access-Control-Allow-Origin`("")
-//      }
-//    }else{
-//      `Access-Control-Allow-Origin`("")
-//    }
   }
 }
