@@ -13,19 +13,25 @@ define([
            options.timeout = 10000;
            var config = new Config();
 
-              console.log("method = " + method);
-              console.log("model = " + model.productName);
-
-              //options.data = '{"productName" : "iphone 100","productDesn" : "A good mobile device.","createDate" : "2012-05-22 13:33","expirationDate" : "2012-05-22 14:33","productCode" : "IPHONE5"}';
-              //options.data = model;
+              window.logger.info("method = " + method);
 
 
               options.xhrFields = { withCredentials: true };
 
               options.contentType = "application/json; charset=utf-8";
-              //options.url = "http://localhost/v1/sillycat/products";
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
               url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
+              if((method == 'read' || method == 'delete') && model.id){
+                url_str = url_str + '/' + model.id;
+              }
+
+              if(method == 'update'){
+                options.beforeSend = function (jqXHR, settings) {
+                      jqXHR.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
+                      return true;
+                }
+              }
+
               options.url = url_str;
 
            return Backbone.sync(method, model, options);

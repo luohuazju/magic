@@ -27,7 +27,7 @@
         <tbody>
         <% items.each( function(item){ %>
         <tr>  <!-- class, error success info -->
-            <td><%= item.get('productName') %></td>
+            <td><a href="#product/edit/<%= item.get('id') %>"><%= item.get('productName') %></a></td>
             <td>$16.00</td>
             <td>￥200.00</td>
             <td>￥300.00</td>

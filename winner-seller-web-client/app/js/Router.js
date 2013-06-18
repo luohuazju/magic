@@ -8,12 +8,19 @@ define([
   'views/product/ProductsView',
   'views/product/ProductEditView'
 ], function($, _, Backbone, AboutView, NavBarView, HomeMainView, ProductsView, ProductEditView) {
-  
+
+  var navBarView = new NavBarView();
+  var aboutView = new AboutView();
+  var productsView = new ProductsView();
+  var productEditView = new ProductEditView();
+  var homeMainView = new HomeMainView();
+
   var Router = Backbone.Router.extend({
     routes: {
       // Define some URL routes
-      'productsPlan' : 'productsPlan',
-      'productEdit' : 'productEdit',
+      'products/:type' : 'products',
+      'product/edit/:productId' : 'product',
+      'product/create' : 'product',
       'about' : 'showAbout',
       '' : 'defaultAction'
       //'*actions': 'defaultAction'
@@ -22,7 +29,6 @@ define([
     initialize: function(){
        //window.logger.debug("init the router, and make backbone start.");
        $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-          //options.url = 'http://localhost/v1/sillycat' + options.url;
           options.crossDomain = true;
           options.xhrFields = { withCredentials: true };
        });
@@ -31,29 +37,31 @@ define([
     
     showAbout: function(){
     	window.logger.debug("Entering the showAbout Page!");
-    	new NavBarView().render();
-    	new AboutView().render();
+    	navBarView.render();
+        aboutView.render();
     },
     
-    productsPlan: function(){
-    	window.logger.debug("Entering the productsPlan Page!");
-    	new NavBarView().render();
-    	new ProductsView().render('PRODUCT_PLAN');
+    products: function(type){
+    	window.logger.debug("Entering the Page products with type=" + type);
+    	navBarView.render();
+        productsView.render(type);
     },
 
-    productEdit: function(){
-        window.logger.debug("Entering the productEdit Page!");
-        new NavBarView().render();
-        new ProductEditView().render();
+    product: function(productId){
+        window.logger.debug("Entering the productEdit Page with id=" + productId);
+        navBarView.render();
+        productEditView.render(productId);
     },
     
     defaultAction: function(){
     	window.logger.debug("Entering the default Page!");
-		new NavBarView().render();
-		new HomeMainView().render();
+		navBarView.render();
+		homeMainView.render();
     }
     
   });
+
+
   
   return Router;
 });
