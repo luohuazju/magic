@@ -3,8 +3,8 @@ require.config({
     paths: {
       jquery: '//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery',
       underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.1/underscore',
-      //backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min',
-      backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone',
+      backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min',
+      //backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone',
       text: '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.5/text',
       async: 'libs/require/async',
       log4javascript: '//cdnjs.cloudflare.com/ajax/libs/log4javascript/1.4.3/log4javascript',

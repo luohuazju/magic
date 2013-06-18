@@ -26,23 +26,14 @@ import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
  */
 trait ProductRouterService extends BaseRouterService with CustomerMethodDirectives {
 
-  val preflightHeaders = List(
-    RawHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"),
-    RawHeader("Access-Control-Allow-Headers", "accept, origin, authorization, content-type, X-Requested-With, X-HTTP-Method-Override"),
-    RawHeader("Access-Control-Max-Age", "86400"),
-    RawHeader("Access-Control-Allow-Origin","http://carl.digby.com:9000"),
-    RawHeader("Access-Control-Allow-Credentials","true")
-  )
 
   def productRoute = {
     pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
       implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
-      //headerValueByName("Origin") { originHeader =>
-        //println("getting the header = " + originHeader)
-        //respondWithHeaders(`Access-Control-Request-Method`("POST"),`Access-Control-Request-Headers`("accept, origin, content-type"),`Access-Control-Expose-Headers`("X-Api-Version, X-Request-Id, X-Response-Time"), `Access-Control-Allow-Origin`("http://localhost:9000"),`Access-Control-Allow-Credentials`(true),`Access-Control-Allow-Methods`("*"),`Access-Control-Allow-Headers`("Origin, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token"), `Access-Control-Max-Age`("10000")) {
-       //respondWithHeaders(`Access-Control-Allow-Origin`("*"),`Access-Control-Allow-Methods`("POST, GET, PUT, DELETE, OPTIONS"),`Access-Control-Allow-Headers`("X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept")) {
 
-      respondWithHeaders(preflightHeaders: _*) {
+      headerValueByName("Origin") { originHeader =>
+
+       respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
         authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
             path("products") {
@@ -56,7 +47,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
               } ~
               post {
                 entity(as[Product]) { item =>
-                  //println("asdfasdfsdf")
                   complete {
                     dao.db.withSession {
                       logger.debug("Hitting to create product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
@@ -66,14 +56,14 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                 }
               } ~
               put {
-                  entity(as[Product]){ item =>
+                 entity(as[Product]){ item =>
                     complete {
                       dao.db withSession {
                         logger.debug("Hitting to update product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                         dao.Products.update(item)
                       }
                     }
-                  }
+                 }
               } ~
               options{
                 complete{
@@ -97,8 +87,13 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                     dao.Products.deleteById(id) + ""
                   }
                 }
+              }~
+              options{
+                  complete{
+                    "OK"
+                  }
               }
-            //}
+            }
           }
         }
       }
