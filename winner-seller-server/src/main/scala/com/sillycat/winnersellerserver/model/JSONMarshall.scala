@@ -7,6 +7,7 @@ import com.typesafe.scalalogging.slf4j.Logging
 import spray.httpx.SprayJsonSupport
 import spray.json._
 import com.sillycat.winnersellerserver.util.SillycatConstant
+import com.sillycat.winnersellerserver.util.SillycatUtil
 
 
 class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
@@ -70,17 +71,14 @@ object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       )
     def read(jsProduct: JsValue) = {
       val params: Map[String, JsValue] = jsProduct.asJsObject.fields
-      val createDate =  params("createDate").convertTo[String]
-      val expirationDate = params("expirationDate").convertTo[String]
-      val createDateObject = SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(createDate)
-      val expirationDateObject = SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(expirationDate)
+
 
       Product(
         params.get("id").map(_.convertTo[Long]),
         params("productName").convertTo[String],
         params.get("productDesn").map(_.convertTo[String]),
-        createDateObject,
-        expirationDateObject,
+        SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(params.get("createDate").filter(jsValue => jsValue != null && jsValue.convertTo[String] != "").map(_.convertTo[String]).getOrElse(SillycatUtil.getDateNow)),
+        SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(params.get("expirationDate").filter(jsValue => jsValue != null && jsValue.convertTo[String] != "").map(_.convertTo[String]).getOrElse(SillycatUtil.getDateNow)),
         params.get("productCode").map(_.convertTo[String]),
         params("productPriceUS").convertTo[BigDecimal],
         params("productPriceCN").convertTo[BigDecimal],

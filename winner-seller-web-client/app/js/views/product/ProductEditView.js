@@ -48,19 +48,12 @@ define([
     saveProduct: function(ev){
         //window.logger.debug("I am about to saving product.");
         var itemDetail = $(ev.currentTarget).serializeObject();
-//        var itemDetail = { productName : "iphone 5",
-//                           productDesn : "A good mobile device.",
-//                           createDate : "2012-05-22 13:33",
-//                           expirationDate : "2012-05-22 14:33",
-//                           productCode : "IPHONE5",
-//                           productPriceUS : 30.32,
-//                           productPriceCN : 400,
-//                           productSellingPriceCN : 200,
-//                           productWeight : 1.0,
-//                           productWin : 100,
-//                           productLink : "link",
-//                           productType : "PLAN",
-//                           productStatus : "ACTIVE" };
+
+        itemDetail.productPriceCN = parseFloat(itemDetail.productPriceCN);
+        itemDetail.productPriceUS = parseFloat(itemDetail.productPriceUS);
+        itemDetail.productSellingPriceCN = parseFloat(itemDetail.productSellingPriceCN);
+        itemDetail.productWeight = parseFloat(itemDetail.productWeight);
+        itemDetail.productWin = parseFloat(itemDetail.productWin);
 
         var newItem = new ProductModel();
 
@@ -75,6 +68,7 @@ define([
               window.logger.error("Failed to save on product" + e);
             }
           });
+          this.item = null;
         }else{
           window.logger.info("I am going to create the item.")
           newItem.save(itemDetail, {

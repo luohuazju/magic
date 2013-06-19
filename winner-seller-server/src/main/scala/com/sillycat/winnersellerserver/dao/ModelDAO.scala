@@ -214,8 +214,10 @@ trait ProductDAO extends Logging { this: Profile =>
         item.productLink,           //12
         item.productType.toString,  //13
         item.productStatus.toString)//14
-      logger.info("I got the returnId as " + id)
-      byId(id)
+      val lastInsertedId: Long = StaticQuery.queryNA[Long]("SELECT LAST_INSERT_ID()").first
+      logger.info("I got the returnId as " + lastInsertedId)
+      byId(lastInsertedId)
+
     }
 
     implicit val getProductResult =
