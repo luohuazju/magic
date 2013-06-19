@@ -14,6 +14,7 @@ import spray.http.HttpHeaders.RawHeader
  * To change this template use File | Settings | File Templates.
  */
 object SillycatUtil {
+  //def getCrossDomainHeaders(originHeader: Option[String]): List[RawHeader] = {
   def getCrossDomainHeaders(originHeader: String): List[RawHeader] = {
     val headers = List(RawHeader("Access-Control-Max-Age", "86400"),RawHeader("Access-Control-Allow-Credentials","true"))
     val config = ConfigFactory.load()

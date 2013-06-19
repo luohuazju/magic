@@ -31,6 +31,7 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
     pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
       implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
 
+      //optionalHeaderValueByName("Origin") { originHeader =>
       headerValueByName("Origin") { originHeader =>
 
        respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {

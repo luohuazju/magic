@@ -115,7 +115,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
       //info(item.toString)
       assert(item.id.get === 1)
       assert(item.productName === "Iphone5")
-      dao.Products.update(item.copy(productName="NiceIphone5"))
+      dao.Products.update(item.copy(productName="NiceIphone5",productDesn=None))
       val item2 = dao.Products.byId(1)
       info(item2.toString)
       assert(item2.id.get === 1)

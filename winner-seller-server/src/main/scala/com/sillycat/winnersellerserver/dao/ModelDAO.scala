@@ -154,16 +154,16 @@ trait ProductDAO extends Logging { this: Profile =>
   object Products extends Table[(Option[Long],String,Option[String],DateTime,DateTime,Option[String],BigDecimal,BigDecimal,BigDecimal,Option[Double],BigDecimal,Option[String],String,String)]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
-    def productDesn = column[String]("PRODUCT_DESN") //3
+    def productDesn = column[String]("PRODUCT_DESN", O.Nullable) //3
     def createDate = column[DateTime]("CREATE_DATE") //4
     def expirationDate = column[DateTime]("EXPIRATION_DATE") // 5
-    def productCode = column[String]("PRODUCT_CODE") //6
+    def productCode = column[String]("PRODUCT_CODE", O.Nullable) //6
     def productPriceUS = column[BigDecimal]("PRODUCT_PRICE_US", O.DBType("decimal(10, 4)")) //7
     def productPriceCN = column[BigDecimal]("PRODUCT_PRICE_CN", O.DBType("decimal(10, 4)")) //8
     def productSellingPriceCN = column[BigDecimal]("PRODUCT_SELLING_PRICE_CN", O.DBType("decimal(10, 4)")) //9
-    def productWeight = column[Double]("PRODUCT_WEIGHT") //10
+    def productWeight = column[Double]("PRODUCT_WEIGHT", O.Nullable) //10
     def productWin = column[BigDecimal]("PRODUCT_WIN", O.DBType("decimal(10, 4)")) //11
-    def productLink = column[String]("PRODUCT_LINK") //12
+    def productLink = column[String]("PRODUCT_LINK", O.Nullable) //12
     def productType = column[String]("PRODUCT_TYPE") //13
     def productStatus = column[String]("PRODUCT_STATUS") //14
 
@@ -248,6 +248,14 @@ trait ProductDAO extends Logging { this: Profile =>
           ", CREATE_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.createDate) +
           ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate) +
           ", PRODUCT_CODE = " +? item.productCode +
+          ", PRODUCT_PRICE_US = " +? item.productPriceUS +
+          ", PRODUCT_PRICE_CN = " +? item.productPriceCN +
+          ", PRODUCT_SELLING_PRICE_CN = " +? item.productSellingPriceCN +
+          ", PRODUCT_WEIGHT = " +? item.productWeight +
+          ", PRODUCT_WIN = " +? item.productWin +
+          ", PRODUCT_LINK = " +? item.productLink +
+          ", PRODUCT_TYPE = " +? item.productType.toString +
+          ", PRODUCT_STATUS = " +? item.productStatus.toString +
           " where id = " +? item.id
           ).execute
 
