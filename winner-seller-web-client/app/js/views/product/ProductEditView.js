@@ -47,20 +47,20 @@ define([
 
     saveProduct: function(ev){
         //window.logger.debug("I am about to saving product.");
-        //var itemDetail = $(ev.currentTarget).serializeObject();
-        var itemDetail = { productName : "iphone 5",
-                           productDesn : "A good mobile device.",
-                           createDate : "2012-05-22 13:33",
-                           expirationDate : "2012-05-22 14:33",
-                           productCode : "IPHONE5",
-                           productPriceUS : 30.32,
-                           productPriceCN : 400,
-                           productSellingPriceCN : 200,
-                           productWeight : 1.0,
-                           productWin : 100,
-                           productLink : "link",
-                           productType : "PLAN",
-                           productStatus : "ACTIVE" };
+        var itemDetail = $(ev.currentTarget).serializeObject();
+//        var itemDetail = { productName : "iphone 5",
+//                           productDesn : "A good mobile device.",
+//                           createDate : "2012-05-22 13:33",
+//                           expirationDate : "2012-05-22 14:33",
+//                           productCode : "IPHONE5",
+//                           productPriceUS : 30.32,
+//                           productPriceCN : 400,
+//                           productSellingPriceCN : 200,
+//                           productWeight : 1.0,
+//                           productWin : 100,
+//                           productLink : "link",
+//                           productType : "PLAN",
+//                           productStatus : "ACTIVE" };
 
         var newItem = new ProductModel();
 
