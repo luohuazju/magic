@@ -80,6 +80,7 @@ define([
               window.logger.error("Failed to save on product" + e);
             }
           });
+          this.item = null;
         }
 
         return false;

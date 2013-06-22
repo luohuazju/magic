@@ -13,6 +13,7 @@ import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.NavBar
 import scala.slick.jdbc.{SetParameter, GetResult, StaticQuery}
 import com.sillycat.winnersellerserver.util.JodaTimestampMapper
+import com.sillycat.winnersellerserver.util.JodaTimestampOptionMapper
 import com.sillycat.winnersellerserver.util.SillycatConstant
 import scala.slick.session.PositionedParameters
 import java.sql.Timestamp
@@ -151,12 +152,12 @@ trait ProductDAO extends Logging { this: Profile =>
 
   implicit object SetDateTime extends SetParameter[DateTime] { def apply(v: DateTime, pp: PositionedParameters) { pp.setTimestamp(new Timestamp(v.getMillis)) } }
 
-  object Products extends Table[(Option[Long],String,Option[String],DateTime,DateTime,Option[String],BigDecimal,BigDecimal,BigDecimal,Option[Double],BigDecimal,Option[String],String,String)]("PRODUCT") {
+  object Products extends Table[(Option[Long],String,Option[String],DateTime,Option[DateTime],Option[String],BigDecimal,BigDecimal,BigDecimal,Option[Double],BigDecimal,Option[String],String,String)]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
     def productDesn = column[String]("PRODUCT_DESN", O.Nullable) //3
     def createDate = column[DateTime]("CREATE_DATE") //4
-    def expirationDate = column[DateTime]("EXPIRATION_DATE") // 5
+    def expirationDate = column[DateTime]("EXPIRATION_DATE", O.Nullable) // 5
     def productCode = column[String]("PRODUCT_CODE", O.Nullable) //6
     def productPriceUS = column[BigDecimal]("PRODUCT_PRICE_US", O.DBType("decimal(10, 4)")) //7
     def productPriceCN = column[BigDecimal]("PRODUCT_PRICE_CN", O.DBType("decimal(10, 4)")) //8
@@ -171,7 +172,7 @@ trait ProductDAO extends Logging { this: Profile =>
             productName ~               //2
             productDesn.? ~             //3
             createDate ~                //4
-            expirationDate ~            //5
+            expirationDate.? ~          //5
             productCode.? ~             //6
             productPriceUS ~            //7
             productPriceCN ~            //8
@@ -187,7 +188,7 @@ trait ProductDAO extends Logging { this: Profile =>
       productName ~                      //2
       productDesn.? ~                    //3
       createDate ~                       //4
-      expirationDate ~                   //5
+      expirationDate.? ~                 //5
       productCode.? ~                    //6
       productPriceUS ~                   //7
       productPriceCN ~                   //8
@@ -227,7 +228,7 @@ trait ProductDAO extends Logging { this: Profile =>
           productName = r.nextString(),      //2
           productDesn = r.nextStringOption(),//3
           createDate = JodaTimestampMapper.comap(r.nextTimestamp),       //4
-          expirationDate = JodaTimestampMapper.comap(r.nextTimestamp),   //5
+          expirationDate = JodaTimestampOptionMapper.comap(r.nextTimestampOption()),   //5
           productCode = r.nextStringOption(),                            //6
           productPriceUS = r.nextBigDecimal(),                           //7
           productPriceCN = r.nextBigDecimal(),                           //8
@@ -248,7 +249,7 @@ trait ProductDAO extends Logging { this: Profile =>
           "  PRODUCT_NAME = " +? item.productName +
           ", PRODUCT_DESN = " +? item.productDesn +
           ", CREATE_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.createDate) +
-          ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate) +
+          ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate.getOrElse(null)) +
           ", PRODUCT_CODE = " +? item.productCode +
           ", PRODUCT_PRICE_US = " +? item.productPriceUS +
           ", PRODUCT_PRICE_CN = " +? item.productPriceCN +

@@ -16,6 +16,19 @@ object JodaTimestampMapper extends MappedTypeMapper[DateTime, Timestamp] with Ba
   override def sqlTypeName = Some("timestamp")
 }
 
+object JodaTimestampOptionMapper extends MappedTypeMapper[Option[DateTime], Option[Timestamp]] with BaseTypeMapper[Option[DateTime]] {
+  def map(j: Option[DateTime]) = j match {
+    case None => None
+    case _    => Option(new Timestamp(j.get.getMillis))
+  }
+  def comap(s: Option[Timestamp]) = s match {
+    case None => None
+    case _ => Option(new DateTime(s.get.getTime))
+  }
+  override def sqlType = Some(java.sql.Types.TIMESTAMP)
+  override def sqlTypeName = Some("timestamp")
+}
+
 //object JodaDateTimeMapper extends MappedTypeMapper[DateTime, Date] with BaseTypeMapper[DateTime] {
 //  def map(j: DateTime) = new Date(j.getMillis)
 //  def comap(s: Date) = new DateTime(s.getTime)

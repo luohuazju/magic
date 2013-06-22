@@ -14,7 +14,7 @@ case class Product(
                     productName: String,
                     productDesn: Option[String],
                     createDate: DateTime,
-                    expirationDate: DateTime,
+                    expirationDate: Option[DateTime],
                     productCode: Option[String],
                     productPriceUS: BigDecimal,
                     productPriceCN: BigDecimal,

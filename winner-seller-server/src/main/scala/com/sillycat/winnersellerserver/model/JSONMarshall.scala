@@ -51,7 +51,6 @@ object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       Map(
       "productName" -> JsString(product.productName),
       "createDate"	-> JsString(SillycatConstant.DATE_TIME_FORMAT_2.print(new DateTime(product.createDate))),
-      "expirationDate" -> JsString(SillycatConstant.DATE_TIME_FORMAT_2.print(new DateTime(product.expirationDate))),
       "productPriceUS" -> JsNumber(product.productPriceUS),
       "productPriceCN" -> JsNumber(product.productPriceCN),
       "productSellingPriceCN" -> JsNumber(product.productSellingPriceCN),
@@ -68,17 +67,24 @@ object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       product.productWeight.map( i=> Map("productWeight" -> JsNumber(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
         ++
       product.productLink.map( i=> Map("productLink" -> JsString(i))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
+        ++
+      product.expirationDate.map( i => Map("expirationDate" -> JsString(SillycatConstant.DATE_TIME_FORMAT_2.print(new DateTime(i))))).getOrElse(SillycatConstant.EMPTY_JS_VALUE)
       )
     def read(jsProduct: JsValue) = {
       val params: Map[String, JsValue] = jsProduct.asJsObject.fields
 
+      val expirationString = params.get("expirationDate").filter(jsValue => jsValue != null && jsValue.convertTo[String] != "").map(_.convertTo[String])
+      val expirationValue = expirationString match {
+        case None => None
+        case Some(str) => Some(SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(str))
+      }
 
       Product(
         params.get("id").map(_.convertTo[Long]),
         params("productName").convertTo[String],
         params.get("productDesn").map(_.convertTo[String]),
         SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(params.get("createDate").filter(jsValue => jsValue != null && jsValue.convertTo[String] != "").map(_.convertTo[String]).getOrElse(SillycatUtil.getDateNow)),
-        SillycatConstant.DATE_TIME_FORMAT_2.parseDateTime(params.get("expirationDate").filter(jsValue => jsValue != null && jsValue.convertTo[String] != "").map(_.convertTo[String]).getOrElse(SillycatUtil.getDateNow)),
+        expirationValue,
         params.get("productCode").map(_.convertTo[String]),
         params("productPriceUS").convertTo[BigDecimal],
         params("productPriceCN").convertTo[BigDecimal],
