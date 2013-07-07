@@ -16,6 +16,7 @@ import com.sillycat.winnersellerserver.CrossDomainHeaders._
 import com.sillycat.winnersellerserver.util.SillycatConstant
 import com.sillycat.winnersellerserver.util.SillycatUtil
 import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+import com.sillycat.winnersellerserver.model.ProductStatus
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,18 +39,19 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
         authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
             path("products") {
               get {
-                complete(
-                  dao.db.withSession {
-                    logger.debug("Hitting to fetch products with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
-                    DefaultJsonProtocol.listFormat[Product].write(dao.Products.all).toString
-                  }
-                )
+                parameters('productType.as[String]) { productType =>
+                  complete(
+                    dao.db.withSession {
+                      //DefaultJsonProtocol.listFormat[Product].write(dao.Products.all).toString
+                      DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+                    }
+                  )
+                }
               } ~
               post {
                 entity(as[Product]) { item =>
                   complete {
                     dao.db.withSession {
-                      logger.debug("Hitting to create product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                       dao.Products.insert(item)
                     }
                   }
@@ -59,7 +61,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                  entity(as[Product]){ item =>
                     complete {
                       dao.db withSession {
-                        logger.debug("Hitting to update product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                         dao.Products.update(item)
                       }
                     }
@@ -75,7 +76,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
               get {
                 complete {
                   dao.db withSession {
-                    logger.debug("Hitting to getById product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                     dao.Products.byId(id)
                   }
                 }
@@ -83,7 +83,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
               delete {
                 complete {
                   dao.db withSession {
-                    logger.debug("Hitting to deleteById product with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
                     dao.Products.deleteById(id) + ""
                   }
                 }

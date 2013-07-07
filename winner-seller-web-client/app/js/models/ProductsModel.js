@@ -26,12 +26,16 @@ define([
               options.crossDomain = true;
               options.xhrFields = { withCredentials: true };
 
-              //options.beforeSend = function (xhr) {
-              //   xhr.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
-              //};
+              window.logger.debug("show me the data: " + options.data.type)
 
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
               url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
+
+              //if(options.data.type == 'productplan'){
+              //  url_str = url_str + '/' + 'PLAN';
+              //  options.data = {};
+              //}
+
               options.url = url_str;
            }
 

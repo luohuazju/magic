@@ -36,6 +36,8 @@ trait BaseRouterService extends HttpService with Logging {
 
   val BrandCode = PathElement
 
+  val ProductType = PathElement
+
   implicit def myExceptionHandler(implicit log: LoggingContext) =
     ExceptionHandler.fromPF {
       case e: java.lang.IllegalArgumentException => ctx =>
