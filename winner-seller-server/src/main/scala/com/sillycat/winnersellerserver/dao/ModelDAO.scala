@@ -295,6 +295,10 @@ trait ProductDAO extends Logging { this: Profile =>
           ProductStatus.withName(item._14))
       }
     }
+
+    def forProductTypeAndStatus()(implicit session: Session): List[Product] = {
+
+    }
     
     def all()(implicit session: Session): List[Product] = {
       Query(Products).list map {
