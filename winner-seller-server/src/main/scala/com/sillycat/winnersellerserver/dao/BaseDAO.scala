@@ -47,7 +47,7 @@ class BaseDAO(override val profile: ExtendedProfile, dbConn: DBConn) extends Pro
       logger.info("Insert the NavBar Items...")
       val id1 = NavBars.insert(NavBar(None,"首页","#","alter",Some(0), None, None))
       val id2 = NavBars.insert(NavBar(None,"商品管理","#","alter",Some(0), None, None))
-      val id3 = NavBars.insert(NavBar(None,"计划商品","#products/productplan","alter",Some(id2), None, None))
+      val id3 = NavBars.insert(NavBar(None,"计划商品","#products/PLAN","alter",Some(id2), None, None))
       val id4 = NavBars.insert(NavBar(None,"上架商品","#","alter",Some(id2), None, None))
       val id5 = NavBars.insert(NavBar(None,"历史商品","#","alter",Some(id2), None, None))
       val id6 = NavBars.insert(NavBar(None,"divider", "#", "alter", Some(id2), None, None))

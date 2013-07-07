@@ -62,7 +62,7 @@ define([
           this.item.save(itemDetail,{
             success: function (data) {
               //window.logger.debug("success to get the data back = " + data);
-              Backbone.history.navigate('products/productplan', {trigger:true});
+              Backbone.history.navigate('products/' + item.productType, {trigger:true});
             },
             error: function(e){
               window.logger.error("Failed to save on product" + e);
@@ -74,7 +74,7 @@ define([
           newItem.save(itemDetail, {
             success: function (data) {
               //window.logger.debug("success to get the data back = " + data);
-              Backbone.history.navigate('products/productplan', {trigger:true});
+              Backbone.history.navigate('products/' + itemDetail.productType, {trigger:true});
             },
             error: function(e){
               window.logger.error("Failed to save on product" + e);

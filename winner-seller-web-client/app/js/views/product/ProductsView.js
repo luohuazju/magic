@@ -20,7 +20,7 @@ define([
 
        window.logger.debug(" products url = " + models.url);
        models.fetch({
-           data: { productType: 'PLAN' },
+           data: { productType: type },
            type: 'GET',
            success: function(data, response, options) {
                window.logger.debug("response data = " + data);
