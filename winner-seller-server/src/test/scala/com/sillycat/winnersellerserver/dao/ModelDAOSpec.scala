@@ -123,6 +123,16 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
     }
   }
 
+  test("Query by Product Status and Type"){
+    dao.db withSession {
+      val item = dao.Products.byId(1)
+      assert(item.id.get === 1)
+      val items: List[Product] = dao.Products.forProductTypeAndStatus(item.productType.toString,item.productStatus.toString)
+      info(items.toString())
+      assert(items.size != 0)
+    }
+  }
+
   test("Delete Product"){
     dao.db withSession {
       val item = dao.Products.insert(

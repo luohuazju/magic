@@ -296,8 +296,27 @@ trait ProductDAO extends Logging { this: Profile =>
       }
     }
 
-    def forProductTypeAndStatus()(implicit session: Session): List[Product] = {
-
+    def forProductTypeAndStatus(productType: String, productStatus: String)(implicit session: Session): List[Product] = {
+      val query = for {
+        item <- Products if item.productType === productType && item.productStatus === productStatus
+      } yield item
+      query.list map {
+        case (item) => Product(
+          item._1,
+          item._2,
+          item._3,
+          item._4,
+          item._5,
+          item._6,
+          item._7,
+          item._8,
+          item._9,
+          item._10,
+          item._11,
+          item._12,
+          ProductType.withName(item._13),
+          ProductStatus.withName(item._14))
+      }
     }
     
     def all()(implicit session: Session): List[Product] = {
