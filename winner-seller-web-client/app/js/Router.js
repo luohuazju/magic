@@ -30,7 +30,7 @@ define([
      var catCookie = new CatCookie("cat");
      if(!catCookie.getcookie("cat_user_name")){
         window.logger.debug("render to login page from router");
-        navBarView.render();
+        //navBarView.render();
         loginView.render();
         return true;
      }
