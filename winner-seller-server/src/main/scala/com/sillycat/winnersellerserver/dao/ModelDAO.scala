@@ -5,12 +5,15 @@ import com.sillycat.winnersellerserver.model.Cart
 import com.sillycat.winnersellerserver.model.RCartProduct
 import com.sillycat.winnersellerserver.model.User
 import com.sillycat.winnersellerserver.model.UserType
+import com.sillycat.winnersellerserver.model.ProductStatus
+import com.sillycat.winnersellerserver.model.ProductType
 import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.NavBar
 import scala.slick.jdbc.{SetParameter, GetResult, StaticQuery}
 import com.sillycat.winnersellerserver.util.JodaTimestampMapper
+import com.sillycat.winnersellerserver.util.JodaTimestampOptionMapper
 import com.sillycat.winnersellerserver.util.SillycatConstant
 import scala.slick.session.PositionedParameters
 import java.sql.Timestamp
@@ -149,25 +152,92 @@ trait ProductDAO extends Logging { this: Profile =>
 
   implicit object SetDateTime extends SetParameter[DateTime] { def apply(v: DateTime, pp: PositionedParameters) { pp.setTimestamp(new Timestamp(v.getMillis)) } }
 
-  object Products extends Table[Product]("PRODUCT") {
+  object Products extends Table[(Option[Long],String,Option[String],DateTime,Option[DateTime],Option[String],BigDecimal,BigDecimal,BigDecimal,Option[Double],BigDecimal,Option[String],String,String)]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
-    def productDesn = column[String]("PRODUCT_DESN") //3
+    def productDesn = column[String]("PRODUCT_DESN", O.Nullable) //3
     def createDate = column[DateTime]("CREATE_DATE") //4
-    def expirationDate = column[DateTime]("EXPIRATION_DATE") // 5
-    def productCode = column[String]("PRODUCT_CODE") //6
+    def expirationDate = column[DateTime]("EXPIRATION_DATE", O.Nullable) // 5
+    def productCode = column[String]("PRODUCT_CODE", O.Nullable) //6
+    def productPriceUS = column[BigDecimal]("PRODUCT_PRICE_US", O.DBType("decimal(10, 4)")) //7
+    def productPriceCN = column[BigDecimal]("PRODUCT_PRICE_CN", O.DBType("decimal(10, 4)")) //8
+    def productSellingPriceCN = column[BigDecimal]("PRODUCT_SELLING_PRICE_CN", O.DBType("decimal(10, 4)")) //9
+    def productWeight = column[Double]("PRODUCT_WEIGHT", O.Nullable) //10
+    def productWin = column[BigDecimal]("PRODUCT_WIN", O.DBType("decimal(10, 4)")) //11
+    def productLink = column[String]("PRODUCT_LINK", O.Nullable) //12
+    def productType = column[String]("PRODUCT_TYPE") //13
+    def productStatus = column[String]("PRODUCT_STATUS") //14
 
-    def * = id.? ~ productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <> (Product.apply _, Product.unapply _)
+    def * = id.? ~                      //1
+            productName ~               //2
+            productDesn.? ~             //3
+            createDate ~                //4
+            expirationDate.? ~          //5
+            productCode.? ~             //6
+            productPriceUS ~            //7
+            productPriceCN ~            //8
+            productSellingPriceCN ~     //9
+            productWeight.? ~           //10
+            productWin ~                //11
+            productLink.? ~             //12
+            productType ~               //13
+            productStatus               //14
+
+    def persist(implicit session: Session) =
+      id.? ~                             //1
+      productName ~                      //2
+      productDesn.? ~                    //3
+      createDate ~                       //4
+      expirationDate.? ~                 //5
+      productCode.? ~                    //6
+      productPriceUS ~                   //7
+      productPriceCN ~                   //8
+      productSellingPriceCN ~            //9
+      productWeight.? ~                  //10
+      productWin ~                       //11
+      productLink.? ~                    //12
+      productType ~                      //13
+      productStatus                      //14
+
+    def insert(item: Product)(implicit session: Session): Product = {
+      val id = persist.insert(
+        item.id,             //1
+        item.productName,    //2
+        item.productDesn,    //3
+        item.createDate,     //4
+        item.expirationDate, //5
+        item.productCode,    //6
+        item.productPriceUS, //7
+        item.productPriceCN, //8
+        item.productSellingPriceCN, //9
+        item.productWeight,         //10
+        item.productWin,            //11
+        item.productLink,           //12
+        item.productType.toString,  //13
+        item.productStatus.toString)//14
+      val lastInsertedId: Long = StaticQuery.queryNA[Long]("SELECT LAST_INSERT_ID()").first
+      logger.info("I got the returnId as " + lastInsertedId)
+      byId(lastInsertedId)
+
+    }
 
     implicit val getProductResult =
       GetResult(
         r => new Product(
-          id = r.nextLongOption,
-          productName = r.nextString(),
-          productDesn = r.nextString,
-          createDate = JodaTimestampMapper.comap(r.nextTimestamp),
-          expirationDate = JodaTimestampMapper.comap(r.nextTimestamp),
-          productCode = r.nextString
+          id = r.nextLongOption,             //1
+          productName = r.nextString(),      //2
+          productDesn = r.nextStringOption(),//3
+          createDate = JodaTimestampMapper.comap(r.nextTimestamp),       //4
+          expirationDate = JodaTimestampOptionMapper.comap(r.nextTimestampOption()),   //5
+          productCode = r.nextStringOption(),                            //6
+          productPriceUS = r.nextBigDecimal(),                           //7
+          productPriceCN = r.nextBigDecimal(),                           //8
+          productSellingPriceCN = r.nextBigDecimal(),                    //9
+          productWeight = r.nextDoubleOption(),                          //10
+          productWin = r.nextBigDecimal(),                               //11
+          productLink = r.nextStringOption(),                            //12
+          productType = ProductType.withName(r.nextString()),            //13
+          productStatus = ProductStatus.withName(r.nextString())         //14
         )
       )
 
@@ -179,8 +249,16 @@ trait ProductDAO extends Logging { this: Profile =>
           "  PRODUCT_NAME = " +? item.productName +
           ", PRODUCT_DESN = " +? item.productDesn +
           ", CREATE_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.createDate) +
-          ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate) +
+          ", EXPIRATION_DATE = " +? SillycatConstant.DATE_TIME_FORMAT_1.print(item.expirationDate.getOrElse(null)) +
           ", PRODUCT_CODE = " +? item.productCode +
+          ", PRODUCT_PRICE_US = " +? item.productPriceUS +
+          ", PRODUCT_PRICE_CN = " +? item.productPriceCN +
+          ", PRODUCT_SELLING_PRICE_CN = " +? item.productSellingPriceCN +
+          ", PRODUCT_WEIGHT = " +? item.productWeight +
+          ", PRODUCT_WIN = " +? item.productWin +
+          ", PRODUCT_LINK = " +? item.productLink +
+          ", PRODUCT_TYPE = " +? item.productType.toString +
+          ", PRODUCT_STATUS = " +? item.productStatus.toString +
           " where id = " +? item.id
           ).execute
 
@@ -195,26 +273,71 @@ trait ProductDAO extends Logging { this: Profile =>
         query.delete
     }
 
-    def forInsert = productName ~ productDesn ~ createDate ~ expirationDate ~ productCode <>
-      ({ t => Product(None, t._1, t._2, t._3, t._4, t._5) },
-        { (s: Product) => Some(s.productName, s.productDesn, s.createDate, s.expirationDate, s.productCode) })
-
-    def insert(item: Product)(implicit session: Session): Product = {
-      val returnId = Products.forInsert returning id insert item
-      logger.info("I got the returnId as " + returnId)
-      byId(returnId)
-    }
-
-
     def forProductCode(productCode: String)(implicit session: Session): Option[Product] = {
       val query = for {
         item <- Products if item.productCode === productCode
       } yield item
-      query.firstOption
+      query.firstOption map {
+        case (item) => Product(
+          item._1,
+          item._2,
+          item._3,
+          item._4,
+          item._5,
+          item._6,
+          item._7,
+          item._8,
+          item._9,
+          item._10,
+          item._11,
+          item._12,
+          ProductType.withName(item._13),
+          ProductStatus.withName(item._14))
+      }
+    }
+
+    def forProductTypeAndStatus(productType: String, productStatus: String)(implicit session: Session): List[Product] = {
+      val query = for {
+        item <- Products if item.productType === productType && item.productStatus === productStatus
+      } yield item
+      query.list map {
+        case (item) => Product(
+          item._1,
+          item._2,
+          item._3,
+          item._4,
+          item._5,
+          item._6,
+          item._7,
+          item._8,
+          item._9,
+          item._10,
+          item._11,
+          item._12,
+          ProductType.withName(item._13),
+          ProductStatus.withName(item._14))
+      }
     }
     
     def all()(implicit session: Session): List[Product] = {
-      Query(Products).list
+      Query(Products).list map {
+        case (item) => Product(
+          item._1,
+          item._2,
+          item._3,
+          item._4,
+          item._5,
+          item._6,
+          item._7,
+          item._8,
+          item._9,
+          item._10,
+          item._11,
+          item._12,
+          ProductType.withName(item._13),
+          ProductStatus.withName(item._14)
+        )
+      }
     }
 
     def byId(id: Long)(implicit session: Session): Product = {
@@ -238,7 +361,15 @@ trait ProductDAO extends Logging { this: Profile =>
           | PRODUCT_DESN,
           | CREATE_DATE,
           | EXPIRATION_DATE,
-          | PRODUCT_CODE
+          | PRODUCT_CODE,
+          | PRODUCT_PRICE_US,
+          | PRODUCT_PRICE_CN,
+          | PRODUCT_SELLING_PRICE_CN,
+          | PRODUCT_WEIGHT,
+          | PRODUCT_WIN,
+          | PRODUCT_LINK,
+          | PRODUCT_TYPE,
+          | PRODUCT_STATUS
           |from
           | PRODUCT
           |where

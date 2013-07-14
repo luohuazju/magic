@@ -2,8 +2,9 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'text!templates/HomeMainTemplate.html'
-], function($, _, Backbone, htmlTemplate) {
+  'text!templates/HomeMainTemplate.html',
+  'catcookie'
+], function($, _, Backbone, htmlTemplate, CatCookie) {
 
   var HomeMainView = Backbone.View.extend({
     el: $("#content"),
@@ -13,13 +14,20 @@ define([
 	},
     
     render: function(){
-      window.logger.debug("I am going to render to HomeMainView");
-      var data = {
-         content: {},
-		 _: _ 
-	  };
-	  var compiledTemplate = _.template( htmlTemplate, data );
-	  $(this.el).html( compiledTemplate );
+      //var catCookie = new CatCookie("cat");
+
+      //if(catCookie.getcookie("cat_user_name")){
+         window.logger.debug("render to home page");
+
+         var data = {
+                  content: {},
+         		 _: _
+         };
+         var compiledTemplate = _.template( htmlTemplate, data );
+         $(this.el).html( compiledTemplate );
+      //}else{
+      //   window.logger.debug("render to login page");
+      //}
     }
   
   });

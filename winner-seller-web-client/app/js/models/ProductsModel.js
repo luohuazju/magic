@@ -26,12 +26,9 @@ define([
               options.crossDomain = true;
               options.xhrFields = { withCredentials: true };
 
-              //options.beforeSend = function (xhr) {
-              //   xhr.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
-              //};
-
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
               url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
+
               options.url = url_str;
            }
 

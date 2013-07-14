@@ -9,7 +9,21 @@ case class NavBar(id: Option[Long], title: String, link: String, alter: String, 
 
 case class Cart(id: Option[Long], cartName: String, cartType: CartType.Value, user: User, products: Seq[Product])
 
-case class Product(id: Option[Long], productName: String, productDesn: String, createDate: DateTime, expirationDate: DateTime, productCode: String)
+case class Product(
+                    id: Option[Long],
+                    productName: String,
+                    productDesn: Option[String],
+                    createDate: DateTime,
+                    expirationDate: Option[DateTime],
+                    productCode: Option[String],
+                    productPriceUS: BigDecimal,
+                    productPriceCN: BigDecimal,
+                    productSellingPriceCN: BigDecimal,
+                    productWeight: Option[Double],
+                    productWin: BigDecimal,
+                    productLink: Option[String],
+                    productType: ProductType.Value,
+                    productStatus: ProductStatus.Value)
 
 /**
  * 1 User(1, 'admin', ... , 'admin')

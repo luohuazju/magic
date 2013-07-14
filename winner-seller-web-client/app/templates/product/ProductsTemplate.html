@@ -21,20 +21,21 @@
             <th>商品重量</th>
             <th>商品毛利（人民币）</th>
             <th>商品链接</th>
-            <th>价格浮动</th>
         </tr>
         </thead>
         <tbody>
         <% items.each( function(item){ %>
         <tr>  <!-- class, error success info -->
             <td><a href="#product/edit/<%= item.get('id') %>"><%= item.get('productName') %></a></td>
-            <td>$16.00</td>
-            <td>￥200.00</td>
-            <td>￥300.00</td>
-            <td>1 pound</td>
-            <td>￥100.00</td>
-            <td><a href="http://www.amazon.com">亚马逊</a></td>
-            <td>+2.75%</td>
+            <td>$<%= item.get('productPriceUS') %></td>
+            <td>￥<%= item.get('productPriceCN') %></td>
+            <td>￥<%= item.get('productSellingPriceCN') %></td>
+            <td><%= item.get('productWeight') %> Pound</td>
+            <td>￥<%= item.get('productWin') %></td>
+            <td><% if(item && item.get('productLink') != '') { %>
+                <a href="<%= item.get('productLink') %>" target="_blank">链接</a>
+                <% } %>
+            </td>
         </tr>
         <% }); %>
         </tbody>

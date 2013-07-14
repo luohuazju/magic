@@ -49,6 +49,12 @@ define([
         //window.logger.debug("I am about to saving product.");
         var itemDetail = $(ev.currentTarget).serializeObject();
 
+        itemDetail.productPriceCN = parseFloat(itemDetail.productPriceCN);
+        itemDetail.productPriceUS = parseFloat(itemDetail.productPriceUS);
+        itemDetail.productSellingPriceCN = parseFloat(itemDetail.productSellingPriceCN);
+        itemDetail.productWeight = parseFloat(itemDetail.productWeight);
+        itemDetail.productWin = parseFloat(itemDetail.productWin);
+
         var newItem = new ProductModel();
 
         if(this.item){
@@ -56,23 +62,25 @@ define([
           this.item.save(itemDetail,{
             success: function (data) {
               //window.logger.debug("success to get the data back = " + data);
-              Backbone.history.navigate('products/productplan', {trigger:true});
+              Backbone.history.navigate('products/' + item.productType, {trigger:true});
             },
             error: function(e){
               window.logger.error("Failed to save on product" + e);
             }
           });
+          this.item = null;
         }else{
           window.logger.info("I am going to create the item.")
           newItem.save(itemDetail, {
             success: function (data) {
               //window.logger.debug("success to get the data back = " + data);
-              Backbone.history.navigate('products/productplan', {trigger:true});
+              Backbone.history.navigate('products/' + itemDetail.productType, {trigger:true});
             },
             error: function(e){
               window.logger.error("Failed to save on product" + e);
             }
           });
+          this.item = null;
         }
 
         return false;
