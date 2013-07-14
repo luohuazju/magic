@@ -11,7 +11,8 @@ require.config({
       json2: '//cdnjs.cloudflare.com/ajax/libs/json2/20121008/json2',
       log4javascript_custom: 'libs/log4javascript/log4javascript_custom',
       templates:   '../templates',
-	  bootstrap:  '../libs/bootstrap/2.3.2/js/bootstrap'
+	  bootstrap:  '../libs/bootstrap/2.3.2/js/bootstrap',
+	  catcookie:  'libs/cookies/Cookies'
     },
 	shim: {
 		jquery: {

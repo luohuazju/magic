@@ -6,64 +6,74 @@
 
 <form class="form-horizontal" id="editForm">
 
-    <input type="hidden" name="productDesn" value="dsf">
-    <input type="hidden" name="createDate" value="2012-05-22 13:33">
-    <input type="hidden" name="expirationDate" value="2012-05-22 13:33">
-    <input type="hidden" name="productCode" value="asdfasdf">
-
-
     <div class="control-group">
-        <label class="control-label" for="inputWarning">商品名称</label>
+        <label class="control-label" for="productName">商品名称</label>
         <div class="controls">
-            <input type="text" id="inputWarning" name="productName" value="<%= item ? item.get('productName') : '' %>">
+            <input type="text" id="productName" name="productName" value="<%= item ? item.get('productName') : '' %>" placeholder="productName">
             <span class="help-inline"></span>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="inputError">商品单价（美元）</label>
+        <label class="control-label" for="productCode">商品编号</label>
         <div class="controls">
-            <input type="text" id="inputError">
+            <input type="text" id="productCode" name="productCode" value="<%= item ? item.get('productCode') : '' %>">
             <span class="help-inline"></span>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="inputInfo">商品成本价格（人民币）</label>
+        <label class="control-label" for="expirationDate">商品有效期</label>
         <div class="controls">
-            <input type="text" id="inputInfo">
-            <span class="help-inline"></span>
+            <input type="text" id="expirationDate" name="expirationDate" value="<%= item ? item.get('expirationDate') : '' %>">
+            <span class="help-inline">2012-05-22 13:33</span>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="inputSuccess">商品售价（人民币）</label>
+        <label class="control-label" for="productPriceUS">商品单价（美元）</label>
         <div class="controls">
-            <input type="text" id="inputSuccess">
-            <span class="help-inline"></span>
+            <input type="text" id="productPriceUS" name="productPriceUS" value="<%= item ? item.get('productPriceUS') : '' %>" placeholder="00.00">
+            <span class="help-inline">$</span>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="weight">商品重量</label>
+        <label class="control-label" for="productPriceCN">商品成本价格（人民币）</label>
         <div class="controls">
-            <input type="text" id="weight">
-            <span class="help-inline"></span>
+            <input type="text" id="productPriceCN" name="productPriceCN" value="<%= item ? item.get('productPriceCN') : '' %>" placeholder="000">
+            <span class="help-inline">RMB</span>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="moneyWin">商品毛利（人民币）</label>
+        <label class="control-label" for="productSellingPriceCN">商品售价（人民币）</label>
         <div class="controls">
-            <input type="text" id="moneyWin">
-            <span class="help-inline"></span>
+            <input type="text" id="productSellingPriceCN" name="productSellingPriceCN" value="<%= item ? item.get('productSellingPriceCN') : '' %>" placeholder="000">
+            <span class="help-inline">RMB</span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="productWeight">商品重量</label>
+        <div class="controls">
+            <input type="text" id="productWeight" name="productWeight" value="<%= item ? item.get('productWeight') : '' %>" placeholder="0.0">
+            <span class="help-inline">磅</span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="productWin">商品毛利（人民币）</label>
+        <div class="controls">
+            <input type="text" id="productWin" name="productWin" value="<%= item ? item.get('productWin') : '' %>" placeholder="000">
+            <span class="help-inline">RMB</span>
         </div>
     </div>
 
     <div class="control-group">
         <label class="control-label" for="productLink">商品链接</label>
         <div class="controls">
-            <input type="text" id="productLink">
+            <input type="text" id="productLink" name="productLink" value="<%= item ? item.get('productLink') : '' %>" placeholder="http://xxxxxx">
             <span class="help-inline"></span>
         </div>
     </div>
@@ -71,8 +81,51 @@
     <div class="control-group">
         <label class="control-label" for="productDesn">商品描述</label>
         <div class="controls">
-            <textarea class="span7" rows="6" id="productDesn"></textarea>
+            <textarea class="span7" rows="6" id="productDesn" name="productDesn"><%= item ? item.get('productDesn') : '' %></textarea>
             <span class="help-block"></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="productType">商品类型</label>
+        <div class="controls">
+            <select id="productType" name="productType">
+                <option value="PLAN"
+                <% if(item && item.get('productType') == 'PLAN'){ %>
+                selected
+                <% } %>
+                        >计划商品</option>
+                <option value="ONLINE"
+                <% if(item && item.get('productType') == 'ONLINE'){ %>
+                selected
+                <% } %>
+                        >上线商品</option>
+                <option value="HISTORY"
+                <% if(item && item.get('productType') == 'HISTORY'){ %>
+                selected
+                <% } %>
+                        >历史商品</option>
+            </select>
+            <span class="help-inline"></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="productStatus">商品状态</label>
+        <div class="controls">
+            <select id="productStatus" name="productStatus">
+                <option value="ACTIVE"
+                <% if(item && item.get('productStatus') == 'ACTIVE'){ %>
+                   selected
+                <% } %>
+                >激活</option>
+                <option value="DISABLE"
+                <% if(item && item.get('productStatus') == 'DISABLE'){ %>
+                selected
+                <% } %>
+                >删除</option>
+            </select>
+            <span class="help-inline"></span>
         </div>
     </div>
 

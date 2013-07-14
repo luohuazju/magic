@@ -83,11 +83,11 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     		"cartName" : "HomeCart",
     		"cartType" : "DIRECT",
     		"user" : {
-    			"id" : 3, 
+    			"id" : 3,
     			"userName" : "Carl",
-    			"age": 31, 
-    			"userType": "ADMIN", 
-    			"createDate": "2012-05-21 12:34", 
+    			"age": 31,
+    			"userType": "ADMIN",
+    			"createDate": "2012-05-21 12:34",
     			"expirationDate": "2013-05-12 12:34",
     			"password": "111111"
     		},
@@ -98,7 +98,15 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     				"productDesn" : "A good mobile device.",
     				"createDate" : "2012-05-22 13:33",
     				"expirationDate" : "2012-05-22 14:33",
-    				"productCode" : "IPHONE5"
+    				"productCode" : "IPHONE5",
+            "productPriceUS" : 30.32,
+            "productPriceCN" : 400,
+            "productSellingPriceCN" : 200,
+            "productWeight" : 1.0,
+            "productWin" : 100,
+            "productLink" : "link",
+            "productType" : "PLAN",
+            "productStatus" : "ACTIVE"
     			},
     			{
     				"id" : 2,
@@ -106,12 +114,20 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     				"productDesn" : "A good mobile device.",
     				"createDate" : "2012-05-22 13:33",
     				"expirationDate" : "2012-05-22 14:33",
-    				"productCode" : "IPHONE4S"
+    				"productCode" : "IPHONE4S",
+            "productPriceUS" : 30.32,
+            "productPriceCN" : 400,
+            "productSellingPriceCN" : 200,
+            "productWeight" : 1.0,
+            "productWin" : 100,
+            "productLink" : "link",
+            "productType" : "PLAN",
+            "productStatus" : "ACTIVE"
     			}
             ]
       }"""
     val cartAST = jsonCart.asJson
-    
+
     info("CartAST: " + cartAST.asJsObject)
     val cart: Cart = cartAST.convertTo[Cart]
     info("Cart Object: " + cart.toJson)
@@ -125,7 +141,15 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     			"productDesn" : "A good mobile device.",
     			"createDate" : "2012-05-22 13:33",
     			"expirationDate" : "2012-05-22 14:33",
-    			"productCode" : "IPHONE5"
+    			"productCode" : "IPHONE5",
+          "productPriceUS" : 30.32,
+          "productPriceCN" : 400,
+          "productSellingPriceCN" : 200,
+          "productWeight" : 1.0,
+          "productWin" : 100,
+          "productLink" : "link",
+          "productType" : "PLAN",
+          "productStatus" : "ACTIVE"
     		}"""
     val productAST = jsonProduct.asJson
     
