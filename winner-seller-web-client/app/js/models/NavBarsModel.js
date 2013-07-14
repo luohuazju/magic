@@ -24,7 +24,7 @@ define([
            if(config.navbarsProvider == 'jsonp'){
               options.dataType = "jsonp";
               options.crossDomain = true;
-              var url_str = 'http://' + 'customer' + ':' + 'customer' + '@';
+              var url_str = 'http://' + 'customer@gmail.com' + ':' + 'customer' + '@';
               url_str = url_str + config.remoteServerURL +':' + config.remoteServerPort;
               url_str = url_str + '/' + config.apiVersion +'/' + config.brandName + '/' + 'navbars';
               options.url = url_str;

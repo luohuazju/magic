@@ -21,7 +21,7 @@ define([
           }
       });
       return o;
-    };
+  };
 
   var View = Backbone.View.extend({
     el: $("#content"),

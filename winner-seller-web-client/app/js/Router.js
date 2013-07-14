@@ -44,6 +44,7 @@ define([
       'product/edit/:productId' : 'product',
       'product/create' : 'product',
       'about' : 'showAbout',
+      'logon' : 'logon',
       '' : 'defaultAction'
       //'*actions': 'defaultAction'
     },
@@ -58,24 +59,29 @@ define([
     },
     
     showAbout: function(){
-        if(loginFilter()) return;
+        //if(loginFilter()) return;
     	window.logger.debug("Entering the showAbout Page!");
     	navBarView.render();
         aboutView.render();
     },
     
     products: function(type){
-    	if(loginFilter()) return;
+    	//if(loginFilter()) return;
     	window.logger.debug("Entering the Page products with type=" + type);
     	navBarView.render();
         productsView.render(type);
     },
 
     product: function(productId){
-        if(loginFilter()) return;
+        //if(loginFilter()) return;
         window.logger.debug("Entering the productEdit Page with id=" + productId);
         navBarView.render();
         productEditView.render(productId);
+    },
+
+    logon: function(){
+        //navBarView.render();
+        loginView.render();
     },
     
     defaultAction: function(){

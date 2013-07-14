@@ -111,11 +111,17 @@ trait UserDAO extends Logging { this: Profile =>
     def auth(email: String, password: String)(implicit session: Session): Option[User] = {
       logger.debug("I am authing the userName=" + email + " password=" + password)
       (email, password) match {
+        case ("admin@gmail.com", "admin") =>
+          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("admin", "admin") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
+        case ("customer@gmail.com", "customer") =>
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
         case ("customer", "customer") =>
           Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
         case ("manager", "manager") =>
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+        case ("manager@gmail.com", "manager") =>
           Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
         case _ => None
       }
