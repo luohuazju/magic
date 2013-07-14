@@ -23,33 +23,22 @@ define([
             var userDetail = $(ev.currentTarget).serializeObject();
             window.logger.debug("logonSystem email=" + userDetail.email + " password=" + userDetail.password);
 
-//            newItem.save({},{
-//                success: function (data) {
-//                   alert("2");
-//                   window.logger.debug("I am getting data from logon=" + data.id);
-//                   var catCookie = new CatCookie("cat");
-//                   catCookie.setCookie("cat_user_name", userDetail.email);
-//                   Backbone.history.navigate('', {trigger:true});
-//                   return false;
-//                },
-//                error: function(e){
-//                   return false;
-//                }
-//            });
-
+            var item = new UserModel({email: userDetail.email, password: userDetail.password});
+            item.fetch({
+                       success: function(data){
+                          window.logger.debug("I am getting data=" + data.id);
+                          if(userDetail.email != ""){
+                                         Backbone.history.navigate('', {trigger:true});
+                          }else{
+                                         Backbone.history.navigate('logon?error=true', {trigger:true});
+                          }
+                       },
+                       error: function(e){
+                            console.log("Failed to fetch the product" + e);
+                            Backbone.history.navigate('logon?error=true', {trigger:true});
+                       }
+            });
             return false;
-//            that.item.save({
-//                success: function(data){
-//                    window.logger.debug("I am getting data from logon=" + data.id);
-//                    var catCookie = new CatCookie("cat");
-//                    catCookie.setCookie("cat_user_name", userDetail.email);
-//                    Backbone.history.navigate('', {trigger:true});
-//                },
-//                error: function(e){
-//                    console.log("Failed to fetch the User" + e);
-//                    Backbone.history.navigate('logon', {trigger:true});
-//                }
-//            });
         },
 
         render: function(){
