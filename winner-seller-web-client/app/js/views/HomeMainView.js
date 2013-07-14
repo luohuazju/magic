@@ -14,9 +14,9 @@ define([
 	},
     
     render: function(){
-      var catCookie = new CatCookie("cat");
+      //var catCookie = new CatCookie("cat");
 
-      if(catCookie.getcookie("cat_user_name")){
+      //if(catCookie.getcookie("cat_user_name")){
          window.logger.debug("render to home page");
 
          var data = {
@@ -25,9 +25,9 @@ define([
          };
          var compiledTemplate = _.template( htmlTemplate, data );
          $(this.el).html( compiledTemplate );
-      }else{
-         window.logger.debug("render to login page");
-      }
+      //}else{
+      //   window.logger.debug("render to login page");
+      //}
     }
   
   });
