@@ -160,7 +160,7 @@ class ModelDAOSpec extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
   
   test("Persist User"){
     dao.db withSession {
-      val item = User(None, "sillycat", 31, UserType.ADMIN, DateTime.now , DateTime.now, "111111")
+      val item = User(None, "sillycat", 31, UserType.ADMIN, DateTime.now , DateTime.now, "111111", "admin@gmail.com")
       info(item.toString)
       val id = dao.Users.insert(item)
       assert(id === 1)

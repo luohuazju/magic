@@ -30,7 +30,15 @@ case class Product(
  * 2 User(2, 'manager', ..., 'manager')
  * 3 User(3, 'customer', ..., 'customer')
  */
-case class User(id: Option[Long], userName: String, age: Int, userType: UserType.Value, createDate: DateTime, expirationDate: DateTime, password: String)
+case class User(
+                 id: Option[Long],
+                 userName: String,
+                 age: Int,
+                 userType: UserType.Value,
+                 createDate: DateTime,
+                 expirationDate: DateTime,
+                 password: String,
+                 email: String)
 
 
 /**
