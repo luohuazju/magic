@@ -4,7 +4,7 @@ define([
   'Config'
 ], function( _, Backbone, Config) {
     var item = Backbone.Model.extend({
-        urlRoot: '/users',
+        urlRoot: '/auth',
         parse: function(response) {
             window.logger.debug("getting User from response=" + response);
             return response;
@@ -19,12 +19,7 @@ define([
 
           options.contentType = "application/json; charset=utf-8";
           var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
-          url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'users';
-
-//          window.logger.info("asdfasdfasdf=" + model.email + "===" + model.id);
-//          if((method == 'read') && model.id){
-//             url_str = url_str + '/' + model.id;
-//          }
+          url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'auth';
 
           options.url = url_str;
 

@@ -3,9 +3,9 @@ define([
   'underscore',
   'backbone',
   'text!templates/LoginTemplate.html',
-  'models/UserModel',
+  'models/AuthModel',
   'catcookie'
-], function($, _, Backbone, htmlTemplate, UserModel, CatCookie) {
+], function($, _, Backbone, htmlTemplate, AuthModel, CatCookie) {
 
     var view = Backbone.View.extend({
         el: $("#content"),
@@ -24,33 +24,27 @@ define([
             var userDetail = $(ev.currentTarget).serializeObject();
             window.logger.debug("logonSystem email=" + userDetail.email + " password=" + userDetail.password);
 
-            var newItem = new UserModel();
+            var newItem = new AuthModel();
 
 
             newItem.save(userDetail, {
-                        success: function (data) {
-                          window.logger.debug("success to get the data back = " + data);
-                          Backbone.history.navigate('products/' + itemDetail.productType, {trigger:true});
-                        },
-                        error: function(e){
-                          window.logger.error("Failed to save on product" + e);
-                        }
+                success: function (data) {
+                      window.logger.debug("I am getting data=" + data.id + " email=" + data.get("email")
+                        + " password=" + data.get("password"));
+                      if(data.id){
+                          window.logger.debug("Logon successfully.");
+                          Backbone.history.navigate('', {trigger:true});
+                      }else{
+                          window.logger.error("Wrong user name and password.");
+                          Backbone.history.navigate('logon?error=true', {trigger:true});
+                      }
+                },
+                error: function(e){
+                  console.log("Failed to fetch the user" + e);
+                  Backbone.history.navigate('logon?error=true', {trigger:true});
+                }
             });
 
-//            that.item.fetch({
-//                       success: function(data){
-//                          window.logger.debug("I am getting data=" + data.id);
-//                          if(userDetail.email != ""){
-//                              Backbone.history.navigate('', {trigger:true});
-//                          }else{
-//                              Backbone.history.navigate('logon?error=true', {trigger:true});
-//                          }
-//                       },
-//                       error: function(e){
-//                            console.log("Failed to fetch the user" + e);
-//                            Backbone.history.navigate('logon?error=true', {trigger:true});
-//                       }
-//            });
             return false;
         },
 
