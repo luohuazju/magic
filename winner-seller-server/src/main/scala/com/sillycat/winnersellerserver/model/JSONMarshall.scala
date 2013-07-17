@@ -45,6 +45,26 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
   }
 }
 
+object UserLogonJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
+
+  implicit object UserLogonJsonFormat extends RootJsonFormat[UserLogon]{
+    def write(item : UserLogon) = JsObject(
+      Map(
+        "email" -> JsString(item.email),
+        "password"  -> JsString(item.password)
+      )
+    )
+    def read(jsItem: JsValue) = {
+      val params: Map[String, JsValue] = jsItem.asJsObject.fields
+
+      UserLogon(
+        params("email").convertTo[String],
+        params("password").convertTo[String]
+      )
+    }
+  }
+}
+
 object ProductJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit object ProductJsonFormat extends RootJsonFormat[Product] {

@@ -40,6 +40,11 @@ case class User(
                  password: String,
                  email: String)
 
+case class UserLogon(
+                 email: String,
+                 password: String
+           )
+
 
 /**
  * 1 Role(1, "admin", "")

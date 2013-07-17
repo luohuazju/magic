@@ -13,7 +13,6 @@ define([
           options.timeout = 10000;
           var config = new Config();
 
-          alert("4");
           window.logger.info("method = " + method);
 
           options.xhrFields = { withCredentials: true };
@@ -21,6 +20,11 @@ define([
           options.contentType = "application/json; charset=utf-8";
           var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
           url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'users';
+
+//          window.logger.info("asdfasdfasdf=" + model.email + "===" + model.id);
+//          if((method == 'read') && model.id){
+//             url_str = url_str + '/' + model.id;
+//          }
 
           options.url = url_str;
 
