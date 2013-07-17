@@ -34,15 +34,21 @@ define([
                       if(data.id){
                           window.logger.debug("Logon successfully.");
                           Backbone.history.navigate('', {trigger:true});
-                      }else{
-                          window.logger.error("Wrong user name and password.");
-                          Backbone.history.navigate('logon?error=true', {trigger:true});
                       }
+//                      else{
+//                          window.logger.error("Wrong user name and password.");
+//                          Backbone.history.navigate('logon?error=true', {trigger:true});
+//                      }
                 },
-                error: function(e){
-                  console.log("Failed to fetch the user" + e);
-                  Backbone.history.navigate('logon?error=true', {trigger:true});
+                error: function(model, response) {
+                   console.log("Failed to fetch the status=" + response.responseText + " " + response.status
+                    + " " + response.statusText);
+                   Backbone.history.navigate('logon?error=true', {trigger:true});
                 }
+//                error: function(e){
+//                  console.log("Failed to fetch the user" + e.status);
+//                  Backbone.history.navigate('logon?error=true', {trigger:true});
+//                }
             });
 
             return false;

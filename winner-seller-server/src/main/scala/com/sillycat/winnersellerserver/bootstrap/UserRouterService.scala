@@ -10,6 +10,9 @@ import BaseDAO.threadLocalSession
 import spray.json._
 import spray.httpx.SprayJsonSupport._
 import com.sillycat.winnersellerserver.model.UserLogon
+import spray.http.StatusCodes._
+import com.sillycat.winnersellerserver.model.UserLogon
+import scala.Some
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,12 +37,13 @@ trait UserRouterService extends BaseRouterService with CustomerMethodDirectives 
             path("auth") {
               post {
                 entity(as[UserLogon]) { item =>
-                  complete {
                     dao.db.withSession {
-                      val userOption = dao.Users.auth(item.email,item.password)
-                      userOption
+                      dao.Users.auth(item.email,item.password) match {
+                        case Some(user) => complete {user}
+                        //case _ => complete(BadRequest, "Error Message asdfasdf")
+                        case _ => complete("{ status: error, message: error message }")
+                      }
                     }
-                  }
                 }
               } ~
               options{
