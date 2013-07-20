@@ -34,6 +34,9 @@ trait UserRouterService extends BaseRouterService with CustomerMethodDirectives 
 
         respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
+          //hostName { webserver =>
+          host("([a-zA-Z0-9]*).api.sillycat.com".r) { webserver =>
+            println("I get it webserver = " + webserver)
             path("auth") {
               post {
                 entity(as[UserLogon]) { item =>
@@ -52,6 +55,7 @@ trait UserRouterService extends BaseRouterService with CustomerMethodDirectives 
                 }
               }
             }
+          }
         }
       }
     }
