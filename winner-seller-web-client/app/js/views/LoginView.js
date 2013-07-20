@@ -66,6 +66,7 @@ define([
           var compiledTemplate = _.template( htmlTemplate, data );
           $(this.el).html( compiledTemplate );
 
+          $("#navBar").html("");
         }
 
     });

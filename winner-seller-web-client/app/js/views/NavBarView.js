@@ -21,7 +21,7 @@ define([
        window.logger.debug("Logout the system!");
        var catCookie = new CatCookie("cat");
        catCookie.setCookie("cat_user_name", "");
-       Backbone.history.navigate('logon', {trigger:false});
+       Backbone.history.navigate('logon', {trigger:true} );
     },
     
     render: function(){
