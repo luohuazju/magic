@@ -3,14 +3,26 @@ define([
   'underscore',
   'backbone',
   'models/NavBarsModel',
-  'text!templates/NavBarTemplate.html'
-], function($, _, Backbone, NavBarsModel, htmlTemplate) {
+  'text!templates/NavBarTemplate.html',
+  'catcookie'
+], function($, _, Backbone, NavBarsModel, htmlTemplate, CatCookie) {
 
   var NavBarView = Backbone.View.extend({
     el: $("#navBar"),
     
     initialize: function(){
 	},
+
+	events: {
+       'click #logout': 'logoutSystem'
+    },
+
+    logoutSystem: function(ev){
+       window.logger.debug("Logout the system!");
+       var catCookie = new CatCookie("cat");
+       catCookie.setCookie("cat_user_name", "");
+       Backbone.history.navigate('logon', {trigger:false});
+    },
     
     render: function(){
       //window.logger.debug("I am going to hit the Nav Bar Template Page.");

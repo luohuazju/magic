@@ -33,7 +33,9 @@ define([
                         + " password=" + data.get("password"));
                       if(data.id){
                           window.logger.debug("Logon successfully.");
-                          Backbone.history.navigate('', {trigger:true});
+                          var catCookie = new CatCookie("cat");
+                          catCookie.setCookie("cat_user_name", data.get("email"));
+                          Backbone.history.navigate('home', {trigger:true});
                       }
 //                      else{
 //                          window.logger.error("Wrong user name and password.");
@@ -41,7 +43,7 @@ define([
 //                      }
                 },
                 error: function(model, response) {
-                   console.log("Failed to fetch the status=" + response.responseText + " " + response.status
+                   console.error("Failed to fetch the status=" + response.responseText + " " + response.status
                     + " " + response.statusText);
                    Backbone.history.navigate('logon?error=true', {trigger:true});
                 }
