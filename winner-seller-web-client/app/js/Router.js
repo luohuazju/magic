@@ -28,7 +28,7 @@ define([
   var loginFilter = function(){
      //if cookie not existing, router to login
      var catCookie = new CatCookie("cat");
-     if(!catCookie.getcookie("cat_user_name")){
+     if(!catCookie.getcookie("cat_user_name") || catCookie.getcookie("cat_user_name") == ""){
         window.logger.debug("render to login page from router");
         //navBarView.render();
         loginView.render();
@@ -43,7 +43,9 @@ define([
       'products/:type' : 'products',
       'product/edit/:productId' : 'product',
       'product/create' : 'product',
+      'home'  : 'homePage',
       'about' : 'showAbout',
+      'logon' : 'logon',
       '' : 'defaultAction'
       //'*actions': 'defaultAction'
     },
@@ -77,12 +79,25 @@ define([
         navBarView.render();
         productEditView.render(productId);
     },
+
+    logon: function(){
+        //navBarView.render();
+        loginView.render();
+    },
+
+    homePage: function(){
+        if(loginFilter()) return;
+        window.logger.debug("Entering the home Page!");
+        navBarView.render();
+        homeMainView.render();
+    },
     
     defaultAction: function(){
-        if(loginFilter()) return;
+        //if(loginFilter()) return;
     	window.logger.debug("Entering the default Page!");
-		navBarView.render();
-		homeMainView.render();
+		//navBarView.render();
+		//homeMainView.render();
+		loginView.render();
     }
     
   });

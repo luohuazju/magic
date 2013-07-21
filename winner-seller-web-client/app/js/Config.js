@@ -17,6 +17,7 @@ define([
         //mock,jsonp,json
 	    this.navbarsProvider = 'jsonp';
 	    this.productsProvider = 'json';
+	    this.usersProvider = 'json';
 	}
 	return Config;
 });

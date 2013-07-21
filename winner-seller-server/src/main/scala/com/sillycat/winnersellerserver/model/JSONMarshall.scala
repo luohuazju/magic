@@ -24,22 +24,43 @@ class UserJsonProtocol(currentId: Long) extends DefaultJsonProtocol {
       "age" -> JsNumber(user.age),
       "userType" -> JsString(user.userType.toString()),
       "createDate" -> JsString(dateTimeFormat.print(new DateTime(user.createDate))),
-      "expirationDate" -> JsString(dateTimeFormat.print(new DateTime(user.expirationDate)))
+      "expirationDate" -> JsString(dateTimeFormat.print(new DateTime(user.expirationDate))),
+      "email" -> JsString(user.email)
       ) ++ 
       user.id.map( i => Map("id" -> JsNumber(i))).getOrElse(emptyJSMap)
     )
     def read(jsUser: JsValue) = {
-      jsUser.asJsObject.getFields("id", "userName", "age", "userType", "createDate", "expirationDate", "password") match {
-        case Seq(JsNumber(id), JsString(userName), JsNumber(age), JsString(userType), JsString(createDate), JsString(expirationDate), JsString(password)) =>
+      jsUser.asJsObject.getFields("id", "userName", "age", "userType", "createDate", "expirationDate", "password", "email") match {
+        case Seq(JsNumber(id), JsString(userName), JsNumber(age), JsString(userType), JsString(createDate), JsString(expirationDate), JsString(password), JsString(email) ) =>
           val createDateObject = dateTimeFormat.parseDateTime(createDate)
           val expirationDateObject = dateTimeFormat.parseDateTime(expirationDate)
-          new User(Some(id.longValue), userName, age.toInt, UserType.withName(userType), createDateObject, expirationDateObject,password)
-        case Seq(JsString(userName), JsNumber(age), JsString(userType), JsString(createDate), JsString(expirationDate), JsString(password)) =>
+          new User(Some(id.longValue), userName, age.toInt, UserType.withName(userType), createDateObject, expirationDateObject,password, email )
+        case Seq(JsString(userName), JsNumber(age), JsString(userType), JsString(createDate), JsString(expirationDate), JsString(password), JsString(email)) =>
           val createDateObject = dateTimeFormat.parseDateTime(createDate)
           val expirationDateObject = dateTimeFormat.parseDateTime(expirationDate)
-          new User( None, userName, age.toInt, UserType.withName(userType), createDateObject, expirationDateObject,password)
+          new User( None, userName, age.toInt, UserType.withName(userType), createDateObject, expirationDateObject,password, email)
         case _ => throw new DeserializationException("User expected")
       }
+    }
+  }
+}
+
+object UserLogonJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
+
+  implicit object UserLogonJsonFormat extends RootJsonFormat[UserLogon]{
+    def write(item : UserLogon) = JsObject(
+      Map(
+        "email" -> JsString(item.email),
+        "password"  -> JsString(item.password)
+      )
+    )
+    def read(jsItem: JsValue) = {
+      val params: Map[String, JsValue] = jsItem.asJsObject.fields
+
+      UserLogon(
+        params("email").convertTo[String],
+        params("password").convertTo[String]
+      )
     }
   }
 }

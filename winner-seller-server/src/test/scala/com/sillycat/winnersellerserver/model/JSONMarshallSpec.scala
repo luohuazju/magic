@@ -19,7 +19,8 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     		"userType": "ADMIN", 
     		"createDate": "2012-05-21 12:34", 
     		"expirationDate": "2013-05-12 12:34",
-    		"password": "111111"
+    		"password": "111111",
+        "email": "admin@gmail.com"
       }"""
     implicit val formatter = (new UserJsonProtocol(1)).UserJsonFormat
     val userAST = jsonUser.asJson
@@ -89,7 +90,8 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     			"userType": "ADMIN",
     			"createDate": "2012-05-21 12:34",
     			"expirationDate": "2013-05-12 12:34",
-    			"password": "111111"
+    			"password": "111111",
+          "email": "admin@gmail.com"
     		},
     		"products" : [
     			{
@@ -167,7 +169,8 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     		"userType": "ADMIN", 
     		"createDate": "2012-05-21 12:34", 
     		"expirationDate": "2013-05-12 12:34",
-    		"password": "111111"
+    		"password": "111111",
+        "email": "admin@gmail.com"
       }"""
     implicit val formatter = (new UserJsonProtocol(1)).UserJsonFormat
     val userAST = jsonUser.asJson
