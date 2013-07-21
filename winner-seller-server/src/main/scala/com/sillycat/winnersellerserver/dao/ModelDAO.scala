@@ -89,7 +89,7 @@ trait NavBarDAO extends Logging { this: Profile =>
 trait UserDAO extends Logging { this: Profile =>
   import profile.simple._
 
-  object Users extends Table[(Long, String, Int, String, DateTime, DateTime, String)]("USER") {
+  object Users extends Table[(Long, String, Int, String, DateTime, DateTime, String, String)]("USER") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def userName = column[String]("USER_NAME") // 2
     def age = column[Int]("AGE") //3
@@ -97,25 +97,32 @@ trait UserDAO extends Logging { this: Profile =>
     def createDate = column[DateTime]("CREATE_DATE") //5
     def expirationDate = column[DateTime]("EXPIRATION_DATE") // 6
     def password = column[String]("PASSWORD") // 7
+    def email = column[String]("EMAIL") //8
 
-    def * = id ~ userName ~ age ~ userType ~ createDate ~ expirationDate ~ password
+    def * = id ~ userName ~ age ~ userType ~ createDate ~ expirationDate ~ password ~ email
 
-    def persist(implicit session: Session) = id.? ~ userName ~ age ~ userType ~ createDate ~ expirationDate ~ password
+    def persist(implicit session: Session) = id.? ~ userName ~ age ~ userType ~ createDate ~ expirationDate ~ password ~ email
 
     def insert(user: User)(implicit session: Session): Long = {
-      val id = persist.insert(user.id, user.userName, user.age, user.userType.toString(), user.createDate, user.expirationDate, user.password)
+      val id = persist.insert(user.id, user.userName, user.age, user.userType.toString(), user.createDate, user.expirationDate, user.password, user.email)
       id
     }
 
-    def auth(userName: String, password: String)(implicit session: Session): Option[User] = {
-      logger.debug("I am authing the userName=" + userName + " password=" + password)
-      (userName, password) match {
+    def auth(email: String, password: String)(implicit session: Session): Option[User] = {
+      logger.debug("I am authing the userName=" + email + " password=" + password)
+      (email, password) match {
+        case ("admin@gmail.com", "admin") =>
+          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("admin", "admin") =>
-          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin"))
+          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
+        case ("customer@gmail.com", "customer") =>
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
         case ("customer", "customer") =>
-          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer"))
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
         case ("manager", "manager") =>
-          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager"))
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+        case ("manager@gmail.com", "manager") =>
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
         case _ => None
       }
     }
@@ -125,7 +132,7 @@ trait UserDAO extends Logging { this: Profile =>
       val query = for { item <- Users if (item.id === userId) } yield (item)
       logger.debug("Get User by id, SQL should be : " + query.selectStatement)
       query.firstOption map {
-        case (user) => User(Option(user._1), user._2, user._3, UserType.withName(user._4), user._5, user._6, user._7)
+        case (user) => User(Option(user._1), user._2, user._3, UserType.withName(user._4), user._5, user._6, user._7, user._8)
       }
     }
 

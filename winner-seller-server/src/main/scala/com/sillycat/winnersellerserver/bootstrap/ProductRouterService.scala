@@ -5,15 +5,10 @@ import com.sillycat.winnersellerserver.model.ProductJsonProtocol
 import com.sillycat.winnersellerserver.model.Product
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import spray.json._
-import spray.http._
-import spray.http.MediaTypes._
 import spray.httpx.SprayJsonSupport._
 import spray.routing.authentication._
 import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
 import BaseDAO.threadLocalSession
-import spray.http.HttpHeaders._
-import com.sillycat.winnersellerserver.CrossDomainHeaders._
-import com.sillycat.winnersellerserver.util.SillycatConstant
 import com.sillycat.winnersellerserver.util.SillycatUtil
 import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
 import com.sillycat.winnersellerserver.model.ProductStatus
