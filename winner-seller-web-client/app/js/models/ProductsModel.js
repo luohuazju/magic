@@ -34,7 +34,8 @@ define([
 
               options.beforeSend = function (xhr) {
                   //Authorization       Authentication
-                  xhr.setRequestHeader("Authorization", "Basic Y3VzdG9tZXI6Y3VzdG9tZXI=");
+                  //xhr.setRequestHeader("Authorization", "Basic Y3VzdG9tZXI6Y3VzdG9tZXI=");
+                  xhr.setRequestHeader("Authorization", btoa("customer@gmail.com"));
               };
 
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort;
