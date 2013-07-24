@@ -44,6 +44,8 @@ libraryDependencies ++= Seq(
 
 seq(Revolver.settings: _*)
 
+publishArtifact in Test := true
+
 assemblySettings
 
 mainClass in assembly := Some("com.sillycat.winnersellerserver.Boot")
