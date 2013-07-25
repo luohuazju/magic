@@ -30,7 +30,6 @@ define([
      var catCookie = new CatCookie("cat");
      if(!catCookie.getcookie("cat_user_name") || catCookie.getcookie("cat_user_name") == ""){
         window.logger.debug("render to login page from router");
-        //navBarView.render();
         loginView.render();
         return true;
      }
@@ -62,42 +61,40 @@ define([
     showAbout: function(){
         if(loginFilter()) return;
     	window.logger.debug("Entering the showAbout Page!");
-    	//navBarView.render();
+    	navBarView.render();
         aboutView.render();
     },
     
     products: function(type){
     	if(loginFilter()) return;
     	window.logger.debug("Entering the Page products with type=" + type);
-    	//navBarView.render();
+    	navBarView.render();
         productsView.render(type);
     },
 
     product: function(productId){
         if(loginFilter()) return;
         window.logger.debug("Entering the productEdit Page with id=" + productId);
-        //navBarView.render();
+        navBarView.render();
         productEditView.render(productId);
     },
 
     logon: function(){
-        //navBarView.render();
         loginView.render();
     },
 
     homePage: function(){
         if(loginFilter()) return;
         window.logger.debug("Entering the home Page!");
-        //navBarView.render();
+        navBarView.render();
         homeMainView.render();
     },
     
     defaultAction: function(){
-        //if(loginFilter()) return;
+        if(loginFilter()) return;
     	window.logger.debug("Entering the default Page!");
-		//navBarView.render();
-		//homeMainView.render();
-		loginView.render();
+		navBarView.render();
+        homeMainView.render();
     }
     
   });

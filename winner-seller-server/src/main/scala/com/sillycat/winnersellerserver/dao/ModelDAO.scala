@@ -109,8 +109,8 @@ trait UserDAO extends Logging { this: Profile =>
     }
 
     def auth(email: String, password: String)(implicit session: Session): Option[User] = {
-      logger.debug("I am authing the userName=" + email + " password=" + password)
-      (email, password) match {
+      logger.debug("I am auth the userName=" + email + " password=" + password)
+      (email,password) match {
         case ("admin@gmail.com", "admin") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("admin", "admin") =>
@@ -122,6 +122,25 @@ trait UserDAO extends Logging { this: Profile =>
         case ("manager", "manager") =>
           Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
         case ("manager@gmail.com", "manager") =>
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+        case _ => None
+      }
+    }
+
+    def getForEmail(email: String)(implicit session: Session): Option[User] = {
+      logger.debug("I am auth the userName=" + email )
+      (email) match {
+        case ("admin@gmail.com") =>
+          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
+        case ("admin") =>
+          Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
+        case ("customer@gmail.com") =>
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+        case ("customer") =>
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+        case ("manager") =>
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+        case ("manager@gmail.com") =>
           Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
         case _ => None
       }

@@ -24,67 +24,70 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
 
 
   def productRoute = {
-    pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
-      implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
 
-      optionalHeaderValueByName("Origin") { originHeader =>
+      pathPrefix(Version) { apiVersion =>
+        implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
 
-         respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-           options{
-             complete{
-               "OK"
-             }
-           } ~
-           authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-                path("products") {
-                  get {
-                    parameters('productType.as[String]) { productType =>
-                      complete(
-                        dao.db.withSession {
-                          DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
-                        }
-                      )
-                    }
-                  } ~
-                  post {
-                    entity(as[Product]) { item =>
-                      complete {
-                        dao.db.withSession {
-                          dao.Products.insert(item)
-                        }
+           respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+
+             options{
+               complete{
+                 "OK"
+               }
+             } ~
+             authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+                  path("products") {
+                    get {
+                      parameters('productType.as[String]) { productType =>
+                        complete(
+                          dao.db.withSession {
+                            DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+                          }
+                        )
                       }
-                    }
-                  } ~
-                  put {
-                     entity(as[Product]){ item =>
+                    } ~
+                    post {
+                      entity(as[Product]) { item =>
                         complete {
-                          dao.db withSession {
-                            dao.Products.update(item)
+                          dao.db.withSession {
+                            dao.Products.insert(item)
                           }
                         }
-                     }
-                  }
-                }~
-                path("products" / IntNumber) { id =>
-                  get {
-                    complete {
-                      dao.db withSession {
-                        dao.Products.byId(id)
+                      }
+                    } ~
+                    put {
+                       entity(as[Product]){ item =>
+                          complete {
+                            dao.db withSession {
+                              dao.Products.update(item)
+                            }
+                          }
+                       }
+                    }
+                  }~
+                  path("products" / IntNumber) { id =>
+                    get {
+                      complete {
+                        dao.db withSession {
+                          dao.Products.byId(id)
+                        }
+                      }
+                    } ~
+                    delete {
+                      complete {
+                        dao.db withSession {
+                          dao.Products.deleteById(id) + ""
+                        }
                       }
                     }
-                  } ~
-                  delete {
-                    complete {
-                      dao.db withSession {
-                        dao.Products.deleteById(id) + ""
-                      }
-                    }
                   }
-                }
-            }
-         }
-      } //optionalHeaderValueByName
-    } //pathPrefix
-  }//productRoute
+              }
+           }
+        } //optionalHeaderValueByName
+      } //pathPrefix
+    }//productRoute
+  }
 }
