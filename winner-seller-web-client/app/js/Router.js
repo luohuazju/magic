@@ -62,21 +62,21 @@ define([
     showAbout: function(){
         if(loginFilter()) return;
     	window.logger.debug("Entering the showAbout Page!");
-    	navBarView.render();
+    	//navBarView.render();
         aboutView.render();
     },
     
     products: function(type){
     	if(loginFilter()) return;
     	window.logger.debug("Entering the Page products with type=" + type);
-    	navBarView.render();
+    	//navBarView.render();
         productsView.render(type);
     },
 
     product: function(productId){
         if(loginFilter()) return;
         window.logger.debug("Entering the productEdit Page with id=" + productId);
-        navBarView.render();
+        //navBarView.render();
         productEditView.render(productId);
     },
 
@@ -88,7 +88,7 @@ define([
     homePage: function(){
         if(loginFilter()) return;
         window.logger.debug("Entering the home Page!");
-        navBarView.render();
+        //navBarView.render();
         homeMainView.render();
     },
     

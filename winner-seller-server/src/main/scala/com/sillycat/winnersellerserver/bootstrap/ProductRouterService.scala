@@ -29,68 +29,73 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
 
       optionalHeaderValueByName("Origin") { originHeader =>
 
-       respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+         respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-        authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-            path("products") {
-              get {
-                parameters('productType.as[String]) { productType =>
-                  complete(
-                    dao.db.withSession {
-                      //DefaultJsonProtocol.listFormat[Product].write(dao.Products.all).toString
-                      DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+            authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+                path("products") {
+                  get {
+                    parameters('productType.as[String]) { productType =>
+                      complete(
+                        dao.db.withSession {
+                          DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+                        }
+                      )
                     }
-                  )
-                }
-              } ~
-              post {
-                entity(as[Product]) { item =>
-                  complete {
-                    dao.db.withSession {
-                      dao.Products.insert(item)
-                    }
-                  }
-                }
-              } ~
-              put {
-                 entity(as[Product]){ item =>
-                    complete {
-                      dao.db withSession {
-                        dao.Products.update(item)
+                  } ~
+                  post {
+                    entity(as[Product]) { item =>
+                      complete {
+                        dao.db.withSession {
+                          dao.Products.insert(item)
+                        }
                       }
                     }
-                 }
-              } ~
-              options{
-                complete{
-                  "OK"
-                }
-              }
-            }~
-            path("products" / IntNumber) { id =>
-              get {
-                complete {
-                  dao.db withSession {
-                    dao.Products.byId(id)
+                  } ~
+                  put {
+                     entity(as[Product]){ item =>
+                        complete {
+                          dao.db withSession {
+                            dao.Products.update(item)
+                          }
+                        }
+                     }
+                  }
+                }~
+                path("products" / IntNumber) { id =>
+                  get {
+                    complete {
+                      dao.db withSession {
+                        dao.Products.byId(id)
+                      }
+                    }
+                  } ~
+                  delete {
+                    complete {
+                      dao.db withSession {
+                        dao.Products.deleteById(id) + ""
+                      }
+                    }
                   }
                 }
-              } ~
-              delete {
-                complete {
-                  dao.db withSession {
-                    dao.Products.deleteById(id) + ""
-                  }
-                }
-              }~
-              options{
-                  complete{
-                    "OK"
-                  }
-              }
             }
-          }
-        }
-      }
-    }
-  }
+         } ~
+         respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+           path("products") {
+             options{
+               complete{
+                 "OK"
+               }
+             }
+           } ~
+             path("products" / IntNumber) { id =>
+               options{
+                 complete{
+                   "OK"
+                 }
+               }
+             }
+         }
+      } //optionalHeaderValueByName
+    } //pathPrefix
+  }//productRoute
 }

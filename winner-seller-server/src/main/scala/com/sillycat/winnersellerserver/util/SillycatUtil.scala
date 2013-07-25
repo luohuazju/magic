@@ -23,7 +23,7 @@ object SillycatUtil {
       if(lists.contains(originHeader.getOrElse(""))){
          headers
            .::(RawHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"))
-           .::(RawHeader("Access-Control-Allow-Headers", "accept, origin, authorization, content-type, X-Requested-With, X-HTTP-Method-Override"))
+           .::(RawHeader("Access-Control-Allow-Headers", "accept, origin, authentication, authorization, content-type, X-Requested-With, X-HTTP-Method-Override"))
            .::(RawHeader("Access-Control-Allow-Origin", originHeader.get ))
       }else{
          headers.::(RawHeader("Access-Control-Allow-Origin", ""))

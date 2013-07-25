@@ -27,6 +27,8 @@ define([
                var compiledTemplate = _.template( htmlTemplate, { items : data } );
                $("#content").html(compiledTemplate);
            },
+           //username: "customer@gmail.com",
+           //password: "customer",
            error: function(jqXHR, textStatus, errorThrown) {
               window.logger.error('error arguments: ', arguments);
               window.logger.error(jqXHR + " " + textStatus + " " + errorThrown);
