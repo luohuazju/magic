@@ -31,7 +31,12 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
 
          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-            authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+           options{
+             complete{
+               "OK"
+             }
+           } ~
+           authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
                 path("products") {
                   get {
                     parameters('productType.as[String]) { productType =>
@@ -78,22 +83,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                   }
                 }
             }
-         } ~
-         respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
-           path("products") {
-             options{
-               complete{
-                 "OK"
-               }
-             }
-           } ~
-             path("products" / IntNumber) { id =>
-               options{
-                 complete{
-                   "OK"
-                 }
-               }
-             }
          }
       } //optionalHeaderValueByName
     } //pathPrefix
