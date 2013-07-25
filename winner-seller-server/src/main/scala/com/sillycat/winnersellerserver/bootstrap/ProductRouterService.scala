@@ -33,20 +33,23 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
 
            respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-             options{
-               complete{
-                 "OK"
-               }
-             } ~
              authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-                  path("products") {
+
+               options{
+                 complete{
+                   "OK"
+                 }
+               } ~
+               path("products") {
                     get {
-                      parameters('productType.as[String]) { productType =>
-                        complete(
-                          dao.db.withSession {
-                            DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
-                          }
-                        )
+                      authorize(user.email == "admin@gmail.com"){
+                        parameters('productType.as[String]) { productType =>
+                          complete(
+                            dao.db.withSession {
+                              DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+                            }
+                          )
+                        }
                       }
                     } ~
                     post {
@@ -84,7 +87,7 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                       }
                     }
                   }
-              }
+               }
            }
         } //optionalHeaderValueByName
       } //pathPrefix

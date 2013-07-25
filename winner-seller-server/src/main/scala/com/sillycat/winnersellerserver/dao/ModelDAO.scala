@@ -116,13 +116,13 @@ trait UserDAO extends Logging { this: Profile =>
         case ("admin", "admin") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("customer@gmail.com", "customer") =>
-          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "customer@gmail.com"))
         case ("customer", "customer") =>
-          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "customer@gmail.com"))
         case ("manager", "manager") =>
-          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "manager@gmail.com"))
         case ("manager@gmail.com", "manager") =>
-          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "manager@gmail.com"))
         case _ => None
       }
     }
@@ -135,13 +135,13 @@ trait UserDAO extends Logging { this: Profile =>
         case ("admin") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("customer@gmail.com") =>
-          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "customer@gmail.com"))
         case ("customer") =>
-          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "admin@gmail.com"))
+          Option(User(Some(2), "customer", 100, UserType.CUSTOMER, new DateTime(), new DateTime(), "customer", "customer@gmail.com"))
         case ("manager") =>
-          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "manager@gmail.com"))
         case ("manager@gmail.com") =>
-          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "admin@gmail.com"))
+          Option(User(Some(3), "manager", 100, UserType.SELLER, new DateTime(), new DateTime(), "manager", "manager@gmail.com"))
         case _ => None
       }
     }

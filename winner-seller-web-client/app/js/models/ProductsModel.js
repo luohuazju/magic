@@ -31,7 +31,7 @@ define([
               options.beforeSend = function (xhr) {
                   //Authorization       Authentication
                   //window.btoa  window.atob
-                  var encryption_str = window.btoa("customer@gmail.com:customer");
+                  var encryption_str = window.btoa("admin@gmail.com:admin");
                   encryption_str = "Basic " + encryption_str
                   xhr.setRequestHeader("Authorization", encryption_str );
               };
