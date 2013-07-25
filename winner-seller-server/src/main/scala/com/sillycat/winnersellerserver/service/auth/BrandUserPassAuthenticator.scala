@@ -12,8 +12,13 @@ class BrandUserPassAuthenticator(dao: BaseDAO) extends UserPassAuthenticator[Use
     Future.successful(
       userPass match {
         case Some(UserPass(user, pass)) => {
-          dao.db withSession { dao.Users.auth(user, pass) }.flatMap {
-            case x => if (x.password == pass) { Some(x) } else { None }
+          dao.db withSession {
+            dao.Users.auth(user, pass) }.flatMap {
+              case x => {
+                if (x.password == pass) {
+                  Some(x)
+                } else { None }
+              }
           }
         }
         case _ => None
