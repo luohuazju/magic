@@ -61,6 +61,6 @@ package object CrossDomainHeaders {
   case class `Access-Control-Allow-Credentials`(allowed: Boolean) extends HttpHeader {
     def name = "Access-Control-Allow-Credentials"
     def lowercaseName = "access-control-allow-credentials"
-    def value = if(allowed) "true" else "false"
+    def value = if (allowed) "true" else "false"
   }
 }

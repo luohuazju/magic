@@ -10,6 +10,6 @@ import spray.http.HttpMethods._
  * Time: 11:38 PM
  * To change this template use File | Settings | File Templates.
  */
-trait CustomerMethodDirectives extends MethodDirectives{
+trait CustomerMethodDirectives extends MethodDirectives {
   val options = method(OPTIONS)
 }

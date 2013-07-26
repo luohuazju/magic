@@ -60,4 +60,4 @@ excludedJars in assembly <<= (fullClasspath in assembly) map { cp =>
 
 addArtifact(artifact in (Compile, assembly), assembly)
 
-
+scalariformSettings

@@ -16,24 +16,24 @@ import org.joda.time.DateTime
  */
 object SillycatUtil {
   def getCrossDomainHeaders(originHeader: Option[String]): List[RawHeader] = {
-    val headers = List(RawHeader("Access-Control-Max-Age", "86400"),RawHeader("Access-Control-Allow-Credentials","true"))
+    val headers = List(RawHeader("Access-Control-Max-Age", "86400"), RawHeader("Access-Control-Allow-Credentials", "true"))
     val config = ConfigFactory.load()
-    if(config.getBoolean("server.crossdomain.eanble") == true){
+    if (config.getBoolean("server.crossdomain.eanble") == true) {
       val lists = config.getStringList("server.crossdomain.list")
-      if(lists.contains(originHeader.getOrElse(""))){
-         headers
-           .::(RawHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"))
-           .::(RawHeader("Access-Control-Allow-Headers", "accept, origin, authentication, authorization, content-type, X-Requested-With, X-HTTP-Method-Override"))
-           .::(RawHeader("Access-Control-Allow-Origin", originHeader.get ))
-      }else{
-         headers.::(RawHeader("Access-Control-Allow-Origin", ""))
+      if (lists.contains(originHeader.getOrElse(""))) {
+        headers
+          .::(RawHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"))
+          .::(RawHeader("Access-Control-Allow-Headers", "accept, origin, authentication, authorization, content-type, X-Requested-With, X-HTTP-Method-Override"))
+          .::(RawHeader("Access-Control-Allow-Origin", originHeader.get))
+      } else {
+        headers.::(RawHeader("Access-Control-Allow-Origin", ""))
       }
-    }else{
+    } else {
       headers
     }
   }
 
-  def getDateNow() : String = {
+  def getDateNow(): String = {
     SillycatConstant.DATE_TIME_FORMAT_2.print(DateTime.now)
   }
 }

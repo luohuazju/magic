@@ -37,40 +37,39 @@ import com.sillycat.winnersellerserver.model.ProductStatus
 
 trait NavBarRouterService extends BaseRouterService with CustomerMethodDirectives {
 
-    implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
+  implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
 
-    def navBarRoute = {
+  def navBarRoute = {
 
-      host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
 
-        pathPrefix(Version) { apiVersion =>
+      pathPrefix(Version) { apiVersion =>
 
-          optionalHeaderValueByName("Origin") { originHeader =>
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-            respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-              authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-                path("navbars") {
-                  get {
-                    complete(
-                      dao.db.withSession {
-                        logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
-                        DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
-                      }
-                    )
-                  }
-                } ~
-                options{
-                  complete{
+            authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+              path("navbars") {
+                get {
+                  complete(
+                    dao.db.withSession {
+                      logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
+                      DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
+                    }
+                  )
+                }
+              } ~
+                options {
+                  complete {
                     "OK"
                   }
                 }
-              }
             }
           }
         }
       }
     }
-
-
   }
+
+}

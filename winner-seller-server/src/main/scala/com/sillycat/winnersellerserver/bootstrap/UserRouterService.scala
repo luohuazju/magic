@@ -36,26 +36,26 @@ trait UserRouterService extends BaseRouterService with CustomerMethodDirectives 
 
           respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-              options{
-                complete{
-                  "OK"
-                }
-              } ~
+            options {
+              complete {
+                "OK"
+              }
+            } ~
               path("auth") {
                 post {
                   entity(as[UserLogon]) { item =>
-                      dao.db.withSession {
-                        dao.Users.auth(item.email,item.password) match {
-                          case Some(user) => complete {user}
-                          case _ => complete("{ status: error, message: error message }")
-                        }
+                    dao.db.withSession {
+                      dao.Users.auth(item.email, item.password) match {
+                        case Some(user) => complete { user }
+                        case _ => complete("{ status: error, message: error message }")
                       }
+                    }
                   }
                 }
               }
-            }
           }
         }
       }
+    }
   }
 }
