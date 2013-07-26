@@ -34,60 +34,63 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
            respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
              authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-
                options{
                  complete{
                    "OK"
                  }
                } ~
-               path("products") {
-                    get {
-                      authorize(user.email == "admin@gmail.com"){
-                        parameters('productType.as[String]) { productType =>
-                          complete(
-                            dao.db.withSession {
-                              DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
-                            }
-                          )
-                        }
-                      }
-                    } ~
-                    post {
-                      entity(as[Product]) { item =>
-                        complete {
-                          dao.db.withSession {
-                            dao.Products.insert(item)
+               //authorize(user.email == "admin@gmail.com"){
+                 path("products") {
+                   //authorize(user.email == "admin@gmail.com"){
+                      get {
+                        authorize(user.email == "admin@gmail.com"){
+                          parameters('productType.as[String]) { productType =>
+                            complete(
+                              dao.db.withSession {
+                                DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
+                              }
+                            )
                           }
                         }
-                      }
-                    } ~
-                    put {
-                       entity(as[Product]){ item =>
+                      } ~
+                      post {
+                        entity(as[Product]) { item =>
                           complete {
-                            dao.db withSession {
-                              dao.Products.update(item)
+                            dao.db.withSession {
+                              dao.Products.insert(item)
                             }
                           }
-                       }
-                    }
-                  }~
-                  path("products" / IntNumber) { id =>
-                    get {
-                      complete {
-                        dao.db withSession {
-                          dao.Products.byId(id)
+                        }
+                      } ~
+                      put {
+                         entity(as[Product]){ item =>
+                            complete {
+                              dao.db withSession {
+                                dao.Products.update(item)
+                              }
+                            }
+                         }
+                      }
+                    // }
+                    }~
+                    path("products" / IntNumber) { id =>
+                      get {
+                        complete {
+                          dao.db withSession {
+                            dao.Products.byId(id)
+                          }
+                        }
+                      } ~
+                      delete {
+                        complete {
+                          dao.db withSession {
+                            dao.Products.deleteById(id) + ""
+                          }
                         }
                       }
-                    } ~
-                    delete {
-                      complete {
-                        dao.db withSession {
-                          dao.Products.deleteById(id) + ""
-                        }
-                      }
                     }
-                  }
-               }
+                 }
+               //}
            }
         } //optionalHeaderValueByName
       } //pathPrefix

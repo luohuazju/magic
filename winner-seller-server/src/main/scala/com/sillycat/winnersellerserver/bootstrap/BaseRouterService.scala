@@ -1,6 +1,6 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-import spray.routing.{ExceptionHandler, HttpService}
+import spray.routing.{MethodRejection, ExceptionHandler, HttpService}
 import com.typesafe.scalalogging.slf4j.Logging
 import spray.routing.directives.PathMatcher
 import shapeless.{HNil, ::}
@@ -40,8 +40,10 @@ trait BaseRouterService extends HttpService with Logging {
 
   implicit def myExceptionHandler(implicit log: LoggingContext) =
     ExceptionHandler.fromPF {
-      case e: java.lang.IllegalArgumentException => ctx =>
+      case e: java.lang.IllegalArgumentException => ctx =>{
         logger.error("Request {} could not be handled normally" + ctx.request)
         ctx.complete(BadRequest, e.getMessage)
+      }
+
     }
 }
