@@ -1,6 +1,6 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
 import com.sillycat.winnersellerserver.model._
 import com.sillycat.winnersellerserver.util.SillycatUtil
 import spray.routing.authentication.BasicAuth
@@ -21,7 +21,7 @@ import scala.Some
  * Time: 1:16 PM
  * To change this template use File | Settings | File Templates.
  */
-trait UserRouterService extends BaseRouterService with CustomerMethodDirectives {
+trait UserRouterService extends BaseRouterService {
 
   def userRoute = {
     host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>

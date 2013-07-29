@@ -3,29 +3,15 @@ package com.sillycat.winnersellerserver.bootstrap
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import com.sillycat.winnersellerserver.model.NavBar
 import com.sillycat.winnersellerserver.model.NavBarProtocol
-import spray.json._
-import spray.routing.authentication._
-
-import spray.http._
-import spray.http.MediaTypes._
-
-import spray.routing.authentication._
-import java.io.BufferedInputStream
-import java.io.FileInputStream
-import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
-import BaseDAO.threadLocalSession
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
-import com.sillycat.winnersellerserver.model.ProductJsonProtocol
-import com.sillycat.winnersellerserver.model.Product
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import spray.json._
-import spray.httpx.SprayJsonSupport._
 import spray.routing.authentication._
 import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
-import com.sillycat.winnersellerserver.model.ProductStatus
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +21,7 @@ import com.sillycat.winnersellerserver.model.ProductStatus
  * To change this template use File | Settings | File Templates.
  */
 
-trait NavBarRouterService extends BaseRouterService with CustomerMethodDirectives {
+trait NavBarRouterService extends BaseRouterService {
 
   implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
 

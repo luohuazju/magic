@@ -1,6 +1,6 @@
 package com.sillycat.winnersellerserver.util
 
-import com.sillycat.winnersellerserver.CrossDomainHeaders.`Access-Control-Allow-Origin`
+//import com.sillycat.winnersellerserver.CrossDomainHeaders.`Access-Control-Allow-Origin`
 import spray.http.HttpHeader
 import com.typesafe.config.ConfigFactory
 import spray.http.HttpHeaders._

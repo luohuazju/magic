@@ -13,11 +13,10 @@ import spray.routing.authentication.Authentication
 import spray.routing.authentication.UserPass
 import spray.util.pimpSeq
 import com.typesafe.scalalogging.slf4j.Logging
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait AuthenticationDirectives extends Logging {
   this: HttpService =>
-
-  //val logger = LoggerFactory.getLogger(this.getClass().getName())
 
   def doAuthenticate(userName: String, password: String): Future[Option[User]]
 

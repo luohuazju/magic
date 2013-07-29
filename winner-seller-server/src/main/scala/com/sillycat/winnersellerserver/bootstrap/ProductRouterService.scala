@@ -9,8 +9,9 @@ import spray.routing.authentication._
 import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
 import com.sillycat.winnersellerserver.model.ProductStatus
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +20,7 @@ import com.sillycat.winnersellerserver.model.ProductStatus
  * Time: 5:11 PM
  * To change this template use File | Settings | File Templates.
  */
-trait ProductRouterService extends BaseRouterService with CustomerMethodDirectives {
+trait ProductRouterService extends BaseRouterService {
 
   def productRoute = {
     host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
@@ -37,9 +38,7 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                   "OK"
                 }
               } ~
-                //authorize(user.email == "admin@gmail.com"){
                 path("products") {
-                  //authorize(user.email == "admin@gmail.com"){
                   get {
                     authorize(user.email == "admin@gmail.com") {
                       parameters('productType.as[String]) { productType =>
@@ -69,7 +68,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                         }
                       }
                     }
-                  // }
                 } ~
                 path("products" / IntNumber) { id =>
                   get {
@@ -88,7 +86,6 @@ trait ProductRouterService extends BaseRouterService with CustomerMethodDirectiv
                     }
                 }
             }
-            //}
           }
         } //optionalHeaderValueByName
       } //pathPrefix
