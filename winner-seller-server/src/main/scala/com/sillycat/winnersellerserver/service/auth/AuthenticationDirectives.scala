@@ -13,12 +13,11 @@ import spray.routing.authentication.Authentication
 import spray.routing.authentication.UserPass
 import spray.util.pimpSeq
 import com.typesafe.scalalogging.slf4j.Logging
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait AuthenticationDirectives extends Logging {
   this: HttpService =>
 
-  //val logger = LoggerFactory.getLogger(this.getClass().getName())
-    
   def doAuthenticate(userName: String, password: String): Future[Option[User]]
 
   def adminOnly: RequestContext => Future[Authentication[User]] = {
@@ -80,7 +79,7 @@ trait AuthenticationDirectives extends Logging {
 }
 
 trait UsersAuthenticationDirectives
-  extends AuthenticationDirectives with Logging{
+    extends AuthenticationDirectives with Logging {
   this: HttpService =>
 
   import BaseDAO.threadLocalSession
@@ -89,8 +88,8 @@ trait UsersAuthenticationDirectives
 
   override def doAuthenticate(userName: String, password: String) = {
     Future {
-      dao.db.withSession{
-    	  dao.Users.auth(userName, password)
+      dao.db.withSession {
+        dao.Users.auth(userName, password)
       }
     }
   }

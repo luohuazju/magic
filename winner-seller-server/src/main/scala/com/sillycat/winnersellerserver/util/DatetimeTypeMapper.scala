@@ -19,7 +19,7 @@ object JodaTimestampMapper extends MappedTypeMapper[DateTime, Timestamp] with Ba
 object JodaTimestampOptionMapper extends MappedTypeMapper[Option[DateTime], Option[Timestamp]] with BaseTypeMapper[Option[DateTime]] {
   def map(j: Option[DateTime]) = j match {
     case None => None
-    case _    => Option(new Timestamp(j.get.getMillis))
+    case _ => Option(new Timestamp(j.get.getMillis))
   }
   def comap(s: Option[Timestamp]) = s match {
     case None => None
