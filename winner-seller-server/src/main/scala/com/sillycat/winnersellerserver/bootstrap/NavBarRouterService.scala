@@ -3,29 +3,15 @@ package com.sillycat.winnersellerserver.bootstrap
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import com.sillycat.winnersellerserver.model.NavBar
 import com.sillycat.winnersellerserver.model.NavBarProtocol
-import spray.json._
-import spray.routing.authentication._
-
-import spray.http._
-import spray.http.MediaTypes._
-
-import spray.routing.authentication._
-import java.io.BufferedInputStream
-import java.io.FileInputStream
-import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
-import BaseDAO.threadLocalSession
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
-import com.sillycat.winnersellerserver.model.ProductJsonProtocol
-import com.sillycat.winnersellerserver.model.Product
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import spray.json._
-import spray.httpx.SprayJsonSupport._
 import spray.routing.authentication._
 import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
-import com.sillycat.winnersellerserver.model.ProductStatus
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,42 +21,41 @@ import com.sillycat.winnersellerserver.model.ProductStatus
  * To change this template use File | Settings | File Templates.
  */
 
-trait NavBarRouterService extends BaseRouterService with CustomerMethodDirectives {
+trait NavBarRouterService extends BaseRouterService {
 
-    implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
+  implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
 
-    def navBarRoute = {
+  def navBarRoute = {
 
-      host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
 
-        pathPrefix(Version) { apiVersion =>
+      pathPrefix(Version) { apiVersion =>
 
-          optionalHeaderValueByName("Origin") { originHeader =>
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-            respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-              authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-                path("navbars") {
-                  get {
-                    complete(
-                      dao.db.withSession {
-                        logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
-                        DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
-                      }
-                    )
-                  }
-                } ~
-                options{
-                  complete{
+            authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+              path("navbars") {
+                get {
+                  complete(
+                    dao.db.withSession {
+                      logger.debug("Hitting the URI navbars with apiVersion=" + apiVersion + ",brandCode=" + brandCode)
+                      DefaultJsonProtocol.listFormat[NavBar].write(dao.NavBars.all).toString
+                    }
+                  )
+                }
+              } ~
+                options {
+                  complete {
                     "OK"
                   }
                 }
-              }
             }
           }
         }
       }
     }
-
-
   }
+
+}

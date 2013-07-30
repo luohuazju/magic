@@ -11,7 +11,7 @@ import org.joda.time.DateTime
 import scala.slick.util.Logging
 import scala.slick.jdbc.meta.MTable
 import com.sillycat.winnersellerserver.model.NavBar
-import scala.slick.jdbc.{SetParameter, GetResult, StaticQuery}
+import scala.slick.jdbc.{ SetParameter, GetResult, StaticQuery }
 import com.sillycat.winnersellerserver.util.JodaTimestampMapper
 import com.sillycat.winnersellerserver.util.JodaTimestampOptionMapper
 import com.sillycat.winnersellerserver.util.SillycatConstant
@@ -36,12 +36,11 @@ trait NavBarDAO extends Logging { this: Profile =>
 
     def * = id.? ~ title ~ link ~ alter ~ parentId.? <>
       ({ t => NavBar(t._1, t._2, t._3, t._4, t._5, None, None) },
-        { (s: NavBar) => Some(s.id ,s.title, s.link, s.alter, s.parentId) })
+        { (s: NavBar) => Some(s.id, s.title, s.link, s.alter, s.parentId) })
 
     def forInsert = title ~ link ~ alter ~ parentId.? <>
       ({ t => NavBar(None, t._1, t._2, t._3, t._4, None, None) },
         { (s: NavBar) => Some(s.title, s.link, s.alter, s.parentId) })
-
 
     def insert(s: NavBar)(implicit session: Session): Long = {
       NavBars.forInsert returning id insert s
@@ -49,19 +48,19 @@ trait NavBarDAO extends Logging { this: Profile =>
 
     def all()(implicit session: Session): List[NavBar] = {
       val s1 = Query(NavBars).list
-      val s2 = s1.filter(_.parentId.getOrElse(-1) == 0)   //filter to get the root NavBars
+      val s2 = s1.filter(_.parentId.getOrElse(-1) == 0) //filter to get the root NavBars
 
-      def placeSubandParent(item: NavBar, all :List[NavBar]) : NavBar = {
-       val nav = NavBar(
-            item.id,
-            item.title,
-            item.link,
-            item.alter,
-            item.parentId,
-            Option(all.filter(_.parentId.getOrElse(-1) == item.id.getOrElse(0))),
-            all.filter(_.id.getOrElse(0) == item.parentId.getOrElse(-1)).headOption
-       )
-       nav
+      def placeSubandParent(item: NavBar, all: List[NavBar]): NavBar = {
+        val nav = NavBar(
+          item.id,
+          item.title,
+          item.link,
+          item.alter,
+          item.parentId,
+          Option(all.filter(_.parentId.getOrElse(-1) == item.id.getOrElse(0))),
+          all.filter(_.id.getOrElse(0) == item.parentId.getOrElse(-1)).headOption
+        )
+        nav
       }
 
       val s3 = s2.map(placeSubandParent(_, s1))
@@ -110,7 +109,7 @@ trait UserDAO extends Logging { this: Profile =>
 
     def auth(email: String, password: String)(implicit session: Session): Option[User] = {
       logger.debug("I am auth the userName=" + email + " password=" + password)
-      (email,password) match {
+      (email, password) match {
         case ("admin@gmail.com", "admin") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
         case ("admin", "admin") =>
@@ -128,7 +127,7 @@ trait UserDAO extends Logging { this: Profile =>
     }
 
     def getForEmail(email: String)(implicit session: Session): Option[User] = {
-      logger.debug("I am auth the userName=" + email )
+      logger.debug("I am auth the userName=" + email)
       (email) match {
         case ("admin@gmail.com") =>
           Option(User(Some(1), "admin", 100, UserType.ADMIN, new DateTime(), new DateTime(), "admin", "admin@gmail.com"))
@@ -145,7 +144,7 @@ trait UserDAO extends Logging { this: Profile =>
         case _ => None
       }
     }
-    
+
     def get(userId: Long)(implicit session: Session): Option[User] = {
       logger.debug("Try to fetch User Object with userId = " + userId)
       val query = for { item <- Users if (item.id === userId) } yield (item)
@@ -178,7 +177,7 @@ trait ProductDAO extends Logging { this: Profile =>
 
   implicit object SetDateTime extends SetParameter[DateTime] { def apply(v: DateTime, pp: PositionedParameters) { pp.setTimestamp(new Timestamp(v.getMillis)) } }
 
-  object Products extends Table[(Option[Long],String,Option[String],DateTime,Option[DateTime],Option[String],BigDecimal,BigDecimal,BigDecimal,Option[Double],BigDecimal,Option[String],String,String)]("PRODUCT") {
+  object Products extends Table[(Option[Long], String, Option[String], DateTime, Option[DateTime], Option[String], BigDecimal, BigDecimal, BigDecimal, Option[Double], BigDecimal, Option[String], String, String)]("PRODUCT") {
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc) // 1 This is the primary key column   
     def productName = column[String]("PRODUCT_NAME") // 2
     def productDesn = column[String]("PRODUCT_DESN", O.Nullable) //3
@@ -194,53 +193,53 @@ trait ProductDAO extends Logging { this: Profile =>
     def productType = column[String]("PRODUCT_TYPE") //13
     def productStatus = column[String]("PRODUCT_STATUS") //14
 
-    def * = id.? ~                      //1
-            productName ~               //2
-            productDesn.? ~             //3
-            createDate ~                //4
-            expirationDate.? ~          //5
-            productCode.? ~             //6
-            productPriceUS ~            //7
-            productPriceCN ~            //8
-            productSellingPriceCN ~     //9
-            productWeight.? ~           //10
-            productWin ~                //11
-            productLink.? ~             //12
-            productType ~               //13
-            productStatus               //14
+    def * = id.? ~ //1
+      productName ~ //2
+      productDesn.? ~ //3
+      createDate ~ //4
+      expirationDate.? ~ //5
+      productCode.? ~ //6
+      productPriceUS ~ //7
+      productPriceCN ~ //8
+      productSellingPriceCN ~ //9
+      productWeight.? ~ //10
+      productWin ~ //11
+      productLink.? ~ //12
+      productType ~ //13
+      productStatus //14
 
     def persist(implicit session: Session) =
-      id.? ~                             //1
-      productName ~                      //2
-      productDesn.? ~                    //3
-      createDate ~                       //4
-      expirationDate.? ~                 //5
-      productCode.? ~                    //6
-      productPriceUS ~                   //7
-      productPriceCN ~                   //8
-      productSellingPriceCN ~            //9
-      productWeight.? ~                  //10
-      productWin ~                       //11
-      productLink.? ~                    //12
-      productType ~                      //13
-      productStatus                      //14
+      id.? ~ //1
+        productName ~ //2
+        productDesn.? ~ //3
+        createDate ~ //4
+        expirationDate.? ~ //5
+        productCode.? ~ //6
+        productPriceUS ~ //7
+        productPriceCN ~ //8
+        productSellingPriceCN ~ //9
+        productWeight.? ~ //10
+        productWin ~ //11
+        productLink.? ~ //12
+        productType ~ //13
+        productStatus //14
 
     def insert(item: Product)(implicit session: Session): Product = {
       val id = persist.insert(
-        item.id,             //1
-        item.productName,    //2
-        item.productDesn,    //3
-        item.createDate,     //4
+        item.id, //1
+        item.productName, //2
+        item.productDesn, //3
+        item.createDate, //4
         item.expirationDate, //5
-        item.productCode,    //6
+        item.productCode, //6
         item.productPriceUS, //7
         item.productPriceCN, //8
         item.productSellingPriceCN, //9
-        item.productWeight,         //10
-        item.productWin,            //11
-        item.productLink,           //12
-        item.productType.toString,  //13
-        item.productStatus.toString)//14
+        item.productWeight, //10
+        item.productWin, //11
+        item.productLink, //12
+        item.productType.toString, //13
+        item.productStatus.toString) //14
       val lastInsertedId: Long = StaticQuery.queryNA[Long]("SELECT LAST_INSERT_ID()").first
       logger.info("I got the returnId as " + lastInsertedId)
       byId(lastInsertedId)
@@ -250,20 +249,20 @@ trait ProductDAO extends Logging { this: Profile =>
     implicit val getProductResult =
       GetResult(
         r => new Product(
-          id = r.nextLongOption,             //1
-          productName = r.nextString(),      //2
-          productDesn = r.nextStringOption(),//3
-          createDate = JodaTimestampMapper.comap(r.nextTimestamp),       //4
-          expirationDate = JodaTimestampOptionMapper.comap(r.nextTimestampOption()),   //5
-          productCode = r.nextStringOption(),                            //6
-          productPriceUS = r.nextBigDecimal(),                           //7
-          productPriceCN = r.nextBigDecimal(),                           //8
-          productSellingPriceCN = r.nextBigDecimal(),                    //9
-          productWeight = r.nextDoubleOption(),                          //10
-          productWin = r.nextBigDecimal(),                               //11
-          productLink = r.nextStringOption(),                            //12
-          productType = ProductType.withName(r.nextString()),            //13
-          productStatus = ProductStatus.withName(r.nextString())         //14
+          id = r.nextLongOption, //1
+          productName = r.nextString(), //2
+          productDesn = r.nextStringOption(), //3
+          createDate = JodaTimestampMapper.comap(r.nextTimestamp), //4
+          expirationDate = JodaTimestampOptionMapper.comap(r.nextTimestampOption()), //5
+          productCode = r.nextStringOption(), //6
+          productPriceUS = r.nextBigDecimal(), //7
+          productPriceCN = r.nextBigDecimal(), //8
+          productSellingPriceCN = r.nextBigDecimal(), //9
+          productWeight = r.nextDoubleOption(), //10
+          productWin = r.nextBigDecimal(), //11
+          productLink = r.nextStringOption(), //12
+          productType = ProductType.withName(r.nextString()), //13
+          productStatus = ProductStatus.withName(r.nextString()) //14
         )
       )
 
@@ -286,17 +285,17 @@ trait ProductDAO extends Logging { this: Profile =>
           ", PRODUCT_TYPE = " +? item.productType.toString +
           ", PRODUCT_STATUS = " +? item.productStatus.toString +
           " where id = " +? item.id
-          ).execute
+        ).execute
 
         byId(item.id.get)
       }
     }
 
     def deleteById(id: Long)(implicit session: Session): Int = {
-        val query = for {
-          item <- Products if item.id === id
-        } yield item
-        query.delete
+      val query = for {
+        item <- Products if item.id === id
+      } yield item
+      query.delete
     }
 
     def forProductCode(productCode: String)(implicit session: Session): Option[Product] = {
@@ -344,7 +343,7 @@ trait ProductDAO extends Logging { this: Profile =>
           ProductStatus.withName(item._14))
       }
     }
-    
+
     def all()(implicit session: Session): List[Product] = {
       Query(Products).list map {
         case (item) => Product(
