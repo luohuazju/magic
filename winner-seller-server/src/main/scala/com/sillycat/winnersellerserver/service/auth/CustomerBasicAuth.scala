@@ -1,6 +1,7 @@
 package com.sillycat.winnersellerserver.service.auth
 
 import spray.routing.authentication._
+import com.sillycat.winnersellerserver.service.auth.authentication._
 import spray.http._
 import scala.concurrent.{ ExecutionContext, Future }
 import spray.util._
@@ -9,9 +10,7 @@ import com.typesafe.scalalogging.slf4j.Logging
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import scala.slick.session.Database.threadLocalSession
 import com.sillycat.winnersellerserver.model.User
-import spray.routing.AuthenticationRequiredRejection
-import spray.routing.AuthenticationFailedRejection
-import spray.routing.RequestContext
+import spray.routing.{ AuthenticationRequiredRejection, AuthenticationFailedRejection, RequestContext }
 import spray.routing.authentication.UserPass
 import spray.http.OAuth2BearerToken
 import scala.Some
@@ -47,10 +46,11 @@ trait CustomerHttpAuthenticator[U] extends ContextAuthenticator[U] with Logging 
     }
 
     authenticate(credential_token, ctx) map {
-      case Some(userContext) ⇒ Right(userContext)
-      case None ⇒ Left {
-        if (authHeader.isEmpty) AuthenticationRequiredRejection(scheme, realm, params(ctx))
-        else AuthenticationFailedRejection(realm)
+      case Some(userContext) => {
+        Right(userContext)
+      }
+      case None => Left {
+        AuthenticationFailedRejection(realm)
       }
     }
   }
@@ -63,7 +63,11 @@ trait CustomerHttpAuthenticator[U] extends ContextAuthenticator[U] with Logging 
   def authenticate(credentials: Option[HttpCredentials], ctx: RequestContext): Future[Option[U]]
 }
 
-class CustomerBasicHttpAuthenticator[U](val realm: String, val userPassAuthenticator: UserPassAuthenticator[U])(implicit val executionContext: ExecutionContext)
+package object authentication {
+  type UserPassTokenAuthenticator[T] = Option[(UserPass, String)] ⇒ Future[Option[T]]
+}
+
+class CustomerBasicHttpAuthenticator[U](val realm: String, val userPassAuthenticator: UserPassTokenAuthenticator[U])(implicit val executionContext: ExecutionContext)
     extends CustomerHttpAuthenticator[U] {
 
   def scheme = "Basic"
@@ -72,25 +76,25 @@ class CustomerBasicHttpAuthenticator[U](val realm: String, val userPassAuthentic
   def authenticate(credentials: Option[HttpCredentials], ctx: RequestContext) = {
     userPassAuthenticator {
       credentials.flatMap {
-        case OAuth2BearerToken(token) => Some(UserPass(token, "no_password"))
-        case BasicHttpCredentials(user, pass) => Some(UserPass(user, pass))
-        case _ ⇒ None
+        case OAuth2BearerToken(token) => Some((null, token))
+        case BasicHttpCredentials(user, pass) => Some((UserPass(user, pass), null))
+        case _ => None
       }
     }
   }
 }
 
 object CustomerBasicAuth {
-  def apply[T](authenticator: UserPassAuthenticator[T], realm: String)(implicit ec: ExecutionContext): CustomerBasicHttpAuthenticator[T] =
+  def apply[T](authenticator: UserPassTokenAuthenticator[T], realm: String)(implicit ec: ExecutionContext): CustomerBasicHttpAuthenticator[T] =
     new CustomerBasicHttpAuthenticator[T](realm, authenticator)
 }
 
-class CustomerBrandUserPassAuthenticator(dao: BaseDAO) extends UserPassAuthenticator[User] with Logging {
+class CustomerBrandUserPassAuthenticator(dao: BaseDAO) extends UserPassTokenAuthenticator[User] with Logging {
 
-  def apply(userPass: Option[UserPass]) =
+  def apply(userPassToken: Option[(UserPass, String)]) =
     Future.successful(
-      userPass match {
-        case Some(UserPass(user, pass)) => {
+      userPassToken match {
+        case Some((UserPass(user, pass), null)) => {
           dao.db withSession {
             dao.Users.getForEmail(user)
           } match {
@@ -104,25 +108,23 @@ class CustomerBrandUserPassAuthenticator(dao: BaseDAO) extends UserPassAuthentic
               }
             }
             case _ => {
-              logger.info("not hitting the right user, try with token = " + user)
-              if (pass == "no_password") {
-                logger.info("hitting the right token, loading the user based on token = " + user)
-                dao.db withSession {
-                  dao.Users.getForEmail("admin")
-                } match {
-                  case Some(z) => {
-                    logger.info("Get user based on the token.")
-                    Some(z)
-                  }
-                  case _ => {
-                    logger.info("no user, no pass, token not right.")
-                    None
-                  }
-                }
-              } else {
-                logger.info("no user, no pass, no token.")
-                None
-              }
+              logger.info("no user matching.")
+              None
+            }
+          }
+        }
+        case Some((null, token)) => {
+          logger.info("not hitting the right user, try with token = " + token)
+          dao.db withSession {
+            dao.Users.getForEmail(token)
+          } match {
+            case Some(z) => {
+              logger.info("Get user based on the token.")
+              Some(z)
+            }
+            case _ => {
+              logger.info("no user, no pass, token not right.")
+              None
             }
           }
         }
