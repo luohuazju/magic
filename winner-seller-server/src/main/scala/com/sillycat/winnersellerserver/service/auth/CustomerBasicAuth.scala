@@ -10,7 +10,7 @@ import com.typesafe.scalalogging.slf4j.Logging
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import scala.slick.session.Database.threadLocalSession
 import com.sillycat.winnersellerserver.model.User
-import spray.routing.{ AuthenticationRequiredRejection, AuthenticationFailedRejection, RequestContext }
+import spray.routing.{ AuthorizationFailedRejection, AuthenticationRequiredRejection, AuthenticationFailedRejection, RequestContext }
 import spray.routing.authentication.UserPass
 import spray.http.OAuth2BearerToken
 import scala.Some
@@ -49,16 +49,13 @@ trait CustomerHttpAuthenticator[U] extends ContextAuthenticator[U] with Logging 
       case Some(userContext) => {
         Right(userContext)
       }
-      case None => Left {
-        AuthenticationFailedRejection(realm)
+      case None => {
+        Left(AuthenticationFailedRejection("realm"))
       }
     }
   }
 
   implicit def executionContext: ExecutionContext
-  def scheme: String
-  def realm: String
-  def params(ctx: RequestContext): Map[String, String]
 
   def authenticate(credentials: Option[HttpCredentials], ctx: RequestContext): Future[Option[U]]
 }
@@ -67,11 +64,8 @@ package object authentication {
   type UserPassTokenAuthenticator[T] = Option[(UserPass, String)] ⇒ Future[Option[T]]
 }
 
-class CustomerBasicHttpAuthenticator[U](val realm: String, val userPassAuthenticator: UserPassTokenAuthenticator[U])(implicit val executionContext: ExecutionContext)
+class CustomerBasicHttpAuthenticator[U](val userPassAuthenticator: UserPassTokenAuthenticator[U])(implicit val executionContext: ExecutionContext)
     extends CustomerHttpAuthenticator[U] {
-
-  def scheme = "Basic"
-  def params(ctx: RequestContext) = Map.empty
 
   def authenticate(credentials: Option[HttpCredentials], ctx: RequestContext) = {
     userPassAuthenticator {
@@ -85,8 +79,8 @@ class CustomerBasicHttpAuthenticator[U](val realm: String, val userPassAuthentic
 }
 
 object CustomerBasicAuth {
-  def apply[T](authenticator: UserPassTokenAuthenticator[T], realm: String)(implicit ec: ExecutionContext): CustomerBasicHttpAuthenticator[T] =
-    new CustomerBasicHttpAuthenticator[T](realm, authenticator)
+  def apply[T](authenticator: UserPassTokenAuthenticator[T])(implicit ec: ExecutionContext): CustomerBasicHttpAuthenticator[T] =
+    new CustomerBasicHttpAuthenticator[T](authenticator)
 }
 
 class CustomerBrandUserPassAuthenticator(dao: BaseDAO) extends UserPassTokenAuthenticator[User] with Logging {

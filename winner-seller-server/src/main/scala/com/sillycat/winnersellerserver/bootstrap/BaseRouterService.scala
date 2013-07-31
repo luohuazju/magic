@@ -1,17 +1,20 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-import spray.routing.{ ExceptionHandler, HttpService }
+import spray.routing.{ RejectionHandler, ExceptionHandler, HttpService, PathMatcher }
 import com.typesafe.scalalogging.slf4j.Logging
-import spray.routing.PathMatcher
 import shapeless.{ HNil }
 import spray.util.LoggingContext
 import spray.http.StatusCodes._
 import scala.Some
 import shapeless.::
+import java.util.{ Arrays, HashMap => JMap }
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import akka.util.Timeout
 import akka.actor.ActorRefFactory
 import scala.concurrent.ExecutionContext
+import spray.routing.MissingCookieRejection
+import spray.routing.AuthenticationFailedRejection
+import scala.collection.immutable.{ :: => immutablePlus }
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,4 +53,13 @@ trait BaseRouterService extends HttpService with Logging {
       }
 
     }
+
+  implicit val myRejectionHandler = RejectionHandler {
+    case MissingCookieRejection(cookieName) immutablePlus _ => {
+      complete(BadRequest, "No cookies, no service!!!")
+    }
+    case AuthenticationFailedRejection(realm) immutablePlus _ => {
+      complete(BadRequest, "No authentication, no service!!!")
+    }
+  }
 }

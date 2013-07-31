@@ -33,7 +33,7 @@ trait ProductRouterService extends BaseRouterService {
           respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
             //authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-            authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao), "Realm")) { user =>
+            authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao))) { user =>
               options {
                 complete {
                   "OK"
