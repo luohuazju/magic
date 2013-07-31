@@ -64,4 +64,24 @@ class ProductRouterServiceSpec extends FunSuite with Directives
       }
   }
 
+  test("ProductRouterService /products GET sucess with token") {
+    Get("/v1/products?productType=PLAN") ~> addHeader(kikoBrand) ~> addHeader("appTokenId", "token_9527") ~>
+      productRoute ~> check {
+        Thread.sleep(2000)
+        val entity = entityAs[String]
+        info("entity=" + entity)
+        val products = DefaultJsonProtocol.listFormat[Product].read(entity.asJson)
+        info("products=" + products)
+        assert(products.size > 0)
+      }
+  }
+
+  test("ProductRouterService /products GET fail with wrong token") {
+    Get("/v1/products?productType=PLAN") ~> addHeader(kikoBrand) ~>
+      productRoute ~> check {
+        info("rejection=" + rejection)
+        assert(rejection === AuthenticationRequiredRejection("Basic", "Realm", Map()))
+      }
+  }
+
 }
