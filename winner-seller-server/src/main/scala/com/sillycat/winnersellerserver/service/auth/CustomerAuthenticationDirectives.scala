@@ -50,6 +50,7 @@ trait CustomerAuthenticationDirectives extends Logging {
                 Left(AuthenticationFailedRejection("Realm"))
           }
         }
+        case _ => Future(Left(AuthenticationFailedRejection("Realm")))
       }
   }
 
