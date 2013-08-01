@@ -14,7 +14,9 @@ import akka.actor.ActorRefFactory
 import scala.concurrent.ExecutionContext
 import spray.routing.MissingCookieRejection
 import spray.routing.AuthenticationFailedRejection
+import spray.routing.AuthenticationRequiredRejection
 import scala.collection.immutable.{ :: => immutablePlus }
+import com.sillycat.winnersellerserver.service.auth.CustomerUsersAuthenticationDirectives
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,13 +25,13 @@ import scala.collection.immutable.{ :: => immutablePlus }
  * Time: 5:05 PM
  * To change this template use File | Settings | File Templates.
  */
-trait BaseRouterService extends HttpService with Logging {
+trait BaseRouterService extends HttpService with Logging with CustomerUsersAuthenticationDirectives {
 
   implicit val timeout = Timeout(60 * 1000)
 
   //implicit def fromActorRefFactory(factory: ActorRefFactory): ExecutionContext = factory.dispatcher
 
-  implicit val dao: BaseDAO = BaseDAO.apply("app")
+  //implicit val dao: BaseDAO = BaseDAO.apply("app")
 
   val Version = PathMatcher("""v([0-9]+)""".r)
     .flatMap {
@@ -60,6 +62,9 @@ trait BaseRouterService extends HttpService with Logging {
     }
     case AuthenticationFailedRejection(realm) immutablePlus _ => {
       complete(BadRequest, "No authentication, no service!!!")
+    }
+    case AuthenticationRequiredRejection(scheme, realm, params) immutablePlus _ => {
+      complete(BadRequest, "No authentication resources, no service!!!")
     }
   }
 }

@@ -6,7 +6,7 @@ import com.sillycat.winnersellerserver.dao.BaseDAO
 import spray.json._
 import spray.httpx.SprayJsonSupport._
 import spray.routing.authentication._
-import com.sillycat.winnersellerserver.service.auth.{ CustomerBrandUserPassAuthenticator, CustomerBasicAuth, BrandUserPassAuthenticator }
+import com.sillycat.winnersellerserver.service.auth.{ CustomerUsersAuthenticationDirectives, CustomerBrandUserPassAuthenticator, CustomerBasicAuth, BrandUserPassAuthenticator }
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
 //import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
@@ -33,7 +33,8 @@ trait ProductRouterService extends BaseRouterService {
           respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
             //authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-            authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao))) { user =>
+            //authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao))) { user =>
+            authenticate(userPassToken) { user =>
               options {
                 complete {
                   "OK"
