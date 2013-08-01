@@ -50,7 +50,7 @@ trait CustomerHttpAuthenticator[U] extends ContextAuthenticator[U] with Logging 
         Right(userContext)
       }
       case None => {
-        Left(AuthenticationFailedRejection("realm"))
+        Left(AuthenticationFailedRejection("Realm"))
       }
     }
   }

@@ -14,6 +14,8 @@ import akka.actor.ActorRefFactory
 import scala.concurrent.ExecutionContext
 import spray.routing.MissingCookieRejection
 import spray.routing.AuthenticationFailedRejection
+import spray.routing.AuthenticationRequiredRejection
+
 import scala.collection.immutable.{ :: => immutablePlus }
 
 /**
@@ -60,6 +62,9 @@ trait BaseRouterService extends HttpService with Logging {
     }
     case AuthenticationFailedRejection(realm) immutablePlus _ => {
       complete(BadRequest, "No authentication, no service!!!")
+    }
+    case AuthenticationRequiredRejection(scheme, realm, params) immutablePlus _ => {
+      complete(BadRequest, "No authentication resources, no service!!!")
     }
   }
 }
