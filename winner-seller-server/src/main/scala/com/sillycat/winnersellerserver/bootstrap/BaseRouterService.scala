@@ -33,15 +33,15 @@ trait BaseRouterService extends HttpService with Logging with CustomerUsersAuthe
 
   //implicit val dao: BaseDAO = BaseDAO.apply("app")
 
-  val Version = PathMatcher("""v([0-9]+)""".r)
-    .flatMap {
-      case string :: HNil => {
-        try Some(java.lang.Integer.parseInt(string) :: HNil)
-        catch {
-          case _: NumberFormatException => None
-        }
-      }
-    }
+  //  val Version = PathMatcher("""v([0-9]+)""".r)
+  //    .flatMap {
+  //      case string :: HNil => {
+  //        try Some(java.lang.Integer.parseInt(string) :: HNil)
+  //        catch {
+  //          case _: NumberFormatException => None
+  //        }
+  //      }
+  //    }
 
   val BrandCode = Segment
 

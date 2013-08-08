@@ -22,7 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * To change this template use File | Settings | File Templates.
  */
 trait CustomerAuthenticationDirectives extends Logging {
-  this: HttpService =>
+  //this: HttpService =>
 
   def authPass(userName: String, password: String): Future[Option[User]]
 
@@ -89,7 +89,7 @@ trait CustomerAuthenticationDirectives extends Logging {
 
 trait CustomerUsersAuthenticationDirectives
     extends CustomerAuthenticationDirectives with Logging {
-  this: HttpService =>
+  //this: HttpService =>
 
   import BaseDAO.threadLocalSession
 

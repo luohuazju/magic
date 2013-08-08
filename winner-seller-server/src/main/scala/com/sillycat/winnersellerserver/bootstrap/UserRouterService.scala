@@ -4,7 +4,7 @@ package com.sillycat.winnersellerserver.bootstrap
 import com.sillycat.winnersellerserver.model._
 import com.sillycat.winnersellerserver.util.SillycatUtil
 import spray.routing.authentication.BasicAuth
-import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
+import com.sillycat.winnersellerserver.service.auth.{ DigbyDirectives, BrandUserPassAuthenticator }
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import BaseDAO.threadLocalSession
 import spray.json._
@@ -21,7 +21,7 @@ import scala.Some
  * Time: 1:16 PM
  * To change this template use File | Settings | File Templates.
  */
-trait UserRouterService extends BaseRouterService {
+trait UserRouterService extends BaseRouterService with DigbyDirectives {
 
   def userRoute = {
     host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>

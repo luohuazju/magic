@@ -6,7 +6,7 @@ import com.sillycat.winnersellerserver.model.NavBarProtocol
 import com.sillycat.winnersellerserver.dao.BaseDAO
 import spray.json._
 import spray.routing.authentication._
-import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
+import com.sillycat.winnersellerserver.service.auth.{ DigbyDirectives, BrandUserPassAuthenticator }
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
 //import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
@@ -21,7 +21,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * To change this template use File | Settings | File Templates.
  */
 
-trait NavBarRouterService extends BaseRouterService {
+trait NavBarRouterService extends BaseRouterService with DigbyDirectives {
 
   implicit val navbarFormatter = NavBarProtocol.NavBarJsonFormat
 
