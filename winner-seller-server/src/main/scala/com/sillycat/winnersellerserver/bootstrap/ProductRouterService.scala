@@ -26,75 +26,75 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait ProductRouterService extends BaseRouterService with DigbyDirectives with SecurityDirectives {
 
   def productRoute = {
-    //host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
-    digbyDirective { (brandCode, user, apiVersion) =>
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
+      //digbyDirective { (brandCode, user, apiVersion) =>
 
-      //pathPrefix(Version) { apiVersion =>
-      implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
+      pathPrefix(Version) { apiVersion =>
+        implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
 
-      optionalHeaderValueByName("Origin") { originHeader =>
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-        respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
 
-          //authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-          //authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao))) { user =>
-          //authenticate(userPassToken) { user =>
-          options {
-            complete {
-              "OK"
-            }
-          } ~
-            path("products") {
-              get {
-                authorize(user.email == "admin@gmail.com") {
-                  parameters('productType.as[String]) { productType =>
-                    complete(
-                      dao.db.withSession {
-                        DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType, ProductStatus.ACTIVE.toString)).toString
-                      }
-                    )
-                  }
+            //authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+            //authenticate(CustomerBasicAuth(new CustomerBrandUserPassAuthenticator(dao))) { user =>
+            authenticate(userPassToken) { user =>
+              options {
+                complete {
+                  "OK"
                 }
               } ~
-                post {
-                  entity(as[Product]) { item =>
-                    complete {
-                      dao.db.withSession {
-                        dao.Products.insert(item)
+                path("products") {
+                  get {
+                    authorize(user.email == "admin@gmail.com") {
+                      parameters('productType.as[String]) { productType =>
+                        complete(
+                          dao.db.withSession {
+                            DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType, ProductStatus.ACTIVE.toString)).toString
+                          }
+                        )
                       }
                     }
-                  }
+                  } ~
+                    post {
+                      entity(as[Product]) { item =>
+                        complete {
+                          dao.db.withSession {
+                            dao.Products.insert(item)
+                          }
+                        }
+                      }
+                    } ~
+                    put {
+                      entity(as[Product]) { item =>
+                        complete {
+                          dao.db withSession {
+                            dao.Products.update(item)
+                          }
+                        }
+                      }
+                    }
                 } ~
-                put {
-                  entity(as[Product]) { item =>
+                path("products" / IntNumber) { id =>
+                  get {
                     complete {
                       dao.db withSession {
-                        dao.Products.update(item)
+                        dao.Products.byId(id)
                       }
                     }
-                  }
-                }
-            } ~
-            path("products" / IntNumber) { id =>
-              get {
-                complete {
-                  dao.db withSession {
-                    dao.Products.byId(id)
-                  }
-                }
-              } ~
-                delete {
-                  complete {
-                    dao.db withSession {
-                      dao.Products.deleteById(id) + ""
+                  } ~
+                    delete {
+                      complete {
+                        dao.db withSession {
+                          dao.Products.deleteById(id) + ""
+                        }
+                      }
                     }
-                  }
                 }
             }
-          //}
-          //}
-        } //optionalHeaderValueByName
-        //} //pathPrefix
+            //}
+          } //optionalHeaderValueByName
+        } //pathPrefix
       } //productRoute
     }
   }
