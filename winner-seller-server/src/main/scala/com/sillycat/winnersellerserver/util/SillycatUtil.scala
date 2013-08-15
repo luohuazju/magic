@@ -8,6 +8,7 @@ import spray.http.HttpHeaders.RawHeader
 import org.joda.time.DateTime
 import java.security.MessageDigest
 import java.math.BigInteger
+import org.parboiled.common.Base64
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,11 +59,13 @@ object SillycatUtil {
   }
 
   def base64Encode(src: String): String = {
-    new sun.misc.BASE64Encoder().encode(src.getBytes("UTF-8"))
+    //new sun.misc.BASE64Encoder().encode(src.getBytes("UTF-8"))
+    Base64.rfc2045.encodeToString(src.getBytes("UTF-8"), false)
   }
 
   def base64Decode(src: String): String = {
-    new String(new sun.misc.BASE64Decoder().decodeBuffer(src), "UTF-8")
+    //new String(new sun.misc.BASE64Decoder().decodeBuffer(src), "UTF-8")
+    new String(Base64.rfc2045.decode(src), "UTF-8")
   }
 
 }

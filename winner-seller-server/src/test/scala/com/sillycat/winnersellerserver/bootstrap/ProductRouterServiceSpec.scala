@@ -39,7 +39,7 @@ class ProductRouterServiceSpec extends FunSuite with Directives
   test("ProductRouterService /products GET success") {
     Get("/v1/products?productType=PLAN") ~> addHeader(kikoBrand) ~> addHeader(Authorization(adminAuth)) ~>
       productRoute ~> check {
-        Thread.sleep(2000)
+        Thread.sleep(3000)
         val entity = entityAs[String]
         info("entity=" + entity)
         val products = DefaultJsonProtocol.listFormat[Product].read(entity.asJson)
