@@ -6,6 +6,8 @@ import com.typesafe.config.ConfigFactory
 import spray.http.HttpHeaders._
 import spray.http.HttpHeaders.RawHeader
 import org.joda.time.DateTime
+import java.security.MessageDigest
+import java.math.BigInteger
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,4 +38,31 @@ object SillycatUtil {
   def getDateNow(): String = {
     SillycatConstant.DATE_TIME_FORMAT_2.print(DateTime.now)
   }
+
+  def md5(password: String): String = {
+    val messageDigest = MessageDigest.getInstance("MD5")
+    messageDigest.update(password.getBytes("UTF-8"), 0, password.length())
+    var hashedPass = new BigInteger(1, messageDigest.digest()).toString(16)
+    if (hashedPass.length() < 32) {
+      hashedPass = "0" + hashedPass
+    }
+    hashedPass
+  }
+
+  def sha256(password: String): String = {
+    val sha = MessageDigest.getInstance("SHA-256")
+    sha.digest(password.getBytes("UTF-8"))
+      .foldLeft("")((s: String, b: Byte) => s +
+        Character.forDigit((b & 0xf0) >> 4, 16) +
+        Character.forDigit(b & 0x0f, 16))
+  }
+
+  def base64Encode(src: String): String = {
+    new sun.misc.BASE64Encoder().encode(src.getBytes("UTF-8"))
+  }
+
+  def base64Decode(src: String): String = {
+    new String(new sun.misc.BASE64Decoder().decodeBuffer(src), "UTF-8")
+  }
+
 }
