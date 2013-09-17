@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>My First Grid</title>
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../components/jqgrid/css/ui-lightness/jquery-ui-1.7.2.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../components/jqgrid/css/ui.jqgrid.css" />
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 75%;
+}
+</style>
+<script src="../components/jquery/jquery-1.3.2.min.js" type="text/javascript"></script>
+<script src="../components/jqgrid/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script src="../components/jqgrid/js/src/grid.loader.js" type="text/javascript"></script>
+
+
+</head>
+<body>
+<script>
+jQuery(document).ready(function(){ 
+	  jQuery.extend(jQuery.jgrid.defaults,{emptyrecords: "No data to display",loadtext:"Playing..."});
+
+	  jQuery("#list").jqGrid({
+	    url:'jqgrid-demo-event-data.jsp',
+	    datatype: "json",
+	    mtype: 'POST',
+	   	colModel:[
+	   	       {name:'name',label:'Name', width:150,editable: true},
+	   	       {name:'id',width:50, sorttype:"int", editable: true},
+	   	       {name:'email',label:'Email', width:150,editable: true,formatter:'email'},
+	   	       {name:'stock',label:'Stock', width:60, align:"center", editable: true,formatter:'checkbox',edittype:"checkbox"},
+	   	       {name:'item.price',label:'Price', width:100, align:"right", editable: true,formatter:'currency'},
+	   	       {name:'item.weight',label:'Weight',width:60, align:"right", editable: true,formatter:'number'},
+	   	       {name:'ship',label:'Ship Via',width:90, editable: true,formatter:'select', edittype:"select",editoptions:{value:"2:FedEx;1:InTime;3:TNT;4:ARK;5:ARAMEX"}},      
+	   	       {name:'note',label:'Notes', width:100, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"20"}},
+	   	       {name:'action',label:'Actions',width:100,sortable:false,editable:false}      
+	   	],
+	   	jsonReader : {
+	        root: "rows",
+	        page: "page",
+	        total: "total",
+	        records: "records",
+	        repeatitems: false,
+	        userdata: "userdata",
+	        id: "id"
+	    },
+	    onSelectRow: function(id){ 
+		    alert(id);
+		},
+		onPaging: function(pgButton){
+			alert(pgButton);
+		},
+		recordtext: "View {0} - {1} of {2}",
+        //emptyrecords: "No records to view",
+		//loadtext: "Loading...",
+		pgtext : "Page {0} of {1}",
+	   	rowNum : 2,
+	   	pgbuttons : true,
+	   	rowList : [2,4,8],
+	   	pager : '#pager',
+	   	sortname : 'id',
+	    viewrecords : true,
+	    sortorder : "desc", 
+	    caption : "JSON Example"
+	  }); 
+
+	  jQuery("#list").jqGrid('navGrid','#pager',
+		{
+		    edittext: "",
+		    edittitle: "Edit selected data",
+		    addtext:"",
+		    addtitle: "Add new data",
+		    deltext: "",
+		    deltitle: "Delete selected data",
+		    searchtext: "",
+		    searchtitle: "Find datas",
+		    refreshtext: "",
+		    refreshtitle: "Reload Grid data",
+		    alertcap: "Warning",
+		    alerttext: "Please, select data",
+		    viewtext: "",
+		    viewtitle: "View selected data"
+		},
+		{
+		     addCaption: "Add data",
+		     editCaption: "Edit data",
+		     bSubmit: "Submit",
+		     bCancel: "Cancel",
+		     bClose: "Close",
+		     saveData: "Data has been changed! Save changes?",
+		     bYes : "Yes",
+		     bNo : "No",
+		     bExit : "Cancel"
+		},
+		{
+		     addCaption: "Add data",
+		     editCaption: "Edit data",
+		     bSubmit: "Submit",
+		     bCancel: "Cancel",
+		     bClose: "Close",
+		     saveData: "Data has been changed! Save changes?",
+		     bYes : "Yes",
+		     bNo : "No",
+		     bExit : "Cancel"
+		},
+		{
+		    caption: "Delete",
+		    msg: "Delete selected record(s)?",
+		    bSubmit: "Delete",
+		    bCancel: "Cancel"
+		},
+		{
+		     caption: "Search...",
+		     Find: "Find",
+		     Reset: "Reset",
+		     odata : ['equal', 'not equal', 'less', 'less or equal','greater','greater or equal', 'begins with','does not begin with','is in','is not in','ends with','does not end with','contains','does not contain'],
+		     groupOps: [ { op: "AND", text: "all" }, { op: "OR", text: "any" } ],
+		     matchText: " match",
+		     rulesText: " rules"
+		},
+		{
+		    caption: "View Record",
+		    bClose: "Close"
+		}
+	  );
+
+}); 
+
+</script>
+<table id="list"></table> 
+<div id="pager"></div>
+</body>
+</html>

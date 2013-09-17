@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<bean name="quartzScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
+		<property name="configLocation" value="classpath:quartz.properties" />
+		<!-- 延时启动，这个很重要，必须要有足够长的时间让你的应用先启动完成后再让 Scheduler启动， 
+		这里设置60秒,如果你的应用启动时间较长，要相应增加startupDelay的时间--> 
+		<property name="startupDelay" value="60"/>
+		<property name="overwriteExistingJobs" value="true" />
+	</bean>
+	
+</beans>

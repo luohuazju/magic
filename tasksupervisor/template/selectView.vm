@@ -1,0 +1,6 @@
+#set($layout = "layout/layout_empty.vm")
+<select>
+	#foreach( $item in $items )
+		<option value="${item.job_name}">${item.display_name}</option>
+	#end
+</select>
