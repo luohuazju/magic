@@ -1,13 +1,16 @@
 <ivysettings>
   <settings defaultResolver="chained"/>
+  <caches defaultCacheDir="/Users/carl/.ivy2/cache" />
   <resolvers>
     <chain name="chained" returnFirst="true">
       <filesystem name="libraries">
         <artifact pattern="${ivy.conf.dir}/lib/[artifact]-[revision].[type]" />
       </filesystem>
+      <!--  
       <url name="sillycat">
         <artifact pattern="http://localhost:8081/nexus/content/groups/public/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
       </url>
+      -->
       <!--
       <url name="sccl">
         <artifact pattern="http://10.206.20.43:9999/nexus/content/groups/public/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
