@@ -3,9 +3,9 @@ package com.sillycat.winnersellerserver.bootstrap
 import com.typesafe.config.ConfigFactory
 
 trait Bootstrap {
-  
+
   val config = ConfigFactory.load()
-  
+
   val env = config.getString("build.env")
   var serverAddress: String = config.getString("server.address")
   var serverPort: Int = config.getInt("server.port")

@@ -30,7 +30,6 @@ define([
      var catCookie = new CatCookie("cat");
      if(!catCookie.getcookie("cat_user_name") || catCookie.getcookie("cat_user_name") == ""){
         window.logger.debug("render to login page from router");
-        //navBarView.render();
         loginView.render();
         return true;
      }
@@ -81,7 +80,6 @@ define([
     },
 
     logon: function(){
-        //navBarView.render();
         loginView.render();
     },
 
@@ -93,11 +91,10 @@ define([
     },
     
     defaultAction: function(){
-        //if(loginFilter()) return;
+        if(loginFilter()) return;
     	window.logger.debug("Entering the default Page!");
-		//navBarView.render();
-		//homeMainView.render();
-		loginView.render();
+		navBarView.render();
+        homeMainView.render();
     }
     
   });

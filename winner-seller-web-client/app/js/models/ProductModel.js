@@ -20,17 +20,19 @@ define([
 
               options.contentType = "application/json; charset=utf-8";
               var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
-              url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
+              url_str = url_str + '/' + config.apiVersion + '/' + 'products';
               if((method == 'read' || method == 'delete') && model.id){
                 url_str = url_str + '/' + model.id;
               }
 
-              if(method == 'update'){
-                options.beforeSend = function (jqXHR, settings) {
-                      jqXHR.setRequestHeader('Authorization', 'Basic Y3VzdG9tZXI6Y3VzdG9tZXI=');
-                      return true;
-                }
-              }
+              options.beforeSend = function (xhr) {
+                                  //Authorization       Authentication
+                                  //window.btoa  window.atob
+                                  var encryption_str = window.btoa("admin@gmail.com:admin");
+                                  encryption_str = "Basic " + encryption_str
+                                  xhr.setRequestHeader("Authorization", encryption_str );
+              };
+
 
               options.url = url_str;
 

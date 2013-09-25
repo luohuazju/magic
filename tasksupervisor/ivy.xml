@@ -1,0 +1,49 @@
+<ivy-module version="2.0">
+	<info organisation="sccl" module="swak" />
+	<configurations>
+		<conf name="release" />
+	</configurations>
+	<publications>
+		<artifact name="common" />
+		<artifact name="client" />
+	</publications>
+	<dependencies>
+		<!-- sillycat -->
+		<dependency org="sccl/easy" name="easygroovyplugin" rev="1.0" />
+		<!-- json -->
+		<dependency org="jackson" name="jackson-core-asl" rev="1.4.1" />
+		<dependency org="jackson" name="jackson-mapper-asl" rev="1.4.1" />
+		<dependency org="jackson" name="jackson-xc" rev="1.4.1" />
+		<dependency org="jackson" name="jackson-jaxrs" rev="1.4.1" />
+		<!-- commons -->
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.4" />
+		<dependency org="commons-collections" name="commons-collections" rev="3.2" />
+		<dependency org="commons-configuration" name="commons-configuration" rev="1.2" />		
+		<dependency org="org/slf4j" name="slf4j-api" rev="1.5.6" />
+		<dependency org="org/slf4j" name="slf4j-log4j12" rev="1.5.6" />
+		<dependency org="log4j" name="log4j" rev="1.2.15" />
+		<!-- spring jar -->
+		<dependency org="org/springframework" name="spring" rev="2.5.6" />
+		<dependency org="org/springframework" name="spring-test" rev="2.5.6" />
+		<dependency org="org/springframework" name="spring-webmvc" rev="2.5.6"/>
+		<!--  database driver -->
+		<!-- mysql and oracle, keep one is ok -->
+		<dependency org="mysql" name="mysql-connector-java" rev="5.1.6" />
+		<dependency org="com/oracle" name="classes12" rev="10.2.0.2.0" />
+		<dependency org="c3p0" name="c3p0" rev="0.9.1.2" />
+		<!--  quartz -->
+		<dependency org="org/quartz" name="quartz-all" rev="1.6.6" />
+		<!-- junit -->
+		<dependency org="junit" name="junit" rev="4.4" />
+		<!-- groovy -->
+		<dependency org="org/codehaus/groovy" name="groovy" rev="1.7-beta-1" />
+		<dependency org="antlr" name="antlr" rev="2.7.7" />
+		<dependency org="asm" name="asm-all" rev="3.2" />
+		<!-- velocity -->
+		<dependency org="org/apache/velocity" name="velocity" rev="1.6.3" />
+		<dependency org="org/apache/velocity" name="velocity-tools" rev="2.0-beta4" />
+		<!-- servlet -->
+		<dependency org="javax/servlet" name="jstl" rev="1.2" />
+	</dependencies>
+</ivy-module>

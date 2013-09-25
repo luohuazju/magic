@@ -20,6 +20,7 @@
 	<logger name="com.sillycat.winnersellerserver.util" level="INFO" />
 	<logger name="com.sillycat.winnersellerserver.dao" level="INFO" />
     <logger name="com.sillycat.winnersellerserver.model" level="INFO" />
+    <logger name="com.sillycat.winnersellerserver.service.auth" level="DEBUG" />
 
     <root level="ERROR">
         <appender-ref ref="CONSOLE"/>

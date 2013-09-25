@@ -36,10 +36,11 @@ define([
     },
 
     deleteProduct: function(ev){
+       var productType = this.item.productType;
        this.item.destroy({
           success: function(){
               window.logger.debug("delete product hitting.");
-              Backbone.history.navigate('products/productplan', {trigger:true});
+              Backbone.history.navigate('products/' + productType, {trigger:true});
           }
        });
        this.item = null;
@@ -62,7 +63,7 @@ define([
           this.item.save(itemDetail,{
             success: function (data) {
               //window.logger.debug("success to get the data back = " + data);
-              Backbone.history.navigate('products/' + item.productType, {trigger:true});
+              Backbone.history.navigate('products/' + itemDetail.productType, {trigger:true});
             },
             error: function(e){
               window.logger.error("Failed to save on product" + e);

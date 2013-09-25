@@ -1,0 +1,127 @@
+#set($layout = "layout/layout_edit.vm")   
+#set($sub= "common/menu.vm" ) 
+<link rel="stylesheet" type="text/css" href="./components/jscal/css/jscal2-1.7.css" />
+<link rel="stylesheet" type="text/css" href="./components/jscal/css/border-radius.css" />
+<link rel="stylesheet" type="text/css" href="./components/jscal/css/gold/gold.css" />
+<script type="text/javascript" src="./components/jscal/js/jscal2-1.7.js"></script>
+<script type="text/javascript" src="./components/jscal/js/lang/en.js"></script>
+
+<h1>新增任务</h1>
+<form action="trigger.do?method=save" method="post" >
+	<input type="hidden" name="triggerType" value="cron" />
+<table>
+	<tr>
+		<td>
+			调度名称：
+		</td>
+		<td>
+			<input type="text" name="triggerName" value="调度的中文名称" />
+        </td>
+	</tr>
+	<tr>
+		<td>
+			cron表达式：
+		</td>
+		<td>
+			<input type="text" name="cronExpression" value="例如0/10 * * ? * * *" size="20"/>
+        </td>
+	</tr>
+	<tr>
+		<td>
+			任务名称：
+		</td>
+		<td>
+			<select name="jobName">
+				#foreach( $item in $items )
+				<option value="${item.job_name}">${item.display_name}</option>
+				#end
+            </select>
+        </td>
+	</tr>
+	<tr>
+		<td cols="2">
+			cron表达式例如：0/10 * * ? * * *（每10秒调用一次）<br />
+		</td>
+	</tr>
+	<tr>
+		<td cols="2">
+			<input type="submit" name="提交" value="提交" />
+        </td>
+	</tr>
+</table>
+</form>
+<form action="trigger.do?method=save" method="post" >
+	<input type="hidden" name="triggerType" value="simple" />
+<table>
+	<tr>
+		<td>
+			调度名称：
+		</td>
+		<td>
+			<input type="text" name="triggerName" value="调度的中文名称" />
+        </td>
+	</tr>
+	<tr>
+		<td>
+			任务名称：
+		</td>
+		<td>
+			<select name="jobName">
+				#foreach( $item in $items )
+				<option value="${item.job_name}">${item.display_name}</option>
+				#end
+            </select>
+        </td>
+	</tr>
+	<tr>
+		<td>
+			调用时间间隔：
+		</td>
+		<td>
+			<input type="text" name="time" value="单位-秒" />
+        </td>
+	</tr>
+	<tr>
+		<td>
+			开始调用时间：
+        </td>
+		<td>
+			<input id="startTime" name="startTime"/><button id="startTime_btn">...</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			结束调用时间：
+        </td>
+		<td>
+			<input id="endTime" name="endTime"/><button id="endTime_btn">...</button>
+		</td>
+	</tr>
+	<tr>
+		<td cols="2">
+			开始调度时间和结束调度时间可以不填写<br />
+		</td>
+	</tr>
+	<tr>
+		<td cols="2">
+			<input type="submit" name="提交" value="提交" />
+        </td>
+	</tr>
+</table>
+<script>
+    Calendar.setup({
+        trigger    : "startTime_btn",
+		showTime   : "true",
+		dateFormat : "%Y-%m-%d %H:%M:%S",
+        inputField : "startTime",
+		onSelect   : function() { this.hide() }
+    });
+	Calendar.setup({
+        trigger    : "endTime_btn",
+		showTime   : "true",
+		dateFormat : "%Y-%m-%d %H:%M:%S",
+        inputField : "endTime",
+		onSelect   : function() { this.hide() }
+    });
+</script>
+</form>

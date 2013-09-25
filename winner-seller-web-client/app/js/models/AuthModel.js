@@ -17,9 +17,17 @@ define([
 
           options.xhrFields = { withCredentials: true };
 
+          options.beforeSend = function (xhr) {
+            //Authorization       Authentication
+            //window.btoa  window.atob
+            var encryption_str = window.btoa("customer@gmail.com:customer");
+            encryption_str = "Basic " + encryption_str
+            xhr.setRequestHeader("Authorization", encryption_str );
+          };
+
           options.contentType = "application/json; charset=utf-8";
           var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
-          url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'auth';
+          url_str = url_str + '/' + config.apiVersion + '/' + 'auth';
 
           options.url = url_str;
 

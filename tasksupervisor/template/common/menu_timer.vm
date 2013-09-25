@@ -1,0 +1,4 @@
+<a href="job.do?method=edit">新增任务</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<a href="trigger.do?method=edit">新增调度</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<a href="job.do?method=list">任务管理</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<a href="trigger.do?method=list">调度管理</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
