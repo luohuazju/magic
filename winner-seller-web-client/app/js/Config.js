@@ -8,14 +8,13 @@ define([
 		this.mockServerURL = 'localhost';   //mock server URL
 		this.mockServerPort = 9000;                //mock server port
 
-		this.remoteServerURL = 'localhost'; //remote server URL
+		this.remoteServerURL = 'seller.api.sillycat.com'; //remote server URL
 		this.remoteServerPort = 9002;              //remote server port
 
 		this.apiVersion = 'v1'
-        this.brandName = 'sillycat'
 
         //mock,jsonp,json
-	    this.navbarsProvider = 'jsonp';
+	    this.navbarsProvider = 'json';
 	    this.productsProvider = 'json';
 	    this.usersProvider = 'json';
 	}

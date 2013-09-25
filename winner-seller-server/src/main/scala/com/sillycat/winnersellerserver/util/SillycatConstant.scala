@@ -1,7 +1,6 @@
 package com.sillycat.winnersellerserver.util
 
 import org.joda.time.format.DateTimeFormat
-import com.sillycat.winnersellerserver.CrossDomainHeaders.{`Access-Control-Allow-Headers`, `Access-Control-Allow-Origin`}
 import spray.json.JsValue
 
 /**

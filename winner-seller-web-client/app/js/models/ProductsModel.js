@@ -22,12 +22,22 @@ define([
 
            //json
            if(config.productsProvider == 'json'){
+              window.logger.debug("I am going to send the ajax call, method=" + method);
               options.dataType = "json";
               options.crossDomain = true;
+
               options.xhrFields = { withCredentials: true };
 
-              var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort
-              url_str = url_str + '/' + config.apiVersion + '/' + config.brandName + '/' + 'products';
+              options.beforeSend = function (xhr) {
+                  //Authorization       Authentication
+                  //window.btoa  window.atob
+                  var encryption_str = window.btoa("admin@gmail.com:admin");
+                  encryption_str = "Basic " + encryption_str
+                  xhr.setRequestHeader("Authorization", encryption_str );
+              };
+
+              var url_str = 'http://' + config.remoteServerURL + ':' + config.remoteServerPort;
+              url_str = url_str + '/' + config.apiVersion + '/' + 'products';
 
               options.url = url_str;
            }

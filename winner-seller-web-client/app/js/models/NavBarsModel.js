@@ -20,14 +20,22 @@ define([
               options.dataType = 'json';
            }
 
-           //jsonp
-           if(config.navbarsProvider == 'jsonp'){
-              options.dataType = "jsonp";
+           //json
+           if(config.navbarsProvider == 'json'){
+              options.dataType = "json";
               options.crossDomain = true;
-              var url_str = 'http://' + 'customer@gmail.com' + ':' + 'customer' + '@';
+              var url_str = 'http://';
               url_str = url_str + config.remoteServerURL +':' + config.remoteServerPort;
-              url_str = url_str + '/' + config.apiVersion +'/' + config.brandName + '/' + 'navbars';
+              url_str = url_str + '/' + config.apiVersion + '/' + 'navbars';
               options.url = url_str;
+
+              options.beforeSend = function (xhr) {
+                //Authorization       Authentication
+                //window.btoa  window.atob
+                var encryption_str = window.btoa("customer@gmail.com:customer");
+                encryption_str = "Basic " + encryption_str
+                xhr.setRequestHeader("Authorization", encryption_str );
+              };
            }
 
            return Backbone.sync(method, model, options);

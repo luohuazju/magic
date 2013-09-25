@@ -1,0 +1,63 @@
+<script type="text/javascript">
+	$(function() {
+		$("#3").lavaLamp( {
+			fx : "backout",
+			speed : 700,
+			click : function(event, menuItem) {
+				//alert(true);
+				return true;
+			}
+		});
+	});
+</script>
+<style type="text/css">
+.lavaLampBottomStyle {
+	position:absolute
+	height: 29px;
+	width: 980px;
+	background-color: white;
+	padding: 15px;
+	margin: 10px 0;
+	overflow: hidden;
+	border: 1px solid gray;
+}
+.lavaLampBottomStyle li {
+	float: left;
+	list-style: none;
+}
+.lavaLampBottomStyle li.back {
+	border-bottom: 5px solid blue;
+	width: 9px;
+	height: 30px;
+	z-index: 8;
+	position: absolute;
+}
+.lavaLampBottomStyle li a {
+	font: bold 14px arial;
+	text-decoration: none;
+	color: #000;
+	outline: none;
+	text-align: center;
+	top: 7px;
+	text-transform: uppercase;
+	letter-spacing: 0;
+	z-index: 10;
+	display: block;
+	float: left;
+	height: 30px;
+	position: relative;
+	overflow: hidden;
+	margin: auto 10px;
+}
+.lavaLampBottomStyle li a:hover,.lavaLampBottomStyle li a:active,.lavaLampBottomStyle li a:visited
+	{
+	border: none;
+}
+</style>
+<ul class="lavaLampBottomStyle" id="3">
+	<li><a href="job.do?method=list">任务管理</a></li>
+	<li><a href="trigger.do?method=list">调度管理</a></li>
+	<li><a href="#">用户管理</a></li>
+	<li><a href="#">关于系统</a></li>
+	<li><a href="#">退出</a></li>
+</ul>

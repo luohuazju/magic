@@ -1,6 +1,6 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
 import com.sillycat.winnersellerserver.model._
 import com.sillycat.winnersellerserver.util.SillycatUtil
 import spray.routing.authentication.BasicAuth
@@ -21,39 +21,39 @@ import scala.Some
  * Time: 1:16 PM
  * To change this template use File | Settings | File Templates.
  */
-trait UserRouterService extends BaseRouterService with CustomerMethodDirectives {
+trait UserRouterService extends BaseRouterService {
 
   def userRoute = {
-    pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
 
-      implicit val userFormatter = new UserJsonProtocol(0).UserJsonFormat
+      pathPrefix(Version) { apiVersion =>
 
-      implicit val userLogonFormatter = UserLogonJsonProtocol.UserLogonJsonFormat
+        implicit val userFormatter = new UserJsonProtocol(0).UserJsonFormat
 
-      optionalHeaderValueByName("Origin") { originHeader =>
+        implicit val userLogonFormatter = UserLogonJsonProtocol.UserLogonJsonFormat
 
-        respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-          //host("([a-zA-Z0-9]*).api.sillycat.com".r) { webserver =>
-            path("auth") {
-              post {
-                entity(as[UserLogon]) { item =>
+          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+
+            options {
+              complete {
+                "OK"
+              }
+            } ~
+              path("auth") {
+                post {
+                  entity(as[UserLogon]) { item =>
                     dao.db.withSession {
-                      dao.Users.auth(item.email,item.password) match {
-                        case Some(user) => complete {user}
-                        //case _ => complete(BadRequest, "Error Message asdfasdf")
+                      dao.Users.auth(item.email, item.password) match {
+                        case Some(user) => complete { user }
                         case _ => complete("{ status: error, message: error message }")
                       }
                     }
-                }
-              } ~
-              options{
-                complete{
-                  "OK"
+                  }
                 }
               }
-            }
-          //}
+          }
         }
       }
     }

@@ -77,7 +77,7 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     info("NavBar Object: " + obj.toJson)
     assert(obj.toJson === objAST)
   }
-  
+
   "Marshalling Cart JSON" should "result in an Cart Object" in {
     val jsonCart = """{
     		"id" : 2,
@@ -135,7 +135,7 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     info("Cart Object: " + cart.toJson)
     assert(cart.toJson === cartAST)
   }
-  
+
   "Marshalling Product JSON" should "result in an Product Object" in {
     val jsonProduct = """{
     			"id" : 1,
@@ -154,7 +154,7 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
           "productStatus" : "ACTIVE"
     		}"""
     val productAST = jsonProduct.asJson
-    
+
     info("ProductAST: " + productAST.asJsObject)
     val product: Product = productAST.convertTo[Product]
     info("Product Object: " + product.toJson)
@@ -180,7 +180,5 @@ class JSONMarshallSpec extends FlatSpec with ShouldMatchers with DefaultJsonProt
     info("User Object: " + user.toJson)
     assert(user.toJson === userAST)
   }
-  
-
 
 }

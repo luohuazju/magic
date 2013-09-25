@@ -1,14 +1,17 @@
 package com.sillycat.winnersellerserver
 
-import spray.can.server.SprayCanHttpServerApp
-import akka.actor.Props
+import akka.actor.{ ActorRefFactory, ActorSystem, Props }
 import com.sillycat.winnersellerserver.bootstrap.URLRouterActor
 import com.sillycat.winnersellerserver.bootstrap.Bootstrap
+import spray.can.Http
+import akka.io.IO
+import scala.concurrent.ExecutionContext
 
-object Boot extends App with Bootstrap with SprayCanHttpServerApp {
+object Boot extends App with Bootstrap {
+  implicit val system = ActorSystem()
 
   val handler = system.actorOf(Props[URLRouterActor])
 
-  newHttpServer(handler) ! Bind(interface = serverAddress, port = serverPort)
+  IO(Http) ! Http.Bind(handler, interface = serverAddress, port = serverPort)
 
 }

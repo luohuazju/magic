@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>My First Grid</title>
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../components/jqgrid/css/ui-lightness/jquery-ui-1.7.2.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../components/jqgrid/css/ui.jqgrid.css" />
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 75%;
+}
+</style>
+
+<script src="../components/jquery/jquery-1.3.2.min.js" type="text/javascript"></script>
+<script src="../components/jqgrid/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script src="../components/jqgrid/js/src/grid.loader.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+// Here we set a globally the altRows option
+jQuery.extend(jQuery.jgrid.defaults, { altRows:true });
+</script>
+
+<script>
+jQuery(document).ready(function(){ 
+	  jQuery("#list").jqGrid({
+	    url:'jqgrid-demo-xml-data.jsp',
+	    datatype: 'xml',
+	    mtype: 'POST',
+	    altRows: false,
+	    colNames:['Inv No','Date', 'Amount','Tax','Total','Notes'],
+	    colModel :[ 
+	      {name:'invid', index:'invid', width:55}, 
+	      {name:'invdate', index:'invdate', width:90}, 
+	      {name:'amount', index:'amount', width:80, align:'right'}, 
+	      {name:'tax', index:'tax', width:80, align:'right'}, 
+	      {name:'total', index:'total', width:80, align:'right'}, 
+	      {name:'note', index:'note', width:150, sortable:false} 
+	    ],
+	    xmlReader: {
+		  root: "rows", 
+	      row: "row", 
+	      page: "rows>page", 
+	      total: "rows>total", 
+	      records : "rows>records", 
+	      repeatitems: true, 
+	      cell: "cell", 
+	      id: "[id]",
+	      userdata: "userdata"
+	    },
+	    pager: '#pager',
+	    rowNum:10,
+	    rowList:[10,20,30],
+	    sortname: 'invid',
+	    sortorder: 'desc',
+	    viewrecords: true,
+	    caption: 'My first grid'
+	  });
+
+	  alert(jQuery("#list").getGridParam('userData'));
+	  alert(jQuery("#list").getUserData() + ":" + jQuery("#list").getUserDataItem( "tax" ));
+});
+
+</script>
+</head>
+<body>
+<table id="list"></table> 
+<div id="pager"></div>
+</body>
+</html>

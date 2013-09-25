@@ -1,6 +1,5 @@
 package com.sillycat.winnersellerserver.bootstrap
 
-
 import com.sillycat.winnersellerserver.model.ProductJsonProtocol
 import com.sillycat.winnersellerserver.model.Product
 import com.sillycat.winnersellerserver.dao.BaseDAO
@@ -10,8 +9,9 @@ import spray.routing.authentication._
 import com.sillycat.winnersellerserver.service.auth.BrandUserPassAuthenticator
 import BaseDAO.threadLocalSession
 import com.sillycat.winnersellerserver.util.SillycatUtil
-import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
+//import com.sillycat.winnersellerserver.patch.CustomerMethodDirectives
 import com.sillycat.winnersellerserver.model.ProductStatus
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,77 +20,75 @@ import com.sillycat.winnersellerserver.model.ProductStatus
  * Time: 5:11 PM
  * To change this template use File | Settings | File Templates.
  */
-trait ProductRouterService extends BaseRouterService with CustomerMethodDirectives {
-
+trait ProductRouterService extends BaseRouterService {
 
   def productRoute = {
-    pathPrefix(Version / BrandCode) { (apiVersion, brandCode) =>
-      implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
+    host("([a-zA-Z0-9]*).api.sillycat.com".r) { brandCode =>
 
-      optionalHeaderValueByName("Origin") { originHeader =>
+      pathPrefix(Version) { apiVersion =>
+        implicit val productFormatter = ProductJsonProtocol.ProductJsonFormat
 
-       respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+        optionalHeaderValueByName("Origin") { originHeader =>
 
-        authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
-            path("products") {
-              get {
-                parameters('productType.as[String]) { productType =>
-                  complete(
-                    dao.db.withSession {
-                      //DefaultJsonProtocol.listFormat[Product].write(dao.Products.all).toString
-                      DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType,ProductStatus.ACTIVE.toString)).toString
-                    }
-                  )
-                }
-              } ~
-              post {
-                entity(as[Product]) { item =>
-                  complete {
-                    dao.db.withSession {
-                      dao.Products.insert(item)
-                    }
-                  }
-                }
-              } ~
-              put {
-                 entity(as[Product]){ item =>
-                    complete {
-                      dao.db withSession {
-                        dao.Products.update(item)
-                      }
-                    }
-                 }
-              } ~
-              options{
-                complete{
+          respondWithHeaders(SillycatUtil.getCrossDomainHeaders(originHeader): _*) {
+
+            authenticate(BasicAuth(new BrandUserPassAuthenticator(dao), "Realm")) { user =>
+              options {
+                complete {
                   "OK"
                 }
-              }
-            }~
-            path("products" / IntNumber) { id =>
-              get {
-                complete {
-                  dao.db withSession {
-                    dao.Products.byId(id)
-                  }
-                }
               } ~
-              delete {
-                complete {
-                  dao.db withSession {
-                    dao.Products.deleteById(id) + ""
-                  }
+                path("products") {
+                  get {
+                    authorize(user.email == "admin@gmail.com") {
+                      parameters('productType.as[String]) { productType =>
+                        complete(
+                          dao.db.withSession {
+                            DefaultJsonProtocol.listFormat[Product].write(dao.Products.forProductTypeAndStatus(productType, ProductStatus.ACTIVE.toString)).toString
+                          }
+                        )
+                      }
+                    }
+                  } ~
+                    post {
+                      entity(as[Product]) { item =>
+                        complete {
+                          dao.db.withSession {
+                            dao.Products.insert(item)
+                          }
+                        }
+                      }
+                    } ~
+                    put {
+                      entity(as[Product]) { item =>
+                        complete {
+                          dao.db withSession {
+                            dao.Products.update(item)
+                          }
+                        }
+                      }
+                    }
+                } ~
+                path("products" / IntNumber) { id =>
+                  get {
+                    complete {
+                      dao.db withSession {
+                        dao.Products.byId(id)
+                      }
+                    }
+                  } ~
+                    delete {
+                      complete {
+                        dao.db withSession {
+                          dao.Products.deleteById(id) + ""
+                        }
+                      }
+                    }
                 }
-              }~
-              options{
-                  complete{
-                    "OK"
-                  }
-              }
             }
           }
-        }
-      }
-    }
+        } //optionalHeaderValueByName
+      } //pathPrefix
+    } //productRoute
   }
 }
