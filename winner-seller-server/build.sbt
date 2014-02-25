@@ -1,4 +1,7 @@
 import AssemblyKeys._
+import sbt._
+import Keys._
+import com.googlecode.flyway.sbt.FlywayPlugin._
 
 name := "winner-seller-server" 
 
@@ -6,15 +9,17 @@ organization := "com.sillycat"
 
 version := "1.0" 
 
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8") 
 
 resolvers ++= Seq(
+  "flyway repo"        at "http://flywaydb.org/repo/",
+  "maven repo"         at "http://repo1.maven.org/maven2/",
 	"sonatype releases"  at "https://oss.sonatype.org/content/repositories/releases/",
-  	"sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-  	"typesafe repo"      at "http://repo.typesafe.com/typesafe/releases/",
-  	"spray repo"         at "http://repo.spray.io/"
+  "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+  "typesafe repo"      at "http://repo.typesafe.com/typesafe/releases/",
+  "spray repo"         at "http://repo.spray.io/"
 )
 
 libraryDependencies ++= Seq(
@@ -61,3 +66,15 @@ excludedJars in assembly <<= (fullClasspath in assembly) map { cp =>
 addArtifact(artifact in (Compile, assembly), assembly)
 
 scalariformSettings
+
+//flyway start
+seq(flywaySettings: _*)
+
+flywayUrl := "jdbc:h2:~/demo_test;DB_CLOSE_DELAY=-1"
+
+flywayUser := "sa"
+
+flywayPassword := "password"
+
+//flyway end
+
