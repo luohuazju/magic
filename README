@@ -15,10 +15,18 @@ This sub system will provide all the REST API from server side, right now, I am 
 
 This is written by Scala based on Spray, Slick and etc. The messages in the requests/responses are using JSON format.
 
+How to run
+
+>sbt run
+
 1.2 winner-seller-web-client
 
 This sub system will be the UI layer based on browsers. I am using backbone JS there. It also consist of jquery, underscore, 
-json2, log4javascript, bootstrap and etc.
+json2, log4javascript, bootstrap, grunt and etc.
+
+How to run
+
+>grunt
 
 1.3 winner-seller-android-client
 
