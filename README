@@ -2,8 +2,31 @@ Some Ideas to build some interesting projects.
 
 I will introduce them one by one.
 
-winner-web-seller
+1. Small CRM projects for My wife
 
-winner-web-client
+She sometimes need to buy and mail some projects/gifts for her good friends. She need a system to track the prices, shipping,
+expiration date, Online Projects Links, Coupons and etc. Here is the system I design and implement for her in my spare time.
+
+First of all, Android and iOS are very common and wildly used in our daily life. So I design this small system as follow.
+
+1.1 winner-seller-server
+
+This sub system will provide all the REST API from server side, right now, I am using H2 DB to persist all the data during developing.
+
+This is written by Scala based on Spray, Slick and etc. The messages in the requests/responses are using JSON format.
+
+1.2 winner-seller-web-client
+
+This sub system will be the UI layer based on browsers. I am using backbone JS there. It also consist of jquery, underscore, 
+json2, log4javascript, bootstrap and etc.
+
+1.3 winner-seller-android-client
+
+TODO
+
+1.4 winner-seller-ios-client
+
+TODO
+
 
 
