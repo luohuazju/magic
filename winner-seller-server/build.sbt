@@ -14,10 +14,10 @@ scalaVersion := "2.10.3"
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8") 
 
 resolvers ++= Seq(
+  "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "flyway repo"        at "http://flywaydb.org/repo/",
   "maven repo"         at "http://repo1.maven.org/maven2/",
-	"sonatype releases"  at "https://oss.sonatype.org/content/repositories/releases/",
-  "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+  "sonatype releases"  at "https://oss.sonatype.org/content/repositories/releases/",
   "typesafe repo"      at "http://repo.typesafe.com/typesafe/releases/",
   "spray repo"         at "http://repo.spray.io/"
 )
